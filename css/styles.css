@@ -1,0 +1,124 @@
+html,body {
+	height: 100%;
+	/* The html and body elements cannot have any padding or margin. */
+}
+
+hr {
+	margin: 1px !important;
+}
+
+.button_as_link {
+	width: 100px;
+	border: none;
+	background-color: transparent;
+	color: olive;
+}
+
+.top-buffer20 { 
+	margin-top: 20px;
+}
+
+.top-buffer5 {
+	margin-top: 5px;
+}
+
+.vcenter {
+    display: inline-block !important;
+    vertical-align: middle !important;
+    float: none !important;
+}
+
+.vbottom {
+	display: inline-block !important;
+	vertical-align: bottom !important;
+	float: none !important;
+}
+
+.img-avatar {
+	max-width: 200px;
+	height: 200px;
+	margin: 10px;
+	border: 1px solid grey;
+}
+
+.img-avatar-sm {
+	height: 150px;
+	max-width: 300px;
+	margin: 10px;
+	border: 1px solid grey;
+}
+
+.img-article-cover {
+	height: 160px;
+	max-width: 250px;
+	border-radius: 4px;
+	margin: 10px;
+}
+
+.img-direction-cover {
+	height: 190px;
+	max-width: 300px;
+	border-radius: 4px;
+	margin: 10px;
+}
+
+.padding-sm {
+	padding: 4px !important;
+}
+
+.margin-sm {
+	margin: 4px !important;
+}
+
+.margin-md {
+	margin: 8px !important;
+}
+
+.menu-img-up {
+	width: 850px;
+	border-radius: 0 0 8px 8px;
+	box-shadow: 0 0 8px rgb(80,74,137);
+}
+
+.menu-img-down {
+	width: 850px;
+	height: 50px;
+	border-radius: 8px 8px 0 0;
+	box-shadow: 0 0 8px rgb(80,74,137);
+}
+
+.image-container {
+	position: relative;
+}
+
+.image-content {
+	position: absolute;
+	top: 0px;
+}
+
+#wrap {
+	height: 100%;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	/* Negative indent footer by it's height */
+	margin: 0 auto -50px;
+}
+
+#footer {
+	width: 100%;
+}
+
+#push {
+	height: 100%;
+}
+
+#push, #footer {
+	height: 50px;
+}
+
+.google-map {
+	width: 350px;
+	height: 350px;
+	border: 1px solid grey;
+}
