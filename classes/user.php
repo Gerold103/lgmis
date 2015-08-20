@@ -108,11 +108,11 @@
 		{
 			switch ($user_privileges) {
 				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+					return $this->ToHTMLPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
 				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
+					return $this->ToHTMLPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -145,29 +145,29 @@
 			return $res;
 		}
 
-		public function ToHTMLAdminShortInTable()
-		{
-			global $positions;
-			$res = '<tr>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.htmlspecialchars($this->surname).'</td>';
-			$res .= '<td>'.htmlspecialchars($positions[$this->position]).'</td>';
-			$res .= '<td>';
-			$res .=		'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(4).'">';
-			$res .= 			$this->ToHTMLFullVers();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLEdit();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLDel();
-			$res .=			'</div>';
-			$res .= 	'</div>';
-			$res .= '</td>';
-			$res .= '</tr>';
-			return $res;
-		}
+		// public function ToHTMLAdminShortInTable()
+		// {
+		// 	global $positions;
+		// 	$res = '<tr>';
+		// 	$res .= '<td>'.htmlspecialchars($this->name).'</td>';
+		// 	$res .= '<td>'.htmlspecialchars($this->surname).'</td>';
+		// 	$res .= '<td>'.htmlspecialchars($positions[$this->position]).'</td>';
+		// 	$res .= '<td>';
+		// 	$res .=		'<div class="row">';
+		// 	$res .= 		'<div class="'.ColAllTypes(4).'">';
+		// 	$res .= 			$this->ToHTMLFullVers();
+		// 	$res .=			'</div>';
+		// 	$res .=			'<div class="'.ColAllTypes(4).'">';
+		// 	$res .=				$this->ToHTMLEdit();
+		// 	$res .=			'</div>';
+		// 	$res .=			'<div class="'.ColAllTypes(4).'">';
+		// 	$res .=				$this->ToHTMLDel();
+		// 	$res .=			'</div>';
+		// 	$res .= 	'</div>';
+		// 	$res .= '</td>';
+		// 	$res .= '</tr>';
+		// 	return $res;
+		// }
 
 		public function ToHTMLPrivateFull()
 		{
@@ -275,6 +275,36 @@
 			$res .= 		$this->ToHTMLFullVers();
 			$res .= 	'</div>';
 			$res .= '</div>';
+			return $res;
+		}
+
+		public function ToHTMLPrivateShortInTable()
+		{
+			global $positions;
+			$res = '<tr>';
+			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
+			$res .= '<td>'.htmlspecialchars($this->surname).'</td>';
+			$res .= '<td>'.htmlspecialchars($positions[$this->position]).'</td>';
+			$res .= '<td>';
+			$res .=		'<div class="row">';
+			if ((GetUserLogin() != $this->login) && (GetUserLogin() != 'admin')) {
+				$res .= 	'<div class="'.ColAllTypes(12).'">';
+			} else {
+				$res .= 	'<div class="'.ColAllTypes(4).'">';
+			}
+			$res .= 			$this->ToHTMLFullVers();
+			$res .=			'</div>';
+			if ((GetUserLogin() == $this->login) || (GetUserLogin() == 'admin')) {
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLEdit();
+				$res .=		'</div>';
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLDel();
+				$res .=		'</div>';
+			}
+			$res .= 	'</div>';
+			$res .= '</td>';
+			$res .= '</tr>';
 			return $res;
 		}
 

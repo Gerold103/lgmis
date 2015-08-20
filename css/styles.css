@@ -7,6 +7,9 @@ hr {
 	margin: 1px !important;
 }
 
+a img {border:0; outline:0;}
+
+
 .button_as_link {
 	width: 100px;
 	border: none;
@@ -121,4 +124,26 @@ hr {
 	width: 350px;
 	height: 350px;
 	border: 1px solid grey;
+}
+
+.rocket {
+	position: relative;
+	bottom: 40px;
+	left: 280px;
+	border: none !important;
+	-webkit-transition: all 0.5s ease;
+	   -moz-transition: all 0.5s ease;
+	    -ms-transition: all 0.5s ease;
+	     -o-transition: all 0.5s ease;
+	        transition: all 0.5s ease;
+}
+
+.rocket:hover {
+	bottom: 60px;
+	left: 270px;
+	-webkit-transform: rotate(-5deg);
+	    moz-transform: rotate(-5deg);
+	     -o-transform: rotate(-5deg);
+	    -ms-transform: rotate(-5deg);
+	        transform: rotate(-5deg);
 }

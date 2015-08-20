@@ -11,7 +11,7 @@
 		//html code of short representation of object in string
 		public function ToHTMLAdminShort();
 
-		public function ToHTMLAdminShortInTable();
+		//public function ToHTMLAdminShortInTable();
 	}
 	
 	//------------------------------------------------I N T E R F A C E   U S E R   H T M L------------------------------------------------
