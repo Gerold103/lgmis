@@ -293,6 +293,7 @@
 					'action_type' => 'full',
 					'obj_type' => Article::$type,
 					'id' => $this->id,
+					'method' => 'get',
 				);
 			} else {
 				$args = array(

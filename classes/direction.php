@@ -413,6 +413,7 @@
 				'obj_type' => Direction::$type,
 				'id' => $this->id,
 				'btn_text' => 'Узнать больше',
+				'method' => 'get',
 				'prev_page' => $link_to_public_content.'?content_type='.$content_types_short['directions'],
 			);
 			return ActionButton($args);

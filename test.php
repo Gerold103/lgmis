@@ -18,6 +18,8 @@
     </head>
 
     <body>
-        <a style="border: none !important;"><img style="border: none !important;" src=<?php echo '"'.$link_to_service_images.'Rocket.png"'; ?> height="120px"></a>
+        <?php
+            
+        ?>
     </body>
 </html>

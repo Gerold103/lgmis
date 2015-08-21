@@ -24,6 +24,21 @@
 		return $res;
 	}
 
+	function WrapToGetVariables($names_and_vals)
+	{
+		$res = '';
+		$i = 0;
+		$size = count($names_and_vals);
+		foreach ($names_and_vals as $name => $val){
+			$res .= $name.'='.$val;
+			if ($i < $size - 1) {
+				$res .= '&';
+			}
+			++$i;
+		}
+		return $res;
+	}
+
 	//here must be 'action_link', 'action_type', 'obj_type', 'id'
 	//'btn_text', 'prev_page', 'info' is optional
 	function ActionButton($args)
@@ -53,18 +68,27 @@
 		if (!isset($args['btn_size'])) {
 			$args['btn_size'] = 'btn-sm';
 		}
+		$method = 'post';
+		if (isset($args['method'])) {
+			$method = $args['method'];
+		} 
 
 		global $act_type_to_css_class;
 
 		$res = '';
-		$res .= '<form class="form-inline" action="'.$args['action_link'].'" method="post">';
-		$res .= 	'<div class="form-group">';
-		$res .= 		'<input class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'" name="'.$args['action_type'].'" type="submit" value="'.$args['btn_text'].'">';
-		$res .= 		WrapToHiddenInputs(array('type' => $args['obj_type'], 'id' => $args['id'], 'prev_page' => $args['prev_page']));
-		if (isset($args['info']))
-			$res .= 	'<input type="hidden" name="info" value="'.$args['info'].'">';
-		$res .= 	'</div>';
-		$res .= '</form>';
+
+		if ($method === 'post') {
+			$res .= '<form class="form-inline" action="'.$args['action_link'].'" method="'.$method.'">';
+			$res .= 	'<div class="form-group">';
+			$res .= 		'<input class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'" name="'.$args['action_type'].'" type="submit" value="'.$args['btn_text'].'">';
+			$res .= 		WrapToHiddenInputs(array('type' => $args['obj_type'], 'id' => $args['id'], 'prev_page' => $args['prev_page']));
+			if (isset($args['info']))
+				$res .= 	'<input type="hidden" name="info" value="'.$args['info'].'">';
+			$res .= 	'</div>';
+			$res .= '</form>';
+		} else if ($method === 'get') {
+			$res .= '<div><a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'">'.$args['btn_text'].'</a></div>';
+		}
 		return $res;
 	}
 
@@ -94,16 +118,24 @@
 		if (!isset($args['prev_page'])) {
 			$args['prev_page'] = $_SERVER['REQUEST_URI'];
 		}
+		$method = 'post';
+		if (isset($args['method'])) {
+			$method = $args['method'];
+		}
 
 		global $act_type_to_css_class;
 
 		$res = '';
-		$res .= '<form class="form-inline" action="'.$args['action_link'].'" method="post" style="display: inline !important;">';
-		$res .= '	<input class="btn btn-link '.$args['lnk_size'].'" style="margin: 0; padding: 0; white-space: normal !important;" name="'.$args['action_type'].'" type="submit" value="'.$args['lnk_text'].'">';
-		$res .= 	WrapToHiddenInputs(array('type' => $args['obj_type'], 'id' => $args['id'], 'prev_page' => $args['prev_page']));		
-		if (isset($args['info']))
-			$res .= '<input type="hidden" name="info" value="'.$args['info'].'">';
-		$res .= '</form>';
+		if ($method === 'post') {
+			$res .= '<form class="form-inline" action="'.$args['action_link'].'" method="post" style="display: inline !important;">';
+			$res .= '	<input class="btn btn-link '.$args['lnk_size'].'" style="margin: 0; padding: 0; white-space: normal !important;" name="'.$args['action_type'].'" type="submit" value="'.$args['lnk_text'].'">';
+			$res .= 	WrapToHiddenInputs(array('type' => $args['obj_type'], 'id' => $args['id'], 'prev_page' => $args['prev_page']));		
+			if (isset($args['info']))
+				$res .= '<input type="hidden" name="info" value="'.$args['info'].'">';
+			$res .= '</form>';
+		} else if ($method === 'get') {
+			$res .= '<a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+		}
 		return $res;
 	}
 

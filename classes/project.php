@@ -464,6 +464,7 @@
 					'obj_type' => Project::$type,
 					'id' => $this->id,
 					'lnk_text' => $this->name,
+					'method' => 'get',
 				);
 			} else {
 				$args = array(

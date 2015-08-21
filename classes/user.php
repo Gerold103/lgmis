@@ -383,6 +383,7 @@
 					'id' => $this->id,
 					'prev_page' => $link_to_contacts,
 					'btn_text' => 'Открыть профиль',
+					'method' => 'get',
 				);
 			} else {
 				$args = array(
