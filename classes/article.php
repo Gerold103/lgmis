@@ -33,12 +33,10 @@
 		public function ToHTMLAutoFull($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminFull();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLPrivateFull();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicFull();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateFull();
 				default:
 					return html_undef;
 			}
@@ -71,9 +69,8 @@
 					return html_undef;
 			}
 		}
-		
-		//html code of full representation of object in string
-		public function ToHTMLAdminFull()
+
+		public function ToHTMLPrivateFull()
 		{
 			$res = '';
 
@@ -118,18 +115,22 @@
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
-			$res .= 	'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(6).'" align="right">';
-			$res .=				'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
-			$res .=			'</div>';
-			$res .= 		'<div class="'.ColAllTypes(6).'" align="left">';
-			$res .=				'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
-			$res .=			'</div>';
-			$res .= 	'</div>';
+			if ((GetUserLogin() === User::FetchByID($this->author_id)->login) || (GetUserLogin() == 'admin')) {
+				$res .= '<div class="row">';
+				$res .= 	'<div class="'.ColAllTypes(6).'" align="right">';
+				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
+				$res .=		'</div>';
+				$res .= 	'<div class="'.ColAllTypes(6).'" align="left">';
+				$res .=			'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
+				$res .=		'</div>';
+				$res .= '</div>';
+			}
 
 			$res .= '</div>';
 			return $res;
 		}
+		
+		
 		//html code of short representation of object in string
 		public function ToHTMLAdminShort()
 		{
@@ -162,67 +163,6 @@
 			$res .= 	'</div>';
 			$res .= '</td>';
 			$res .= '</tr>';
-			return $res;
-		}
-		
-		//html code of full representation of object in string within internal pages of lgmis
-		public function ToHTMLUserPrivateFull()
-		{
-			$res = '';
-
-			$res .= '<div class="form-horizontal">';
-
-			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Дата создания</label>';
-			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(date('d : m : Y - H : i', $this->creating_date));
-			$res .= 		'</div>';
-			$res .= 	'</div>';
-
-			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Автор</label>';
-			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
-			$res .= 		'</div>';
-			$res .= 	'</div>';
-
-			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Аннотация</label>';
-			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(htmlspecialchars($this->annotation));
-			$res .= 		'</div>';
-			$res .= 	'</div>';
-
-			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Обложка</label>';
-			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			'<img src="'.$this->path_to_image.'" class="img-article-cover">';
-			$res .= 		'</div>';
-			$res .= 	'</div>';
-
-			$res .= '<hr>';
-
-			$res .= 	'<div class="row" align="center">';
-			$res .= 		'<label class="control-label">Текст</label>';
-			$res .= 	'</div>';
-			$res .= 	'<div class="row" align="left">';
-			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
-			$res .= 			SimplePanel($this->text_block);
-			$res .= 		'</div>';
-			$res .= 	'</div>';
-
-			if (GetUserLogin() === User::FetchByID($this->author_id)->login) {
-				$res .= '<div class="row">';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="right">';
-				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
-				$res .=		'</div>';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="left">';
-				$res .=			'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
-				$res .=		'</div>';
-				$res .= '</div>';
-			}
-
-			$res .= '</div>';
 			return $res;
 		}
 
