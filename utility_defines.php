@@ -1,6 +1,8 @@
 <?php
 	include_once('utility_links.php');
 
+	$use_mod_rewrite = true;
+
 	$user_blocks_in_db = array(
 		0 => array(
 			'id' => 0,

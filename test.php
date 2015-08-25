@@ -1,5 +1,7 @@
 <?php
     include_once('utility_lgmis_lib.php');
+    //echo $_SERVER['REQUEST_URI'];
+    header( "Location: http://localhost/lgmis2/lgmis/public_article.php?type=article&id=1&full=1" );
 ?>
 
 <!doctype html>
@@ -18,8 +20,5 @@
     </head>
 
     <body>
-        <?php
-            
-        ?>
     </body>
 </html>

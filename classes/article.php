@@ -279,6 +279,12 @@
 			return ActionButton($args);
 		}
 
+		public function LinkToThis()
+		{
+			if (IsSessionPublic()) return Link::Get(Article::$type).'/'.$this->id;
+			else return Link::Get('private_'.Article::$type).'/'.$this->id;
+		}
+
 		public function ToHTMLFullVers()
 		{
 			global $link_to_admin_article;
@@ -286,7 +292,13 @@
 
 			global $link_to_admin_manage_content;
 			global $content_types_short;
+			global $use_mod_rewrite;
 			$args = array();
+
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
 			if (IsSessionPublic()) {
 				$args = array(
 					'action_link' => $link_to_public_article,
@@ -294,6 +306,7 @@
 					'obj_type' => Article::$type,
 					'id' => $this->id,
 					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
 				);
 			} else {
 				$args = array(

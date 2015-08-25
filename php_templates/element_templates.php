@@ -87,7 +87,11 @@
 			$res .= 	'</div>';
 			$res .= '</form>';
 		} else if ($method === 'get') {
-			$res .= '<div><a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'">'.$args['btn_text'].'</a></div>';
+			if (isset($args['mod_rewrite']) && ($args['mod_rewrite'] === 1)) {
+				$res = '<div><a href="'.Link::Get($args['obj_type']).'/'.$args['id'].'" class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'">'.$args['btn_text'].'</a></div>';
+			} else {
+				$res .= '<div><a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="'.($act_type_to_css_class[$args['action_type']]).' '.($args['btn_size']).' '.($args['btn_color']).'">'.$args['btn_text'].'</a></div>';
+			}
 		}
 		return $res;
 	}
