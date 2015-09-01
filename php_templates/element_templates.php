@@ -138,7 +138,11 @@
 				$res .= '<input type="hidden" name="info" value="'.$args['info'].'">';
 			$res .= '</form>';
 		} else if ($method === 'get') {
-			$res .= '<a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+			if (isset($args['mod_rewrite']) && ($args['mod_rewrite'] === 1)) {
+				$res .= '<a href="'.Link::Get($args['obj_type']).'/'.$args['id'].'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+			} else {
+				$res .= '<a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+			}
 		}
 		return $res;
 	}
@@ -155,12 +159,18 @@
 		return $res;
 	}
 
-	function DialogFormYesNo($action_link, $action_type, $object_type, $id_, $val_yes = 'Да', $val_no = 'Нет', $need_prev_page = true)
+	function DialogFormYesNo($action_link, $action_type, $object_type, $id_, $val_yes = 'Да', $val_no = 'Нет', $need_prev_page = true, $method = 'post')
 	{
 		$res = '';
-		$res .= '<form action="'.$action_link.'" method="post">';
-		$res .= DialogInputsYesNo($action_type, $object_type, $id_, $val_yes, $val_no, $need_prev_page);
-		$res .= '</form><br>';
+		if ($method === 'post') {
+			$res .= '<form action="'.$action_link.'" method="post">';
+			$res .= DialogInputsYesNo($action_type, $object_type, $id_, $val_yes, $val_no, $need_prev_page);
+			$res .= '</form><br>';
+		} else if ($method === 'get') {
+			$get_variables = array('type' => $object_type, 'id' => $id_, $action_type => '');
+			$res .= '<a href="'.$action_link.'?'.WrapToGetVariables($get_variables).'&yes=yes">'.$val_yes.'</a>';
+			$res .= '<a href="'.$action_link.'?'.WrapToGetVariables($get_variables).'&no=no">'.$val_no.'</a>';
+		}
 		return $res;
 	}
 	
@@ -212,16 +222,23 @@
 		return $res;
 	}
 
-	function MenuButton($text, $action, $class = 'btn-default', $name = '')
+	function MenuButton($text, $action, $class = 'btn-default', $name = '', $method = 'post')
 	{
 		$res = '';
 		$res .= '<div class="row top-buffer20">';
 		$res .= 	'<div class="'.ColAllTypes(12).'">';
-		$res .= 		'<form method="post" class="form-inline" action="'.$action.'">';
-		$res .=				'<div class="form-group">';
-		$res .= 				'<input type="submit" name="'.$name.'" class="btn '.$class.' btn-lg btn-block" value="'.$text.'">';
-		$res .=				'</div>';
-		$res .= 		'</form>';
+		if ($method === 'post') {
+			$res .= 		'<form method="post" class="form-inline" action="'.$action.'">';
+			$res .=				'<div class="form-group">';
+			$res .= 				'<input type="submit" name="'.$name.'" class="btn '.$class.' btn-lg btn-block" value="'.$text.'">';
+			$res .=				'</div>';
+			$res .= 		'</form>';
+		} else if ($method === 'get') {
+			$res .= '<form class="form-inline"><div class="form-group"><a href="'.$action.'" class="btn '.$class.' btn-lg btn-block">'.$text.'</a></div></form>';
+		} else {
+			$res = AlertMessage('alert-danger', 'Нет метода '.$method);
+			return $res;
+		}
 		$res .=		'</div>';
 		$res .=	'</div>';
 		return $res;

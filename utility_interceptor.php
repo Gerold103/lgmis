@@ -3,19 +3,24 @@
 	//----------------------------------------------------------------A U X I L I A R Y   F U N C T I O N S----------------------------------------------------------------
 
 	//------------------------------------------------D E L E T I N G------------------------------------------------
-	if (isset($_POST['del'])) {
+	if (isset($_REQUEST['del'])) {
 		//if action is deleting
-		if (isset($_POST['type'])) {
-			if (isset($_POST['id'])) {
+		if (isset($_REQUEST['type'])) {
+			if (isset($_REQUEST['id'])) {
 				$header = '';
-				if (!isset($_POST['info'])) {
-					$header = 'Вы уверены, что хотите удалить <b>'.$_POST['type'].'</b> с <b>id</b> = '.$_POST['id'].'?';
+				if (!isset($_REQUEST['info'])) {
+					if ($_REQUEST['type'] === RequestOnRegister::$type) {
+						$_REQUEST['info'] = 'Вы уверены, что хотите отклонить запрос пользователя '.RequestOnRegister::FetchByID($_REQUEST['id'])->name.'?';
+					}
+				}
+				if (!isset($_REQUEST['info'])) {
+					$header = 'Вы уверены, что хотите удалить <b>'.$_REQUEST['type'].'</b> с <b>id</b> = '.$_REQUEST['id'].'?';
 				} else {
-					$header = htmlspecialchars($_POST['info']);
+					$header = htmlspecialchars($_REQUEST['info']);
 				}
 				//form for agree or cancel
 				$title = 'Подтверждение удаления';
-				$content = DialogFormYesNo($link_to_utility_sql_worker, 'del', $_POST['type'], $_POST['id']);
+				$content = DialogFormYesNo($link_to_utility_sql_worker, 'del', $_REQUEST['type'], $_REQUEST['id']);
 				require_once($link_to_registering_template);
 				exit();
 			} else {
@@ -27,18 +32,18 @@
 
 	//------------------------------------------------E D I T I N G------------------------------------------------
 
-	} else if (isset($_POST['edit'])) {
+	} else if (isset($_REQUEST['edit'])) {
 		//if action is editing
-		if (isset($_POST['type'])) {
-			if (isset($_POST['id'])) {
+		if (isset($_REQUEST['type'])) {
+			if (isset($_REQUEST['id'])) {
 				//form for editing
-				echo 'Editing here. Details: type='.$_POST['type'].', id='.$_POST['id'].'<br>';
-				echo DialogFormYesNo($link_to_utility_sql_worker, 'edit', $_POST['type'], $_POST['id'], 'Сохранить', 'Отменить');
+				echo 'Editing here. Details: type='.$_REQUEST['type'].', id='.$_REQUEST['id'].'<br>';
+				echo DialogFormYesNo($link_to_utility_sql_worker, 'edit', $_REQUEST['type'], $_REQUEST['id'], 'Сохранить', 'Отменить');
 				
 				//link on start page
 				echo OnStartAdminPage();
-				if (isset($_POST['prev_page'])) {
-					echo '<br>'.OnPreviousPage($_POST['prev_page']);
+				if (isset($_REQUEST['prev_page'])) {
+					echo '<br>'.OnPreviousPage($_REQUEST['prev_page']);
 				}
 			} else {
 				echo 'id is not specified';
@@ -49,19 +54,25 @@
 
 	//------------------------------------------------A D D I N G------------------------------------------------
 
-	} else if (isset($_POST['add'])) {
+	} else if (isset($_REQUEST['add'])) {
 		//if action is adding
-		if (isset($_POST['type'])) {
-			if (isset($_POST['id'])) {
+		if (isset($_REQUEST['type'])) {
+			if (isset($_REQUEST['id'])) {
 				$header = '';
-				if (isset($_POST['info'])) {
-					$header = $_POST['info'];
+				if (!isset($_REQUEST['info'])) {
+					if ($_REQUEST['type'] === RequestOnRegister::$type) {
+						$_REQUEST['info'] = 'Вы уверены, что хотите принять запрос пользователя '.RequestOnRegister::FetchByID($_REQUEST['id'])->name.'?';
+					}
+				}
+
+				if (isset($_REQUEST['info'])) {
+					$header = $_REQUEST['info'];
 				} else {
-					$header = 'Вы уверены, что хотите добавить <b>'.$_POST['type'].'</b> с <b>id</b> = '.$_POST['id'].'?';
+					$header = 'Вы уверены, что хотите добавить <b>'.$_REQUEST['type'].'</b> с <b>id</b> = '.$_REQUEST['id'].'?';
 				}
 				//form for agree or cancel
 				$title = 'Подтверждение добавления';
-				$content = DialogFormYesNo($link_to_utility_sql_worker, 'add', $_POST['type'], $_POST['id']);
+				$content = DialogFormYesNo($link_to_utility_sql_worker, 'add', $_REQUEST['type'], $_REQUEST['id']);
 				require_once($link_to_registering_template);
 				exit();
 			} else {

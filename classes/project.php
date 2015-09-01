@@ -59,12 +59,10 @@
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -130,30 +128,6 @@
 			$res .= $this->ToHTMLDel().'<br>';
 			$res .= $this->ToHTMLEdit().'<br>';
 			$res .= $this->ToHTMLFullVers().'<br>';
-			return $res;
-		}
-
-		public function ToHTMLAdminShortInTable()
-		{
-			$res = '<tr>';
-			$res .= '<td>'.Direction::FetchByID($this->direction_id)->LinkToThis().'</td>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
-			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
-			$res .= '<td>';
-			$res .=		'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(4).'">';
-			$res .= 			$this->ToHTMLFullVers();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLEdit();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLDel();
-			$res .=			'</div>';
-			$res .= 	'</div>';
-			$res .= '</td>';
-			$res .= '</tr>';
 			return $res;
 		}
 
@@ -246,14 +220,14 @@
 			$res .= '<td>'.$author->LinkToThis().'</td>';
 			$res .= '<td>';
 			$res .=		'<div class="row">';
-			if (GetUserLogin() === $author->login) {
+			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
 				$res .= 	'<div class="'.ColAllTypes(4).'">';
 			} else {
 				$res .= 	'<div class="'.ColAllTypes(12).'">';
 			}
 			$res .= 			$this->ToHTMLFullVers();
 			$res .=			'</div>';
-			if (GetUserLogin() === $author->login) {
+			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
 				$res .=		'<div class="'.ColAllTypes(4).'">';
 				$res .=			$this->ToHTMLEdit();
 				$res .=		'</div>';
@@ -307,6 +281,7 @@
 				'obj_type' => Project::$type,
 				'id' => $this->id,
 				'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['projects'],
+				'method' => 'get',
 			);
 			return ActionButton($args);
 		}
@@ -453,10 +428,14 @@
 		public function LinkToThis()
 		{
 			global $link_to_admin_project;
-
+			global $use_mod_rewrite;
 			global $link_to_public_project;
 			$args = array();
 
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
 			if (IsSessionPublic()) {
 				$args = array(
 					'action_link' => $link_to_public_project,
@@ -465,6 +444,7 @@
 					'id' => $this->id,
 					'lnk_text' => $this->name,
 					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
 				);
 			} else {
 				$args = array(

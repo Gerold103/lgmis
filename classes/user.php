@@ -234,7 +234,7 @@
 			$res = '';
 			$res .= '<div class="row" style="display: table;" align="center">';
 			$res .= 	'<div class="'.ColAllTypes(4).'" style="float: none; display: table-cell; vertical-align: middle;">';
-			$res .= 		'<img src="'.$this->path_to_photo.'" class="img-rounded img-avatar-sm">';
+			$res .= 		'<img src="'.Link::Get($this->path_to_photo).'" class="img-rounded img-avatar-sm">';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="'.ColAllTypes(5).'" style="float: none; display: table-cell; vertical-align: middle;">';
@@ -375,6 +375,11 @@
 			global $link_to_public_user;
 			global $link_to_contacts;
 			global $link_to_admin_manage_staff;
+			global $use_mod_rewrite;
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
 			if (IsSessionPublic()) {
 				$args = array(
 					'action_link' => $link_to_public_user,
@@ -384,6 +389,7 @@
 					'prev_page' => $link_to_contacts,
 					'btn_text' => 'Открыть профиль',
 					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
 				);
 			} else {
 				$args = array(
@@ -392,6 +398,7 @@
 					'obj_type' => User::$type,
 					'id' => $this->id,
 					'prev_page' => $link_to_admin_manage_staff,
+					'method' => 'get',
 				);
 			}
 			return ActionButton($args);
@@ -650,6 +657,7 @@
 				'id' => $this->id,
 				'lnk_text' => ($this->surname).' '.($this->name),
 				'lnk_size' => $link_size,
+				'method' => 'get',
 			);
 			return ActionLink($args);
 		}

@@ -93,6 +93,7 @@
 				'id' => $this->id,
 				'btn_text' => 'Отклонить',
 				'info' => 'Вы уверены, что хотите отклонить запрос пользователя '.$this->name.'?',
+				'method' => 'get',
 			);
 			$res .= ActionButton($argsdel);
 			$res .=	'</div>';
@@ -105,6 +106,7 @@
 				'id' => $this->id,
 				'btn_text' => 'Принять',
 				'info' => 'Вы уверены, что хотите принять запрос пользователя '.$this->name.'?',
+				'method' => 'get',
 			);
 			return $res.ActionButton($argsadd).'</div></div>';
 		}

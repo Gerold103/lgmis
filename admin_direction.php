@@ -7,7 +7,7 @@
 	$content = '';
 	$prev_page = $link_to_admin_manage_content.'?content_type='.$content_types_short['directions'];
 
-	if (isset($_POST['add'])) {
+	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
 		clear_tmp_images_dir(Direction::$type, $id);
 
@@ -38,10 +38,10 @@
 
 		$title = 'Добавление направления';
 		$header = 'Добавление направления';
-	} else if (isset($_POST['edit'])) {
+	} else if (isset($_REQUEST['edit'])) {
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
-		$dir_id = $_POST['id'];
+		$dir_id = $_REQUEST['id'];
 		$direction = Direction::FetchByID($dir_id);
 		$cover_src = $direction->path_to_image;
 
@@ -64,19 +64,19 @@
 		$content .=			'CKEDITOR.config.height = 400;';
 		$content .=		'</script>';
 		$content .= 	'<div class="row">';
-		$content .=			DialogInputsYesNo('edit', $_POST['type'], $dir_id, 'Сохранить', 'Отменить');
+		$content .=			DialogInputsYesNo('edit', $_REQUEST['type'], $dir_id, 'Сохранить', 'Отменить');
 		$content .=		'</div>';
 		$content .= '</form>';
 
 		$title = 'Редактирование направления';
 		$header = 'Редактирование направления';
 	} else {
-		if (!isset($_POST['id'])) {
+		if (!isset($_REQUEST['id'])) {
 			echo 'user id is unset';
 			exit();
 		}
 
-		$direction = Direction::FetchByID($_POST['id']);
+		$direction = Direction::FetchByID($_REQUEST['id']);
 
 		$title = 'Направление';
 

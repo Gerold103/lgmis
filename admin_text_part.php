@@ -6,8 +6,7 @@
 	$header = '';
 	$content = '';
 
-	//adding new article
-	if (isset($_POST['add'])) {
+	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
 		clear_tmp_images_dir(TextPart::$type, $id);
 
@@ -39,10 +38,10 @@
 
 		$title = 'Добавление текста';
 		$header = 'Добавление текста';
-	} else if (isset($_POST['edit'])) {
+	} else if (isset($_REQUEST['edit'])) {
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
-		$txt_id = $_POST['id'];
+		$txt_id = $_REQUEST['id'];
 		$text_part = TextPart::FetchByID($txt_id);
 
 		$selected_field = array($text_part->GetRole(), $content_types_full[$text_part->GetRole()]);
@@ -66,19 +65,19 @@
 		$content .=			'CKEDITOR.config.height = 400;';
 		$content .=		'</script>';
 		$content .= 	'<div class="row">';
-		$content .=			DialogInputsYesNo('edit', $_POST['type'], $txt_id, 'Сохранить', 'Отменить');
+		$content .=			DialogInputsYesNo('edit', $_REQUEST['type'], $txt_id, 'Сохранить', 'Отменить');
 		$content .=		'</div>';
 		$content .= '</form>';
 
 		$title = 'Редактирование текста';
 		$header = 'Редактирование текста';
 	} else {
-		if (!isset($_POST['id'])) {
+		if (!isset($_REQUEST['id'])) {
 			echo 'user id is unset';
 			exit();
 		}
 
-		$text_part = TextPart::FetchByID($_POST['id']);
+		$text_part = TextPart::FetchByID($_REQUEST['id']);
 
 		$title = '';
 		$header = '';

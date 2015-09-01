@@ -2,25 +2,29 @@
 	require_once('utility_lgmis_lib.php');
 	require_once($link_to_utility_authorization);
 
-	$user = User::FetchByID($_POST['id']);
-	if ($user == NULL) {
-		header('Location: '.$link_to_admin);
-		exit();
-	}
-	$prev_page = '';
-
-	if (isset($_POST['edit'])) {
-		$title = 'Редактирование профиля';
-		$header = 'Редактирование профиля';
-		$content = $user->ToHTMLEditing();
+	if ((isset($_POST['id'])) && (isset($_GET['id'])) && ($_POST['id'] !== $_GET['id'])) {
+		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
+		$user = User::FetchByID($_REQUEST['id']);
+		if ($user == NULL) {
+			header('Location: '.$link_to_admin);
+			exit();
+		}
+		$prev_page = '';
 
-		$title = $user->name;
+		if (isset($_REQUEST['edit'])) {
+			$title = 'Редактирование профиля';
+			$header = 'Редактирование профиля';
+			$content = $user->ToHTMLEditing();
+		} else {
 
-		$header = htmlspecialchars($user->name.' '.$user->surname.' '.$user->fathername);
+			$title = $user->name;
 
-		$content = $user->ToHTMLAutoFull(GetUserPrivileges());
-		$no_content_center = true;
+			$header = htmlspecialchars($user->name.' '.$user->surname.' '.$user->fathername);
+
+			$content = $user->ToHTMLAutoFull(GetUserPrivileges());
+			$no_content_center = true;
+		}
 	}
 
 	require_once($link_to_admin_template);

@@ -4,6 +4,7 @@
 	include_once('utility_lgmis_lib.php');
 	include_once($link_to_utility_authorization);
 
+	
 	if ((isset($_POST['id'])) && (isset($_GET['id'])) && ($_POST['id'] !== $_GET['id'])) {
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
@@ -20,7 +21,7 @@
 		$header = htmlspecialchars($user->surname.' '.$user->name.' '.$user->fathername);
 
 		$content .= '<div class="row" align="center">';
-		$content .= 	'<div class="'.ColAllTypes(4).'"><img src="'.$user->path_to_photo.'" class="img-avatar"></div>';
+		$content .= 	'<div class="'.ColAllTypes(4).'"><img src="'.Link::Get($user->path_to_photo).'" class="img-avatar"></div>';
 		$content .= 	'<div class="'.ColAllTypes(8).'">';
 		$content .= 		'<br><div class="row" align="center">';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="right"><font color="grey">Должность:</font></div>';

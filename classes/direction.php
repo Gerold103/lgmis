@@ -60,12 +60,10 @@
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -174,29 +172,6 @@
 			$res .= $this->ToHTMLEdit().'<br>';
 			$res .= $this->ToHTMLFullVers().'<br>';
 			return $res;	
-		}
-
-		public function ToHTMLAdminShortInTable()
-		{
-			$res = '<tr>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
-			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
-			$res .= '<td>';
-			$res .=		'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(4).'">';
-			$res .= 			$this->ToHTMLFullVers();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLEdit();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLDel();
-			$res .=			'</div>';
-			$res .= 	'</div>';
-			$res .= '</td>';
-			$res .= '</tr>';
-			return $res;
 		}
 
 		//html code of full representation of object in string within internal pages of lgmis
@@ -322,8 +297,8 @@
 			$res = '';
 			$res .= '<div class="row">';
 			$res .= 	ToPageHeader($this->name, 'h4', 'black');
-			$res .= 	'<img class="img-direction-cover" src="'.$this->path_to_image.'">';
-			$res .= 	$this->ToHTMLFullVersSpecialPublic();
+			$res .= 	'<img class="img-direction-cover" src="'.Link::Get($this->path_to_image).'">';
+			$res .= 	$this->ToHTMLFullVers();
 			$res .= '</div>';
 			return $res;
 		}
@@ -337,14 +312,14 @@
 			$res .= '<td>'.$author->LinkToThis().'</td>';
 			$res .= '<td>';
 			$res .=		'<div class="row">';
-			if (GetUserLogin() === $author->login) {
+			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
 				$res .= 	'<div class="'.ColAllTypes(4).'">';
 			} else {
 				$res .= 	'<div class="'.ColAllTypes(12).'">';
 			}
 			$res .= 			$this->ToHTMLFullVers();
 			$res .=			'</div>';
-			if (GetUserLogin() === $author->login) {
+			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
 				$res .=		'<div class="'.ColAllTypes(4).'">';
 				$res .=			$this->ToHTMLEdit();
 				$res .=		'</div>';
@@ -391,31 +366,37 @@
 		{
 			global $link_to_admin_direction;
 			global $link_to_admin_manage_content;
-			global $content_types_short;
-			$args = array(
-				'action_link' => $link_to_admin_direction,
-				'action_type' => 'full',
-				'obj_type' => Direction::$type,
-				'id' => $this->id,
-				'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['directions'],
-			);
-			return ActionButton($args);
-		}
-
-		public function ToHTMLFullVersSpecialPublic()
-		{
 			global $link_to_public_direction;
-			global $link_to_public_content;
 			global $content_types_short;
-			$args = array(
-				'action_link' => $link_to_public_direction,
-				'action_type' => 'full',
-				'obj_type' => Direction::$type,
-				'id' => $this->id,
-				'btn_text' => 'Узнать больше',
-				'method' => 'get',
-				'prev_page' => $link_to_public_content.'?content_type='.$content_types_short['directions'],
-			);
+			global $link_to_public_content;
+			global $use_mod_rewrite;
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			$args = array();
+
+			if (IsSessionPublic()) {
+				$args = array(
+					'action_link' => $link_to_public_direction,
+					'action_type' => 'full',
+					'obj_type' => Direction::$type,
+					'id' => $this->id,
+					'btn_text' => 'Узнать больше',
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+					'prev_page' => $link_to_public_content.'?content_type='.$content_types_short['directions'],
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_direction,
+					'action_type' => 'full',
+					'obj_type' => Direction::$type,
+					'id' => $this->id,
+					'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['directions'],
+					'method' => 'get',
+				);
+			}
 			return ActionButton($args);
 		}
 
@@ -590,7 +571,13 @@
 		{
 			global $link_to_admin_direction;
 			global $link_to_public_direction;
+			global $use_mod_rewrite;
 			$args = array();
+
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
 			if (IsSessionPublic()) {
 				$args = array(
 					'action_link' => $link_to_public_direction,
@@ -598,6 +585,8 @@
 					'obj_type' => Direction::$type,
 					'id' => $this->id,
 					'lnk_text' => $this->name,
+					'mod_rewrite' => $mod_rewrite,
+					'method' => 'get',
 				);
 			} else {
 				$args = array(
@@ -606,6 +595,7 @@
 					'obj_type' => Direction::$type,
 					'id' => $this->id,
 					'lnk_text' => $this->name,
+					'method' => 'get',
 				);
 			}
 			return ActionLink($args);

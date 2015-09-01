@@ -1,4 +1,5 @@
 <?php
+	$is_public = false;
 	include_once('utility_lgmis_lib.php');
 	include_once($link_to_utility_authorization);
 
@@ -27,7 +28,7 @@
 		if ($_GET['content_type'] == $content_types_short['articles']) {
 			$articles = Article::FetchAll();
 			$size = count($articles);
-			$content .= MenuButton('Добавить новость', $link_to_admin_article, 'btn-primary', 'add');
+			$content .= MenuButton('Добавить новость', $link_to_admin_article, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -62,7 +63,7 @@
 		else if ($_GET['content_type'] == $content_types_short['directions']) {
 			$directions = Direction::FetchAll();
 			$size = count($directions);
-			$content .= MenuButton('Добавить направление', $link_to_admin_direction, 'btn-primary', 'add');
+			$content .= MenuButton('Добавить направление', $link_to_admin_direction, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -97,7 +98,7 @@
 		else if ($_GET['content_type'] == $content_types_short['projects']) {
 			$projects = Project::FetchAll();
 			$size = count($projects);
-			$content .= MenuButton('Добавить проект', $link_to_admin_project, 'btn-primary', 'add');
+			$content .= MenuButton('Добавить проект', $link_to_admin_project, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -107,8 +108,8 @@
 				$content .= '<table class="table table-striped text-center">';
 				$content .= 	'<thead>';
 				$content .= 		'<tr>';
-				$content .=				'<th class="text-center" width="30%">Направление</th>';
-				$content .=				'<th class="text-center">Название</th>';
+				$content .=				'<th class="text-center" width="20%">Направление</th>';
+				$content .=				'<th class="text-center" width="20%">Название</th>';
 				$content .=				'<th class="text-center">Дата</th>';
 				$content .=				'<th class="text-center">Автор</th>';
 				$content .=				'<th class="text-center">Действия</th>';
@@ -131,7 +132,7 @@
 		} else if ($_GET['content_type'] === $content_types_short['about_us']) {
 			$parts = TextPart::FetchByRole('about_us');
 			$size = count($parts);
-			$content .= MenuButton('Добавить блок текста', $link_to_admin_text_part, 'btn-primary', 'add');
+			$content .= MenuButton('Добавить блок текста', $link_to_admin_text_part, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -164,16 +165,16 @@
 		$prev_page = $link_to_admin_manage_content;
 	} else {
 		//Manage articles
-		$content .= MenuButton('Новости', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['articles']);
+		$content .= MenuButton('Новости', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['articles'], 'btn-default', '', 'get');
 
 		//Manage directions
-		$content .=	MenuButton('Направления', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['directions']);
+		$content .=	MenuButton('Направления', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['directions'], 'btn-default', '', 'get');
 
 		//Manage projects
-		$content .=	MenuButton('Проекты', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['projects']);	
+		$content .=	MenuButton('Проекты', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['projects'], 'btn-default', '', 'get');	
 
 		//About us page
-		$content .= MenuButton('О нас', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['about_us']);	
+		$content .= MenuButton('О нас', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['about_us'], 'btn-default', '', 'get');	
 	}
 
 	$pagination = '';

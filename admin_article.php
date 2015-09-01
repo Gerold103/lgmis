@@ -8,7 +8,7 @@
 	$prev_page = $link_to_admin_manage_content.'?content_type='.$content_types_short['articles'];
 
 	//adding new article
-	if (isset($_POST['add'])) {
+	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
 		clear_tmp_images_dir(Article::$type, $id);
 
@@ -40,7 +40,7 @@
 
 		$title = 'Добавление новости';
 		$header = 'Добавление новости';
-	} else if (isset($_POST['edit'])) {
+	} else if (isset($_REQUEST['edit'])) {
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
 		$art_id = $_POST['id'];
@@ -74,12 +74,12 @@
 		$title = 'Редактирование новости';
 		$header = 'Редактирование новости';
 	} else {
-		if (!isset($_POST['id'])) {
+		if (!isset($_REQUEST['id'])) {
 			echo 'user id is unset';
 			exit();
 		}
 
-		$article = Article::FetchByID($_POST['id']);
+		$article = Article::FetchByID($_REQUEST['id']);
 
 		$title = '';
 		$header = '';

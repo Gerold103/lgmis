@@ -7,7 +7,7 @@
 	$content = '';
 	$prev_page = $link_to_admin_manage_content.'?content_type='.$content_types_short['projects'];
 
-	if (isset($_POST['add'])) {
+	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
 		clear_tmp_images_dir(Project::$type, $id);
 
@@ -44,10 +44,10 @@
 
 		$title = 'Добавление проекта';
 		$header = 'Добавление проекта';
-	} else if (isset($_POST['edit'])) {
+	} else if (isset($_REQUEST['edit'])) {
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
-		$proj_id = $_POST['id'];
+		$proj_id = $_REQUEST['id'];
 		$project = Project::FetchByID($proj_id);
 
 		$dirs = Direction::FetchAll();
@@ -78,19 +78,19 @@
 		$content .=			'CKEDITOR.config.height = 400;';
 		$content .=		'</script>';
 		$content .= 	'<div class="row">';
-		$content .=			DialogInputsYesNo('edit', $_POST['type'], $proj_id, 'Сохранить', 'Отменить');
+		$content .=			DialogInputsYesNo('edit', $_REQUEST['type'], $proj_id, 'Сохранить', 'Отменить');
 		$content .=		'</div>';
 		$content .= '</form>';
 
 		$title = 'Редактирование проекта';
 		$header = 'Редактирование проекта';
 	} else {
-		if (!isset($_POST['id'])) {
+		if (!isset($_REQUEST['id'])) {
 			echo 'user id is unset';
 			exit();
 		}
 
-		$project = Project::FetchByID($_POST['id']);
+		$project = Project::FetchByID($_REQUEST['id']);
 
 		$title = 'Проект';
 

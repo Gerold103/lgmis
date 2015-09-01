@@ -11,6 +11,12 @@ $link_to_bootstrap_styles = 'css/bootstrap.min.css';
 $link_to_js = 'js/';
 $link_to_ckeditor = 'ckeditor/';
 
+$link_to_articles_mod = 'articles';
+$link_to_projects_mod = 'projects';
+$link_to_directions_mod = 'directions';
+$link_to_about_us_mod = 'about-us';
+$link_to_contacts_mod = 'contacts';
+
 $link_to_utility_authorization = 'utility_authorization.php';
 $link_to_utility_interceptor = 'utility_interceptor.php';
 $link_to_img_upload = 'imgupload.php';

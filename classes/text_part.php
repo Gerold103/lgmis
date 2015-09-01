@@ -48,11 +48,9 @@
 		{
 			switch ($user_privileges) {
 				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -126,7 +124,12 @@
 			return html_undef;
 		}
 
-		public function ToHTMLAdminShortInTable()
+		public function ToHTMLUserPublicShortInTable()
+		{
+			return html_undef;
+		}
+
+		public function ToHTMLUserPrivateShortInTable()
 		{
 			global $content_types_full;
 			$res = '<tr>';
@@ -149,16 +152,6 @@
 			$res .= '</td>';
 			$res .= '</tr>';
 			return $res;
-		}
-
-		public function ToHTMLUserPublicShortInTable()
-		{
-			return html_undef;
-		}
-
-		public function ToHTMLUserPrivateShortInTable()
-		{
-			return html_undef;
 		}
 
 		//Methods for fetching
@@ -281,6 +274,7 @@
 				'obj_type' => TextPart::$type,
 				'id' => $this->id,
 				'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['about_us'],
+				'method' => 'get',
 			);
 			return ActionButton($args);
 		}

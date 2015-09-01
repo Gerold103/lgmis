@@ -109,7 +109,7 @@
 		if (file_exists($dir)) {
 			removeDirectory($dir);
 		}
-		mkdir($dir);
+		mkdir($dir, 0777, true);
 	}
 
 	function recurse_copy($src, $dst, $max_depth = 10) {

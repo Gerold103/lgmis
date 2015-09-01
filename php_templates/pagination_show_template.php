@@ -44,7 +44,25 @@
 			if ($i != $cur_page) {
 				$pagination .= '<li>';
 				$params = array_merge($_GET, array("page" => $i));
-				$pagination .=		'<a href="?'.http_build_query($params).'">'.$i.'</a>';
+				if (($use_mod_rewrite === true) && (IsSessionPublic())) {
+					$tmp = explode('/', $_SERVER['REQUEST_URI']);
+					$uri = array();
+					for ($_i = 0, $_size = count($tmp); $_i < $_size; ++$_i) {
+						if (!empty($tmp[$_i])) array_push($uri, $tmp[$_i]);
+
+					}
+					$_last = count($uri) - 1;
+					if (preg_match('/^page-[0-9]+/', $uri[$_last]) === 1) {
+						unset($uri[$_last]);
+					}
+					for ($_i = 0, $_size = count($uri); $_i < $_size; ++$_i) {
+						$res_uri .= '/'.$uri[$_i];
+					}
+
+					$pagination .=		'<a href="'.$res_uri.'/page-'.$i.'">'.$i.'</a>';
+				} else {
+					$pagination .=		'<a href="?'.http_build_query($params).'">'.$i.'</a>';
+				}
 				$pagination .=	'</li>';
 				continue;
 			}

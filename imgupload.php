@@ -66,7 +66,7 @@
    'maxheight' => 2500,         // maximum allowed height, in pixels
    'minwidth' => 10,           // minimum allowed width, in pixels
    'minheight' => 10,          // minimum allowed height, in pixels
-   'type' => array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg')        // allowed extensions
+   'type' => array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg')        // allowed extensions
   );
 
   $re = '';
@@ -79,7 +79,7 @@
     $protocol = !empty($_SERVER['HTTPS']) ? 'https://' : 'http://';
     $site = $protocol. $_SERVER['SERVER_NAME'] .'/';
 
-    $uploadpath = $_SERVER['DOCUMENT_ROOT'] .'/'. $upload_dir . $img_id;       // full file path
+    $uploadpath = $_SERVER['DOCUMENT_ROOT'] .$link_prefix. $upload_dir . $img_id;       // full file path
     $sepext = explode('.', strtolower($_FILES['upload']['name']));
     $type = end($sepext);       // gets extension
     $uploadpath .= '.'.$type;
@@ -97,9 +97,11 @@
     // If no errors, upload the image, else, output the errors
     if($err == '') {
       $re = 'alert("'.$_FILES['upload']['tmp_name'].'; '.$uploadpath.'");';
+      file_put_contents('files/[debug].txt', $uploadpath."\xA", FILE_APPEND);
       if(move_uploaded_file($_FILES['upload']['tmp_name'], $uploadpath)) {
         $CKEditorFuncNum = $_GET['CKEditorFuncNum'];
-        $url = $site. $upload_dir . $img_id.'.'.$type;
+        $url = $site.$link_prefix.$upload_dir.$img_id.'.'.$type;
+        file_put_contents('files/[debug].txt', $url."\xA", FILE_APPEND);
         $message = $img_name .' successfully uploaded: \\n- Size: '. number_format($_FILES['upload']['size']/1024, 3, '.', '') .' KB \\n- Image Width x Height: '. $width. ' x '. $height;
         $re = "window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$message')";
       }

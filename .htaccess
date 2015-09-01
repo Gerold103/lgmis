@@ -4,4 +4,23 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
 RewriteBase /lgmis2/lgmis/
-RewriteRule ^article/([0-9]+)$ public_article.php?type=article&id=$1&full=1 [L]
+RewriteRule ^article/([0-9]+)/?$ public_article.php?type=article&id=$1&full=1 [L]
+RewriteRule ^direction/([0-9]+)/?$ public_direction.php?type=direction&id=$1&full=1 [L]
+RewriteRule ^project/([0-9]+)/?$ public_project.php?type=project&id=$1&full=1 [L]
+
+RewriteRule ^articles/?$ index.php [L]
+RewriteRule ^articles/page-([0-9]+)/?$ index.php?page=$1 [L]
+
+RewriteRule ^directions/?$ index.php?content_type=dirs [L]
+RewriteRule ^directions/page-([0-9]+)/?$ index.php?content_type=dirs&page=$1 [L]
+
+RewriteRule ^projects/?$ index.php?content_type=projs [L]
+RewriteRule ^projects/page-([0-9]+)/?$ index.php?content_type=projs&page=$1 [L]
+
+RewriteRule ^about-us/?$ public_about_us.php [L]
+RewriteRule ^about-us/page-([0-9]+)/?$ public_about_us.php?page=$1 [L]
+
+RewriteRule ^contacts/?$ public_contacts.php [L]
+RewriteRule ^contacts/page-([0-9]+)/?$ public_contacts.php?page=$1 [L]
+
+RewriteRule ^user/([0-9]+)/?$ public_user.php?type=user&id=$1&full=1 [L]

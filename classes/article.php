@@ -59,12 +59,10 @@
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -143,34 +141,11 @@
 			return $res;
 		}
 
-		public function ToHTMLAdminShortInTable()
-		{
-			$res = '<tr>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
-			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
-			$res .= '<td>';
-			$res .=		'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(4).'">';
-			$res .= 			$this->ToHTMLFullVers();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLEdit();
-			$res .=			'</div>';
-			$res .=			'<div class="'.ColAllTypes(4).'">';
-			$res .=				$this->ToHTMLDel();
-			$res .=			'</div>';
-			$res .= 	'</div>';
-			$res .= '</td>';
-			$res .= '</tr>';
-			return $res;
-		}
-
 		public function ToHTMLUserPublicShortInTable()
 		{
 			$res = '<div class="row" style="color: grey;">';
 			$res .= 	'<div class="'.ColAllTypes(4).'" style="padding-right: 0px;">';
-			$res .= 		'<img class="img-article-cover" src="'.$this->path_to_image.'">';
+			$res .= 		'<img class="img-article-cover" src="'.Link::Get($this->path_to_image).'">';
 			$res .= 	'</div>';
 			$res .= 	'<div class="'.ColAllTypes(8).'">';
 			$res .= 		'<div class="row">';
@@ -228,14 +203,14 @@
 			$res .= '<td>';
 			$res .=		'<div class="row">';
 			$author_login = User::FetchByID($this->author_id)->login;
-			if (GetUserLogin() === $author_login) {
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
 				$res .= 	'<div class="'.ColAllTypes(4).'">';
 			} else {
 				$res .= 	'<div class="'.ColAllTypes(12).'">';
 			}
 			$res .= 			$this->ToHTMLFullVers();
 			$res .=			'</div>';
-			if (GetUserLogin() === $author_login) {
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
 				$res .=		'<div class="'.ColAllTypes(4).'">';
 				$res .=			$this->ToHTMLEdit();
 				$res .=		'</div>';
@@ -315,6 +290,7 @@
 					'obj_type' => Article::$type,
 					'id' => $this->id,
 					'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['articles'],
+					'method' => 'get',
 				);
 			}
 			return ActionButton($args);
