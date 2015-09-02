@@ -234,7 +234,13 @@
 			$res .=				'</div>';
 			$res .= 		'</form>';
 		} else if ($method === 'get') {
-			$res .= '<form class="form-inline"><div class="form-group"><a href="'.$action.'" class="btn '.$class.' btn-lg btn-block">'.$text.'</a></div></form>';
+			$query = parse_url($url, PHP_URL_QUERY);
+			$link = $action;
+			if ($name !== '') {
+				if ($query) $link .= '&'.$name.'=name';
+				else $link .= '?'.$name.'=name';
+			}
+			$res .= '<form class="form-inline"><div class="form-group"><a href="'.$link.'" class="btn '.$class.' btn-lg btn-block">'.$text.'</a></div></form>';
 		} else {
 			$res = AlertMessage('alert-danger', 'Нет метода '.$method);
 			return $res;

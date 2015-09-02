@@ -1,5 +1,5 @@
 <?php
-$link_prefix = '/lgmis2/lgmis/';
+$link_prefix = '/';
 
 $link_to_admin_manage_staff = 'admin_manage_staff.php';
 $link_to_admin_manage_content = 'admin_manage_content.php';

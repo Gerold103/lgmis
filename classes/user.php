@@ -650,15 +650,35 @@
 		public function LinkToThis($link_size = 'btn-md')
 		{
 			global $link_to_admin_user;
-			$args = array(
-				'action_link' => $link_to_admin_user,
-				'action_type' => 'full',
-				'obj_type' => User::$type,
-				'id' => $this->id,
-				'lnk_text' => ($this->surname).' '.($this->name),
-				'lnk_size' => $link_size,
-				'method' => 'get',
-			);
+			global $link_to_public_user;
+			global $use_mod_rewrite;
+			$args = array();
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			if (IsSessionPublic() === true) {
+				$args = array(
+					'action_link' => $link_to_public_user,
+					'action_type' => 'full',
+					'obj_type' => User::$type,
+					'id' => $this->id,
+					'lnk_text' => ($this->surname).' '.($this->name),
+					'lnk_size' => $link_size,
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_user,
+					'action_type' => 'full',
+					'obj_type' => User::$type,
+					'id' => $this->id,
+					'lnk_text' => ($this->surname).' '.($this->name),
+					'lnk_size' => $link_size,
+					'method' => 'get',
+				);
+			}
 			return ActionLink($args);
 		}
 	}

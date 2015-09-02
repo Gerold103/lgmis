@@ -49,16 +49,15 @@
 					$uri = array();
 					for ($_i = 0, $_size = count($tmp); $_i < $_size; ++$_i) {
 						if (!empty($tmp[$_i])) array_push($uri, $tmp[$_i]);
-
 					}
 					$_last = count($uri) - 1;
 					if (preg_match('/^page-[0-9]+/', $uri[$_last]) === 1) {
 						unset($uri[$_last]);
 					}
+					$res_uri = '';
 					for ($_i = 0, $_size = count($uri); $_i < $_size; ++$_i) {
 						$res_uri .= '/'.$uri[$_i];
 					}
-
 					$pagination .=		'<a href="'.$res_uri.'/page-'.$i.'">'.$i.'</a>';
 				} else {
 					$pagination .=		'<a href="?'.http_build_query($params).'">'.$i.'</a>';

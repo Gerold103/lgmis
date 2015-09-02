@@ -1,5 +1,5 @@
 <?php
-	$db_connection = mysqli_connect('localhost', 'root', '126241441008Pf');
+	$db_connection = mysqli_connect('localhost', 'root', 'goljaf');
 	if (!$db_connection->ping()) {
 		echo '<font color="red">Ошибка при подключении к базе</font>';
 		exit();
