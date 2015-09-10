@@ -1,20 +1,4 @@
 <?php
-	$act_type_to_text = array(
-		'del' => 'Удалить',
-		'add' => 'Добавить',
-		'edit' => 'Редактировать',
-		'full' => 'Подробнее',
-	);
-
-	$act_type_to_css_class = array(
-		'del' => 'btn btn-danger',
-		'full' => 'btn btn-info',
-		'add' => 'btn btn-primary',
-		'edit' => 'btn btn-default',
-		'def' => 'btn btn-default',
-		'succ' => 'btn btn-success',
-	);
-
 	function WrapToHiddenInputs($names_and_vals)
 	{
 		$res = '';
@@ -59,8 +43,7 @@
 
 		//Add other fields
 		if (!isset($args['btn_text'])) {
-			global $act_type_to_text;
-			$args['btn_text'] = $act_type_to_text[$args['action_type']];
+			$args['btn_text'] = Language::ActionTypeToText($args['action_type']);
 		}
 		if (!isset($args['prev_page'])) {
 			$args['prev_page'] = $_SERVER['REQUEST_URI'];
@@ -147,8 +130,10 @@
 		return $res;
 	}
 
-	function DialogInputsYesNo($action_type, $object_type, $id_, $val_yes = 'Да', $val_no = 'Нет', $need_prev_page = true)
+	function DialogInputsYesNo($action_type, $object_type, $id_, $val_yes = 0, $val_no = 0, $need_prev_page = true)
 	{
+		if ($val_yes === 0) $val_yes = Language::Word('yes');
+		if ($val_no === 0) $val_no = Language::Word('no');
 		$res = '';
 		$res .= '<input class="btn btn-primary margin-sm" type="submit" name="yes" value="'.$val_yes.'">';
 		$res .= '<input class="btn btn-danger margin-sm" type="submit" name="no" value="'.$val_no.'">';
@@ -159,8 +144,10 @@
 		return $res;
 	}
 
-	function DialogFormYesNo($action_link, $action_type, $object_type, $id_, $val_yes = 'Да', $val_no = 'Нет', $need_prev_page = true, $method = 'post')
+	function DialogFormYesNo($action_link, $action_type, $object_type, $id_, $val_yes = 0, $val_no = 0, $need_prev_page = true, $method = 'post')
 	{
+		if ($val_yes === 0) $val_yes = Language::Word('yes');
+		if ($val_no === 0) $val_no = Language::Word('no');
 		$res = '';
 		if ($method === 'post') {
 			$res .= '<form action="'.$action_link.'" method="post">';
@@ -177,16 +164,17 @@
 	function OnStartAdminPage()
 	{
 		global $link_to_admin;
-		return '<a href="'.$link_to_admin.'">На главную страницу</a>';
+		return '<a href="'.$link_to_admin.'">'.Language::Word('on start admin page').'</a>';
 	}
 
 	function OnPreviousPage($path_to)
 	{
-		return '<a href="'.$path_to.'">Предыдущая страница</a>';
+		return '<a href="'.$path_to.'">'.Language::Word('on previous admin page').'</a>';
 	}
 
-	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('jpg', 'png', 'gif'))
+	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('jpg', 'png', 'gif'), $lang = 'rus')
 	{
+		if ($lang !== 'rus') $image_name .= '_'.$lang;
 		$res = $start_path.'/'.$image_name.'.';
 		for ($i = 0, $size = count($available); $i < $size; ++$i) {
 			if (file_exists($res.$available[$i])) {

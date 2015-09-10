@@ -378,6 +378,37 @@
 		60 => 'Руководитель',
 	);
 
+	$act_type_to_text = array(
+		'del' => 'Удалить',
+		'add' => 'Добавить',
+		'edit' => 'Редактировать',
+		'full' => 'Подробнее',
+		'add_lang' => 'Добавить язык',
+	);
+
+	$act_type_to_css_class = array(
+		'del' => 'btn btn-danger',
+		'full' => 'btn btn-info',
+		'add' => 'btn btn-primary',
+		'edit' => 'btn btn-default',
+		'def' => 'btn btn-default',
+		'succ' => 'btn btn-success',
+		'add_lang' => 'btn btn-primary',
+	);
+
+	$languages = array(
+		'eng' => 'English',
+		'rus' => 'Русский',
+	);
+
+	$image_extensions = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg');
+
+	function CheckLanguage($lang) {
+		global $languages;
+		if (isset($languages[$lang])) return true;
+		else return false;
+	}
+
 	const NewEmployeeNum = 10;
 	const NotEmployeeNum = 1;
 	const DirectorPositionNum = 60;

@@ -11,16 +11,16 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
               <ul class="nav navbar-nav">
-                <li><p class="navbar-text">Добро пожаловать, <b>'.$_SESSION['user_login'].'</b></p></li>
+                <li><p class="navbar-text">'.Language::Word('welcome').', <b>'.$_SESSION['user_login'].'</b></p></li>
                 <li>
                     <form class="navbar-form navbar-left" method="post" action="'.$link_to_utility_authorization.'">
-                        <button type="submit" class="btn btn-default" name="exit">Выйти</button>
+                        <button type="submit" class="btn btn-default" name="exit">'.Language::Word('logout').'</button>
                     </form>
                 </li>';
 
                 if ((!isset($on_start_page)) || ($on_start_page == false) || isset($_POST['prev_page']) || isset($prev_page) && ($prev_page != '')) {
                     $menu .= '<li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Действия <span class="caret"></span></a>
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.Language::Word('actions').' <span class="caret"></span></a>
                       <ul class="dropdown-menu" role="menu">';
                     if ((!isset($on_start_page)) || ($on_start_page == false)) {
                         $menu .=  '<li>'.OnStartAdminPage().'</li>'; 
@@ -36,13 +36,17 @@
 
                 $menu .= '<li>
                             <form class="navbar-form navbar-left" method="post" action="'.$link_to_admin_user.'">
-                                <input class="btn btn-default" name="full" type="submit" value="Моя страница">
+                                <input class="btn btn-default" name="full" type="submit" value="'.Language::Word('my page').'">
                                 <input type="hidden" name="type" value="'.User::$type.'">
                                 <input type="hidden" name="id" value="'.User::FetchByLogin($_SESSION['user_login'])->id.'">
                                 <input type="hidden" name="prev_page" value="'.$_SERVER['REQUEST_URI'].'">
                             </form>
                         </li>';
               $menu .= '</ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a style="margin: 0px; padding: 0px;" href="'.$link_to_utility_interceptor.'?lang=rus"><img class="lang_flag" src="'.$link_to_service_images.'rus_flag.png"></a></li>
+                <li><a style="margin: 0px; padding: 0px;" href="'.$link_to_utility_interceptor.'?lang=eng"><img class="lang_flag" src="'.$link_to_service_images.'eng_flag.png"></a></li>
+              </ul>
           </div><!-- /.container-fluid -->
         </nav>';
         echo $menu;

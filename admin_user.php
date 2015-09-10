@@ -13,14 +13,14 @@
 		$prev_page = '';
 
 		if (isset($_REQUEST['edit'])) {
-			$title = 'Редактирование профиля';
-			$header = 'Редактирование профиля';
+			$title = Language::Word('profile edit');
+			$header = $title;
 			$content = $user->ToHTMLEditing();
 		} else {
 
 			$title = $user->name;
 
-			$header = htmlspecialchars($user->name.' '.$user->surname.' '.$user->fathername);
+			$header = htmlspecialchars(Language::Translit($user->name.' '.$user->surname.' '.$user->fathername));
 
 			$content = $user->ToHTMLAutoFull(GetUserPrivileges());
 			$no_content_center = true;

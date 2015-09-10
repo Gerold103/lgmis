@@ -5,18 +5,18 @@
         <title>
         	<?php
         		if (!isset($title)) {
-        			echo 'ЛГМИС';
+        			echo Language::SiteName();
         		} else {
         			echo $title;
         		}
         	?>
         </title>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_ckeditor).'contents.css"'; ?> >
-        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_bootstrap_styles).'"'; ?>>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'script.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'jquery-1.11.1.js"'; ?> ></script>
-        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'bootstrap.min.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_ckeditor).'ckeditor.js"'; ?> ></script>
+        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'bootstrap.min.js"'; ?> ></script>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_bootstrap_styles).'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_styles).'"'; ?>>
         <script type="text/javascript">
             $(function () {
@@ -77,6 +77,9 @@
             echo    '</div>';
             echo '</div>';
         ?>
+    </div>
+    <div style="position: absolute; top: 20px; right: 50px;">
+        <a href=<?php echo '"'.Link::Get('/lang/rus').'"'; ?> ><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'rus_flag.png"'; ?> ></a><a href=<?php echo '"'.Link::Get('/lang/eng').'"'; ?>><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'eng_flag.png"'; ?> ></a>
     </div>
     </body>
 </html>

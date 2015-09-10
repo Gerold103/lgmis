@@ -12,6 +12,8 @@
 		public  $name         = undef;
 		public  $text_block   = undef;
 		private $creating_date = time_undef;
+
+		public  $language = undef;
 		
 		public static $type = 'project';
 		public static $table = 'projects';
@@ -31,12 +33,10 @@
 		public function ToHTMLAutoFull($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminFull();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLUserPrivateFull();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicFull();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateFull();
 				default:
 					return html_undef;
 			}
@@ -75,21 +75,21 @@
 			$res .= '<div class="form-horizontal">';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Дата создания</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('creating date').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(date('d : m : Y - H : i', $this->creating_date));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Автор</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Направление</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('direction').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(Direction::FetchByID($this->direction_id)->LinkToThis());
 			$res .= 		'</div>';
@@ -98,7 +98,7 @@
 			$res .= '<hr>';
 
 			$res .= 	'<div class="row" align="center">';
-			$res .= 		'<label class="control-label">Текст</label>';
+			$res .= 		'<label class="control-label">'.Language::Word('text').'</label>';
 			$res .= 	'</div>';
 			$res .= 	'<div class="row" align="left">';
 			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
@@ -139,21 +139,21 @@
 			$res .= '<div class="form-horizontal">';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Дата создания</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('creating date').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(date('d : m : Y - H : i', $this->creating_date));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Автор</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Направление</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('direction').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(Direction::FetchByID($this->direction_id)->LinkToThis());
 			$res .= 		'</div>';
@@ -162,7 +162,7 @@
 			$res .= '<hr>';
 
 			$res .= 	'<div class="row" align="center">';
-			$res .= 		'<label class="control-label">Текст</label>';
+			$res .= 		'<label class="control-label">'.Language::Word('text').'</label>';
 			$res .= 	'</div>';
 			$res .= 	'<div class="row" align="left">';
 			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
@@ -170,16 +170,20 @@
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
-			if (GetUserLogin() === User::FetchByID($this->author_id)->login) {
-				$res .= '<div class="row">';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="right">';
+			$res .= 	'<div class="row">';
+			if ((GetUserLogin() === User::FetchByID($this->author_id)->login) || (GetUserLogin() === 'admin')) {
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="right">';
 				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
 				$res .=		'</div>';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="left">';
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="center">';
 				$res .=			'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
 				$res .=		'</div>';
-				$res .= '</div>';
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="left">';
+			} else {
+				$res .= 	'<div class="'.ColAllTypes(12).'" align="center">';
 			}
+			$res .=				'<div class="margin-sm">'.$this->ToHTMLAddLanguage().'</div>';	
+			$res .= 	'</div>';
 
 			$res .= '</div>';
 			return $res;
@@ -246,6 +250,19 @@
 		//html code of short representation of object in string within public pages of lgmis
 		public function ToHTMLUserPublicShort() { return html_undef; }
 
+		public function ToHTMLAddLanguage()
+		{
+			global $link_to_admin_project;
+			$args = array(
+				'action_link' => $link_to_admin_project,
+				'action_type' => 'add_lang',
+				'obj_type' => Project::$type,
+				'id' => $this->id,
+				'btn_color' => 'btn-primary',
+			);
+			return ActionButton($args);
+		}
+
 		public function ToHTMLDel()
 		{
 			global $link_to_utility_interceptor;
@@ -254,7 +271,7 @@
 				'action_type' => 'del',
 				'obj_type' => Project::$type,
 				'id' => $this->id,
-				'info' => 'Вы уверены, что хотите удалить проект с заголовком '.$this->name.'?',
+				'info' => Language::Word('are you shure that you want to delete project with header').' '.$this->name.'?',
 			);
 			return ActionButton($args);
 		}
@@ -286,16 +303,33 @@
 			return ActionButton($args);
 		}
 
-		public static function FetchByDirectionID($id)
+		public static function FetchByDirectionID($id, $kwargs = array())
 		{
 			global $db_connection;
+			global $languages;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".Project::$table."` WHERE `direction_id`=".$id);
-			if (!$result) {
-				return NULL;
-			}
-			while ($row = $result->fetch_assoc()) {
-				array_push($res, Project::FetchFromAssoc($row));
+			if (!isset($kwargs['all'])) {
+				$lang = '';
+				if (isset($kwargs['lang'])) $lang = $kwargs['lang'];
+				else $lang = GetLanguage();
+				$fetch_table = Project::$table;
+				if ($lang != 'rus') $fetch_table .= '_'.$lang;
+				$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `direction_id`=".$id);
+				if (!$result) {
+					echo $db_connection->error;
+					return NULL;
+				}
+				while ($row = $result->fetch_assoc()) {
+					$row['language'] = $lang;
+					$tmp = Project::FetchFromAssoc($row);
+					array_push($res, $tmp);
+				}
+			} else {
+				foreach ($languages as $key => $value) {
+					$tmp = $this->FetchByDirectionID($id, array('lang' => $key));
+					if (($tmp !== NULL) && (count($tmp) > 0))
+						$res = array_merge($res, $tmp);
+				}
 			}
 			return $res;
 		}
@@ -305,14 +339,19 @@
 		{
 			global $db_connection;
 			$res = NULL;
-			$result = $db_connection->query("SELECT * FROM `".Project::$table."` WHERE `id`=".$id);
+			$lang = GetLanguage();
+			$fetch_table = Project::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `id`=".$id);
 			if ((!$result) || ($result->num_rows != 1)) {
 				return NULL;
 			}
-			return Project::FetchFromAssoc($result->fetch_assoc());
+			$tmp = $result->fetch_assoc();
+			$tmp['language'] = $lang;
+			return Project::FetchFromAssoc($tmp);
 		}
 
-		public static function InsertToDB($request)
+		public static function InsertToDB($request, $lang_vers = 'rus', $glob_id = 0)
 		{
 			global $db_connection;
 			global $link_to_projects_images;
@@ -320,21 +359,25 @@
 			$author_id 	  = $db_connection->real_escape_string($request->author_id);
 			$direction_id = $db_connection->real_escape_string($request->direction_id);
 			$name 		  = $db_connection->real_escape_string($request->name);
-			$res = $db_connection->query("INSERT INTO `".Project::$table."` (`id`, `author_id`, `direction_id`, `name`, `text_block`, `creating_date`) VALUES ('0', '".$author_id."', '".$direction_id."', '".$name."', '', CURRENT_TIMESTAMP)");
+			$insert_table = Project::$table;
+			if ($lang_vers !== 'rus') {
+				$insert_table .= '_'.$lang_vers;
+			}
+			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `author_id`, `direction_id`, `name`, `text_block`, `creating_date`) VALUES ('".$glob_id."', '".$author_id."', '".$direction_id."', '".$name."', '', CURRENT_TIMESTAMP)");
 			if (!$res) {
 				return false;
 			}
 			$id = $db_connection->insert_id;
 
-			$request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
+			if ($glob_id === 0) $request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
 			$text_block = $db_connection->real_escape_string($request->text_block);
-			$res = $db_connection->query("UPDATE `".Project::$table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
+			$res = $db_connection->query("UPDATE `".$insert_table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
 			if (!$res) {
 				echo $db_connection->error;
-				$db_connection->query("DELETE FROM `".Project::$table."` WHERE `id` = ".$id);
+				$db_connection->query("DELETE FROM `".$insert_table."` WHERE `id` = ".$id);
 				return false;
 			}
-			recurse_copy($link_to_projects_images.'tmp_'.$request->author_id, $link_to_projects_images.$id);
+			if ($glob_id === 0) recurse_copy($link_to_projects_images.'tmp_'.$request->author_id, $link_to_projects_images.$id);
 			return true;
 		}
 
@@ -351,6 +394,7 @@
 			$proj->direction_id = $assoc['direction_id'];
 			$proj->name = $assoc['name'];
 			$proj->text_block = $assoc['text_block'];
+			if (ArrayElemIsValidStr($assoc, 'language')) $proj->language = $assoc['language'];
 			try {
 				if (isset($assoc['creating_date']) && (strlen($assoc['creating_date'])))
 					$proj->creating_date = strtotime($assoc['creating_date']);
@@ -370,11 +414,15 @@
 		{
 			global $db_connection;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".Project::$table."` ORDER BY direction_id");
+			$from_table = Project::$table;
+			$lang = GetLanguage();
+			if ($lang !== 'rus') $from_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$from_table."` ORDER BY direction_id DESC, id DESC");
 			if (!$result) {
 				return NULL;
 			}
 			while ($row = $result->fetch_assoc()) {
+				$row['language'] = $lang;
 				array_push($res, Project::FetchFromAssoc($row));
 			}
 			return $res;
@@ -391,7 +439,9 @@
 		public function Save()
 		{
 			global $db_connection;
-			$res = $db_connection->query("SELECT `id` FROM `".Project::$table."` WHERE (`id`=".$this->id.")");
+			$from_table = Project::$table;
+			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
+			$res = $db_connection->query("SELECT `id` FROM `".$from_table."` WHERE (`id`=".$this->id.")");
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -404,7 +454,7 @@
 			$name_tmp 		= $db_connection->real_escape_string($this->name);
 			$text_block_tmp = $db_connection->real_escape_string($this->text_block);
 			$direction_id_tmp = $db_connection->real_escape_string($this->direction_id);
-			$res = $db_connection->query("UPDATE `".Project::$table."` SET `name`=\"".$name_tmp."\", `direction_id`=\"".$direction_id_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
+			$res = $db_connection->query("UPDATE `".$from."` SET `name`=\"".$name_tmp."\", `direction_id`=\"".$direction_id_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -412,15 +462,54 @@
 			return true;
 		}
 
+		public function FetchLanguages()
+		{
+			global $languages;
+			global $db_connection;
+			$res = array();
+			foreach ($languages as $key => $value) {
+				$from_table = Project::$table;
+				if ($key !== 'rus') $from_table .= '_'.$key;
+				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$this->id);
+				if ($q) {
+					$cnt = $q->fetch_array()[0];
+					if ($cnt > 0) $res[$key] = $value;
+				}
+			}
+			return $res;
+		}
+
 		public static function Delete($id)
 		{
 			global $db_connection;
 			global $link_to_projects_images;
 
-			if (!$db_connection->query("DELETE FROM `".Project::$table."` WHERE `id` = ".$id)) {
+			$project = Project::FetchByID($id);
+			$langs = $project->FetchLanguages();
+
+			$from_table = Project::$table;
+			if ($project->language !== 'rus') $from_table .= '_'.$project->language;
+
+			if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE `id` = ".$id)) {
 				return 0;
 			} else {
-				removeDirectory($link_to_projects_images.$id);
+				if (count($langs) < 2) removeDirectory($link_to_projects_images.$id);
+				return 1;
+			}
+		}
+
+		public function DeleteThis()
+		{
+			global $db_connection;
+			global $link_to_projects_images;
+
+			$langs = $this->FetchLanguages();
+			$from_table = Project::$table;
+			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
+			if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE id = ".$this->id)) {
+				return 0;
+			} else {
+				if (count($langs) < 2) removeDirectory($link_to_projects_images.$this->id);
 				return 1;
 			}
 		}

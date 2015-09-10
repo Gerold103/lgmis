@@ -8,23 +8,23 @@
 	$footer = '';
 	$on_start_page = true;
 	
-	$header .= 'Главная';
+	$header .= Language::Word('main admin page');
 
 	if (GetUserPrivileges() == admin_user_id) {
 		//Manage staff
-		$content .=	MenuButton('Управление штатом', $link_to_admin_manage_staff, 'btn-default', '', 'get');
+		$content .=	MenuButton(Language::Word('staff management'), $link_to_admin_manage_staff, 'btn-default', '', 'get');
 
 		//Manage content
-		$content .= MenuButton('Управление контентом', $link_to_admin_manage_content, 'btn-default', '', 'get');
+		$content .= MenuButton(Language::Word('content management'), $link_to_admin_manage_content, 'btn-default', '', 'get');
 
 		//Requests on register
-		$content .= MenuButton('Заявки на регистрацию', $link_to_admin_requests_on_register, 'btn-default', '', 'get');
+		$content .= MenuButton(Language::Word('requests on register'), $link_to_admin_requests_on_register, 'btn-default', '', 'get');
 	} else {
 		//Manage staff
-		$content .=	MenuButton('Наш коллектив', $link_to_admin_manage_staff, 'btn-default', '', 'get');
+		$content .=	MenuButton(Language::Word('our collective'), $link_to_admin_manage_staff, 'btn-default', '', 'get');
 
 		//Manage content
-		$content .= MenuButton('Наш контент', $link_to_admin_manage_content, 'btn-default', '', 'get');
+		$content .= MenuButton(Language::Word('our content'), $link_to_admin_manage_content, 'btn-default', '', 'get');
 	}
 
 	include($link_to_admin_template);

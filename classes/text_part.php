@@ -13,6 +13,8 @@
 		private $text_block;
 		private $creating_date;
 
+		public  $language;
+
 		public static $type = 'text_part';
 		public static $table = 'text_parts';
 
@@ -32,8 +34,6 @@
 					return $this->ToHTMLAdminFull();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicFull();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateFull();
 				default:
 					return html_undef;
 			}
@@ -65,28 +65,28 @@
 			$res .= '<div class="form-horizontal">';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Дата создания</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('creating date').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(date('d : m : Y - H : i', $this->creating_date));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Автор</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Роль</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('role').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(htmlspecialchars($content_types_full[$this->role]));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Приоритет</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('priority').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(htmlspecialchars($this->priority));
 			$res .= 		'</div>';
@@ -95,7 +95,7 @@
 			$res .= '<hr>';
 
 			$res .= 	'<div class="row" align="center">';
-			$res .= 		'<label class="control-label">Текст</label>';
+			$res .= 		'<label class="control-label">'.Language::Word('text').'</label>';
 			$res .= 	'</div>';
 			$res .= 	'<div class="row" align="left">';
 			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
@@ -104,11 +104,14 @@
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<div class="'.ColAllTypes(6).'" align="right">';
+			$res .= 		'<div class="'.ColAllTypes(4).'" align="right">';
 			$res .=				'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
 			$res .=			'</div>';
-			$res .= 		'<div class="'.ColAllTypes(6).'" align="left">';
+			$res .= 		'<div class="'.ColAllTypes(4).'" align="center">';
 			$res .=				'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
+			$res .=			'</div>';
+			$res .= 		'<div class="'.ColAllTypes(4).'" align="left">';
+			$res .=				'<div class="margin-sm">'.$this->ToHTMLAddLanguage().'</div>';
 			$res .=			'</div>';
 			$res .= 	'</div>';
 
@@ -159,11 +162,17 @@
 		{
 			global $db_connection;
 			$res = NULL;
-			$result = $db_connection->query("SELECT * FROM `".TextPart::$table."` WHERE `id`=".$id." ORDER BY priority DESC");
+			$lang = GetLanguage();
+			$fetch_table = TextPart::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `id`=".$id." ORDER BY priority DESC");
 			if ((!$result) || ($result->num_rows != 1)) {
+				echo $db_connection->error;
 				return NULL;
 			}
-			return TextPart::FetchFromAssoc($result->fetch_assoc());
+			$tmp = $result->fetch_assoc();
+			$tmp['language'] = $lang;
+			return TextPart::FetchFromAssoc($tmp);
 		}
 
 		public static function FetchFromAssoc($assoc)
@@ -185,6 +194,7 @@
 			$txt_part->role = $assoc['role'];
 			$txt_part->text_block = $assoc['text_block'];
 			$txt_part->name = $assoc['name'];
+			if (ArrayElemIsValidStr($assoc, 'language')) $txt_part->language = $assoc['language'];
 			try {
 				if (isset($assoc['creating_date']) && (strlen($assoc['creating_date'])))
 					$txt_part->creating_date = strtotime($assoc['creating_date']);
@@ -213,11 +223,15 @@
 		{
 			global $db_connection;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".TextPart::$table."`");
+			$from_table = TextPart::$table;
+			$lang = GetLanguage();
+			if ($lang !== 'rus') $from_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$from_table."`");
 			if (!$result) {
 				return NULL;
 			}
 			while ($row = $result->fetch_assoc()) {
+				$row['language'] = $lang;
 				array_push($res, TextPart::FetchFromAssoc($row));
 			}
 			return $res;
@@ -227,15 +241,49 @@
 		{
 			global $db_connection;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".TextPart::$table."` WHERE role=\"".htmlspecialchars($role)."\" ORDER BY priority DESC");
+			$from_table = TextPart::$table;
+			$lang = GetLanguage();
+			if ($lang !== 'rus') $from_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$from_table."` WHERE role=\"".htmlspecialchars($role)."\" ORDER BY priority DESC");
 			if (!$result) {
 				echo $db_connection->error;
 				return NULL;
 			}
 			while ($row = $result->fetch_assoc()) {
+				$row['language'] = $lang;
 				array_push($res, TextPart::FetchFromAssoc($row));
 			}
 			return $res;
+		}
+
+		public function FetchLanguages()
+		{
+			global $languages;
+			global $db_connection;
+			$res = array();
+			foreach ($languages as $key => $value) {
+				$from_table = TextPart::$table;
+				if ($key !== 'rus') $from_table .= '_'.$key;
+				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$this->id);
+				if ($q) {
+					$cnt = $q->fetch_array()[0];
+					if ($cnt > 0) $res[$key] = $value;
+				}
+			}
+			return $res;
+		}
+
+		public function ToHTMLAddLanguage()
+		{
+			global $link_to_admin_text_part;
+			$args = array(
+				'action_link' => $link_to_admin_text_part,
+				'action_type' => 'add_lang',
+				'obj_type' => TextPart::$type,
+				'id' => $this->id,
+				'btn_color' => 'btn-primary',
+			);
+			return ActionButton($args);
 		}
 
 		public function ToHTMLDel()
@@ -246,7 +294,7 @@
 				'action_type' => 'del',
 				'obj_type' => TextPart::$type,
 				'id' => $this->id,
-				'info' => 'Вы уверены, что хотите удалить текстовый блок с заголовком '.htmlspecialchars($this->name).'?',
+				'info' => Language::Word('are you shure that you want to delete text block with header').' '.htmlspecialchars($this->name).'?',
 			);
 			return ActionButton($args);
 		}
@@ -279,7 +327,7 @@
 			return ActionButton($args);
 		}
 
-		public static function InsertToDB($request)
+		public static function InsertToDB($request, $lang_vers = 'rus', $glob_id = 0)
 		{
 			global $db_connection;
 			global $link_to_text_part_images;
@@ -289,23 +337,27 @@
 			$name 		= $db_connection->real_escape_string($request->name);
 			$priority 	= $db_connection->real_escape_string($request->priority);
 			$role 		= $db_connection->real_escape_string($request->role);
-			$res = $db_connection->query("INSERT INTO `".TextPart::$table."` (`id`, `link_id`, `author_id`, `name`, `priority`, `role`, `text_block`, `creating_date`) VALUES ('0', '".$link_id."', '".$author_id."', '".$name."', '".$priority."', '".$role."', '', CURRENT_TIMESTAMP)");
+			$insert_table = TextPart::$table;
+			if ($lang_vers !== 'rus') {
+				$insert_table .= '_'.$lang_vers;
+			}
+			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `link_id`, `author_id`, `name`, `priority`, `role`, `text_block`, `creating_date`) VALUES ('".$glob_id."', '".$link_id."', '".$author_id."', '".$name."', '".$priority."', '".$role."', '', CURRENT_TIMESTAMP)");
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
 			}
 			$id = $db_connection->insert_id;
 
-			$request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
+			if ($glob_id === 0) $request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
 			$text_block = $db_connection->real_escape_string($request->text_block);
-			$res = $db_connection->query("UPDATE `".TextPart::$table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
+			$res = $db_connection->query("UPDATE `".$insert_table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
 			if (!$res) {
 				echo $db_connection->error;
-				$db_connection->query("DELETE FROM `".TextPart::$table."` WHERE `id` = ".$id);
+				$db_connection->query("DELETE FROM `".$insert_table."` WHERE `id` = ".$id);
 				return false;
 			}
 			$request->id = $id;
-			recurse_copy($link_to_text_part_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_text_part_images.$id);
+			if ($glob_id === 0) recurse_copy($link_to_text_part_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_text_part_images.$id);
 			return true;
 		}
 		
@@ -313,7 +365,9 @@
 		public function Save()
 		{
 			global $db_connection;
-			$res = $db_connection->query("SELECT `id` FROM `".TextPart::$table."` WHERE (`id`=".$this->id.")");
+			$from_table = TextPart::$table;
+			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
+			$res = $db_connection->query("SELECT `id` FROM `".$from_table."` WHERE (`id`=".$this->id.")");
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -328,7 +382,7 @@
 			$priority_tmp = $db_connection->real_escape_string($this->priority);
 			$role_tmp = $db_connection->real_escape_string($this->role);
 			$name_tmp = $db_connection->real_escape_string($this->name);
-			$res = $db_connection->query("UPDATE `".TextPart::$table."` SET `name`=\"".$name_tmp."\", `link_id`=\"".$link_id_tmp."\", `priority`=\"".$priority_tmp."\", `text_block`=\"".$text_block_tmp."\", `role`=\"".$role_tmp."\" WHERE `id`=".$this->id);
+			$res = $db_connection->query("UPDATE `".$from_table."` SET `name`=\"".$name_tmp."\", `link_id`=\"".$link_id_tmp."\", `priority`=\"".$priority_tmp."\", `text_block`=\"".$text_block_tmp."\", `role`=\"".$role_tmp."\" WHERE `id`=".$this->id);
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -341,10 +395,16 @@
 			global $db_connection;
 			global $link_to_text_part_images;
 
-			if (!$db_connection->query("DELETE FROM `".TextPart::$table."` WHERE `id` = ".$id)) {
+			$txt_part = TextPart::FetchByID($id);
+			$langs = $txt_part->FetchLanguages();
+
+			$from_table = TextPart::$table;
+			if ($txt_part->language !== 'rus') $from_table .= '_'.$txt_part->language;
+
+			if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE `id` = ".$id)) {
 				return 0;
 			} else {
-				removeDirectory($link_to_text_part_images.$id);
+				if (count($langs) < 2) removeDirectory($link_to_text_part_images.$id);
 				return 1;
 			}
 		}

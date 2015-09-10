@@ -1,5 +1,5 @@
 <?php
-$link_prefix = '/';
+$link_prefix = '/lgmis2/lgmis/';
 
 $link_to_admin_manage_staff = 'admin_manage_staff.php';
 $link_to_admin_manage_content = 'admin_manage_content.php';
@@ -20,7 +20,9 @@ $link_to_contacts_mod = 'contacts';
 $link_to_utility_authorization = 'utility_authorization.php';
 $link_to_utility_interceptor = 'utility_interceptor.php';
 $link_to_img_upload = 'imgupload.php';
+$link_to_img_browse = 'imgbrowse.php';
 $link_to_utility_lgmis_lib = 'ulitity_lgmis_lib.php';
+$link_to_utility_languages = 'utility_languages.php';
 $link_to_utility_links = 'utility_links.php';
 $link_to_utility_sql_worker = 'utility_sql_worker.php';
 $link_to_utility_defines = 'utility_defines.php';
@@ -31,6 +33,7 @@ $link_to_direction_images = 'files/images/directions/';
 $link_to_projects_images = 'files/images/projects/';
 $link_to_service_images = 'files/images/service_images/';
 $link_to_text_part_images = 'files/images/text_parts/';
+$link_to_logo = 'files/images/service_images/Logo.png';
 
 $link_to_element_templates = 'php_templates/element_templates.php';
 $link_to_interfaces = 'classes/interfaces.php';
@@ -91,6 +94,7 @@ function AddLinkPrefix()
 	$link_to_utility_authorization = $link_prefix.'utility_authorization.php';
 	$link_to_utility_interceptor = $link_prefix.'utility_interceptor.php';
 	$link_to_img_upload = $link_prefix.'imgupload.php';
+	$link_to_img_browse = $link_prefix.'imgbrowse.php';
 	$link_to_utility_lgmis_lib = $link_prefix.'ulitity_lgmis_lib.php';
 	$link_to_utility_links = $link_prefix.'utility_links.php';
 	$link_to_utility_sql_worker = $link_prefix.'utility_sql_worker.php';

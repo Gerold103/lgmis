@@ -4,13 +4,13 @@
 	include_once('utility_lgmis_lib.php');
 	include_once($link_to_utility_authorization);
 
-	$header = 'О нас';
+	$header = Language::PublicMenu('about_us');
 	$content = '';
 	$footer = '';
 
 	$header_type = 'h4';
 
-	$title = 'О нас';
+	$title = $header;
 
 	$txt_parts = TextPart::FetchByRole('about_us');
 	$size = count($txt_parts);

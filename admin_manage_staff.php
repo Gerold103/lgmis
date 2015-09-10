@@ -9,9 +9,9 @@
 
 	$size = User::GetCount();
 	if (GetUserPrivileges() === admin_user_id) {
-		$header .= 'Управление штатом';
+		$header .= Language::Word('staff management');
 	} else {
-		$header .= 'Наш коллектив';
+		$header .= Language::Word('our collective');
 	}
 
 	if ($size) {
@@ -21,10 +21,10 @@
 		$content .= '<table class="table table-striped text-center">';
 		$content .= 	'<thead>';
 		$content .= 		'<tr>';
-		$content .=				'<th class="text-center">Имя</th>';
-		$content .=				'<th class="text-center">Фамилия</th>';
-		$content .=				'<th class="text-center">Должность</th>';
-		$content .=				'<th class="text-center">Действия</th>';
+		$content .=				'<th class="text-center">'.Language::Word('name').'</th>';
+		$content .=				'<th class="text-center">'.Language::Word('surname').'</th>';
+		$content .=				'<th class="text-center">'.Language::Word('position').'</th>';
+		$content .=				'<th class="text-center">'.Language::Word('actions').'</th>';
 		$content .=			'</tr>';
 		$content .=		'</thead>';
 		$content .=		'<tbody>';
@@ -47,7 +47,7 @@
 		require($link_to_pagination_show_template);
 		$content .= $pagination;
 	} else {
-		$content = AlertMessage('alert-danger', 'Ошибка: '.User::$last_error);
+		$content = AlertMessage('alert-danger', Language::Word('error').': '.User::$last_error);
 	}
 
 	require($link_to_admin_template);

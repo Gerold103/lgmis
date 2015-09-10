@@ -36,7 +36,7 @@
 				if ($res->num_rows > 0) {
 					return $res->fetch_row()[0];
 				}
-				User::$last_error = 'Пользователей нет';
+				User::$last_error = Language::Word('no users');
 				return 0;
 			}
 			User::$last_error = $db_connection->error;
@@ -46,7 +46,7 @@
 		public function GetPosition()
 		{
 			global $positions;
-			return $positions[$this->position];
+			return Language::Position($this->position);
 		}
 
 		public function GetLastVisitTime()
@@ -123,7 +123,7 @@
 			$res = '';
 			$res .= '<div class="row">';
 			$res .=		'<div class="'.ColAllTypes(12).'">';
-			$res .= 		'<b>name</b>: '.htmlspecialchars($this->name).', <b>surname</b>: '.htmlspecialchars($this->surname).', <b>fathername</b>: '.htmlspecialchars($this->fathername).';<br>';
+			$res .= 		'<b>name</b>: '.Language::Translit(htmlspecialchars($this->name).', <b>surname</b>: '.htmlspecialchars($this->surname).', <b>fathername</b>: '.htmlspecialchars($this->fathername)).';<br>';
 			$res .= 		'<b>position</b>: '.htmlspecialchars($positions[$this->position]).'<br>';
 			$res .=		'</div>';
 			$res .= '</div>';
@@ -155,17 +155,17 @@
 			$res .= 	'</div>';
 			$res .= 	'<div class="'.ColAllTypes(5).' vcenter" align="left">';
 
-			$res .= PairLabelAndPanel(2, 10, 'ФИО', htmlspecialchars($this->surname).' '.htmlspecialchars($this->name).' '.htmlspecialchars($this->fathername));
-			$res .= PairLabelAndPanel(2, 10, 'Должность', htmlspecialchars($positions[$this->position]));
-			$res .= PairLabelAndPanel(2, 10, 'Почта', htmlspecialchars($this->email));
-			$res .= PairLabelAndPanel(2, 10, 'Телефон', htmlspecialchars($this->telephone));
-			$res .= PairLabelAndPanel(2, 10, 'Дата рождения', htmlspecialchars($this->GetBirthday()));
+			$res .= PairLabelAndPanel(2, 10, Language::Word('full name'), Language::Translit(htmlspecialchars($this->surname.' '.$this->name.' '.$this->fathername)));
+			$res .= PairLabelAndPanel(2, 10, Language::Word('position'), htmlspecialchars(Language::Position($this->position)));
+			$res .= PairLabelAndPanel(2, 10, Language::Word('mail'), htmlspecialchars($this->email));
+			$res .= PairLabelAndPanel(2, 10, Language::Word('telephone'), htmlspecialchars($this->telephone));
+			$res .= PairLabelAndPanel(2, 10, Language::Word('birthday'), htmlspecialchars($this->GetBirthday()));
 			if ((GetUserLogin() === $this->login) || (GetUserLogin() === 'admin')) {
 				$actions = '<div class="row">';
 				$actions .= 	'<div class="'.ColAllTypes(6).'">'.$this->ToHTMLDel().'</div>';
 				$actions .= 	'<div class="'.ColAllTypes(6).'">'.$this->ToHTMLEdit().'</div>';
 				$actions .= '</div>';
-				$res .= PairLabelAndPanel(2, 10, 'Действия', $actions);
+				$res .= PairLabelAndPanel(2, 10, Language::Word('actions'), $actions);
 			}
 
 			$res .= 	'</div>';
@@ -180,7 +180,7 @@
 						'action_type' => 'add',
 						'obj_type' => UserBlock::$type,
 						'id' => $this->id,
-						'btn_text' => 'Добавить блок',
+						'btn_text' => Language::Word('add block'),
 						'btn_size' => 'btn-lg',
 					);
 				$res .= 		'<span style="margin: 3px;">'.ActionButton($args).'</span>';
@@ -238,8 +238,8 @@
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="'.ColAllTypes(5).'" style="float: none; display: table-cell; vertical-align: middle;">';
-			$res .= 		ToPageHeader($this->surname.' '.$this->name, 'h4', 'black');
-			$res .= 		'<u>'.$positions[$this->position].'</u><br>';
+			$res .= 		ToPageHeader(Language::Translit($this->surname.' '.$this->name), 'h4', 'black');
+			$res .= 		'<u>'.Language::Position($this->position).'</u><br>';
 			$res .= 		'<a href="mailto:'.$this->email.'">'.$this->email.'</a><br>';
 			$res .= 	'</div>';
 
@@ -254,9 +254,9 @@
 		{
 			global $positions;
 			$res = '<tr>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.htmlspecialchars($this->surname).'</td>';
-			$res .= '<td>'.htmlspecialchars($positions[$this->position]).'</td>';
+			$res .= '<td>'.htmlspecialchars(Language::Translit($this->name)).'</td>';
+			$res .= '<td>'.htmlspecialchars(Language::Translit($this->surname)).'</td>';
+			$res .= '<td>'.htmlspecialchars(Language::Position($this->position)).'</td>';
 			$res .= '<td>';
 			$res .=		'<div class="row">';
 			if ((GetUserLogin() != $this->login) && (GetUserLogin() != 'admin')) {
@@ -286,6 +286,7 @@
 			global $link_to_admin_user_block;
 			global $positions;
 			global $link_to_utility_sql_worker;
+			$positions = Language::GetPositions();
 
 			$res = '';
 			$res .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
@@ -296,45 +297,45 @@
 			$res .=					'<img src="'.($this->path_to_photo).'" class="img-rounded img-avatar">';
 			$res .= 			'</div>';
 			$res .= 			'<div class="row">';
-			$res .= 				PairLabelAndInputFile(3, 5, 'Загрузить изображение', 'img');
+			$res .= 				PairLabelAndInputFile(3, 5, Language::Word('upload image'), 'img');
 			$res .= 			'</div>';
 			$res .= 		'</div>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter" align="left">';
-			$res .= 			PairLabelAndInput(2, 10, 'Имя', 'name', 'Введите имя', $this->name);
-			$res .= 			PairLabelAndInput(2, 10, 'Фамилия', 'surname', 'Введите фамилию', $this->surname);
-			$res .= 			PairLabelAndInput(2, 10, 'Отчество', 'fathername', 'Введите отчество', $this->fathername);
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('name'), 'name', Language::Word('insert name'), $this->name);
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('surname'), 'surname', Language::Word('insert surname'), $this->surname);
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('fathername'), 'fathername', Language::Word('insert fathername'), $this->fathername);
 			if ($this->login != 'admin') {
 				$tmp = User::FetchAllByPosition(DirectorPositionNum);
 				if ((($tmp != NULL) || (GetUserLogin() != 'admin')) && ($this->position != DirectorPositionNum)) {
 					unset($positions[DirectorPositionNum]);
 				}
 
-				$res .= 		PairLabelAndSelect(2, 10, 'Должность', 'position', 
+				$res .= 		PairLabelAndSelect(2, 10, Language::Word('position'), 'position', 
 									$positions, $selected_field = array($this->position,
 									$positions[$this->position]));
 			} else {
-				$res .= 		PairLabelAndPanel(2, 10, 'Должность', htmlspecialchars($positions[$this->position]));
+				$res .= 		PairLabelAndPanel(2, 10, Language::Word('position'), htmlspecialchars(Language::Position($this->position)));
 			}
-			$res .= 			PairLabelAndInput(2, 10, 'Почта', 'email', 'Введите почту', $this->email);
-			$res .= 			PairLabelAndInput(2, 10, 'Телефон', 'telephone', 'Введите телефон', $this->telephone);
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('mail'), 'email', Language::Word('insert mail'), $this->email);
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('telephone'), 'telephone', Language::Word('insert telephone'), $this->telephone);
 			if (($this->login == GetUserLogin()) && ($this->login != 'admin')) {
-				$res .= 		PairLabelAndInput(2, 10, 'Логин', 'login', 'Введите логин', $this->login);
+				$res .= 		PairLabelAndInput(2, 10, Language::Word('login'), 'login', Language::Word('insert login'), $this->login);
 			} else {
-				$res .= 		PairLabelAndPanel(2, 10, 'Логин', $this->login);
+				$res .= 		PairLabelAndPanel(2, 10, Language::Word('login'), $this->login);
 			}
-			$res .= 			PairLabelAndInput(2, 10, 'День рождения', 'birth_day', 'Например, 17', date('j', $this->birthday));
-			$res .= 			PairLabelAndInput(2, 10, 'Месяц рождения', 'birth_month', 'Например, 02', date('n', $this->birthday));
-			$res .= 			PairLabelAndInput(2, 10, 'Год рождения', 'birth_year', 'Например, 1995', date('Y', $this->birthday));	
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('birthday'), 'birth_day', 'dd', date('j', $this->birthday));
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('birthmonth'), 'birth_month', 'mm', date('n', $this->birthday));
+			$res .= 			PairLabelAndInput(2, 10, Language::Word('birthyear'), 'birth_year', 'yyyy', date('Y', $this->birthday));	
 
 			if ($this->login == GetUserLogin()) {
-				$res .= 		PairLabelAndPassword(4, 8, 'Старый пароль', 'password_old', 'Только для смены пароля');
-				$res .= 		PairLabelAndPassword(4, 8, 'Новый пароль', 'password_new1', 'Только для смены пароля');
-				$res .= 		PairLabelAndPassword(4, 8, 'Повторите новый пароль', 'password_new2', 'Только для смены пароля');
+				$res .= 		PairLabelAndPassword(4, 8, Language::Word('old password'), 'password_old', Language::Word('only for password changing'));
+				$res .= 		PairLabelAndPassword(4, 8, Language::Word('new password'), 'password_new1', Language::Word('only for password changing'));
+				$res .= 		PairLabelAndPassword(4, 8, Language::Word('repeat new password'), 'password_new2', Language::Word('only for password changing'));
 			}
 
 			$res .= 		'</div>';
 			$res .= 	'</div>';
-			$res .= 	DialogInputsYesNo('edit', $_POST['type'], $_POST['id'], 'Сохранить', 'Отменить');
+			$res .= 	DialogInputsYesNo('edit', $_POST['type'], $_POST['id'], Language::Word('save'), Language::Word('cancel'));
 			$res .= '</form>';
 			return $res;
 		}
@@ -352,7 +353,7 @@
 				'action_type' => 'del',
 				'obj_type' => User::$type,
 				'id' => $this->id,
-				'info' => 'Вы уверены, что хотите удалить пользователя '.htmlspecialchars($this->name).'?',
+				'info' => Language::Word('are you sure that you want to delete user').' '.Language::Translit(htmlspecialchars($this->name)).'?',
 			);
 			return ActionButton($args);
 		}
@@ -387,7 +388,7 @@
 					'obj_type' => User::$type,
 					'id' => $this->id,
 					'prev_page' => $link_to_contacts,
-					'btn_text' => 'Открыть профиль',
+					'btn_text' => Language::Word('open profile'),
 					'method' => 'get',
 					'mod_rewrite' => $mod_rewrite,
 				);
@@ -632,18 +633,22 @@
 		{
 			global $db_connection;
 			global $link_to_users_images;
+			global $languages;
 
 			if (!$db_connection->query("DELETE FROM `".User::$table."` WHERE `id` = ".$id)) {
 				echo $db_connection->error;
 				return 0;
 			} else {
-				if (!$db_connection->query("DELETE FROM `".UserBlock::$table."` WHERE `author_id` = ".$id)) {
-					echo $db_connection->error;
-					return 0;
-				} else {
-					removeDirectory($link_to_users_images.$id);
-					return 1;
+				foreach ($languages as $key => $value) {
+					$from_table = UserBlock::$table;
+					if ($key !== 'rus') $from_table .= '_'.$key;
+					if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE `author_id` = ".$id)) {
+						echo $db_connection->error;
+						return 0;
+					}
 				}
+				removeDirectory($link_to_users_images.$id);
+				return 1;
 			}
 		}
 
@@ -663,7 +668,7 @@
 					'action_type' => 'full',
 					'obj_type' => User::$type,
 					'id' => $this->id,
-					'lnk_text' => ($this->surname).' '.($this->name),
+					'lnk_text' => Language::Translit(($this->surname).' '.($this->name)),
 					'lnk_size' => $link_size,
 					'method' => 'get',
 					'mod_rewrite' => $mod_rewrite,
@@ -674,7 +679,7 @@
 					'action_type' => 'full',
 					'obj_type' => User::$type,
 					'id' => $this->id,
-					'lnk_text' => ($this->surname).' '.($this->name),
+					'lnk_text' => Language::Translit(($this->surname).' '.($this->name)),
 					'lnk_size' => $link_size,
 					'method' => 'get',
 				);

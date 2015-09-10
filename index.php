@@ -29,10 +29,10 @@
 				if ($i != $to) $content .= '<hr><div style="background-color: #eeeeee;"><br></div><hr>';
 			}
 		} else {
-			$content .= ToPageHeader("Новостей пока нет", "h3", "black");
+			$content .= ToPageHeader(Language::Word('no news'), "h3", "black");
 		}
 
-		$header .= 'Новости';
+		$header .= Language::PublicMenu('articles');
 	} else if (isset($_GET['content_type'])) {
 		//----D I R E C T I O N S----
 		if ($_GET['content_type'] == $content_types_short['directions']) {
@@ -47,14 +47,21 @@
 					if ($i != $to) $content .= '<hr><div style="background-color: #eeeeee;"><br></div><hr>';
 				}
 			} else {
-				$content .= ToPageHeader("Направлений пока нет", 'h3', 'black');
+				$content .= ToPageHeader(Language::Word('no directions'), 'h3', 'black');
 			}
 
-			$header .= 'Направления';
+			$header .= Language::PublicMenu('directions');
 		}
 		//----P R O J E C T S----
 		else if ($_GET['content_type'] == $content_types_short['projects']) {
-			$projects = Project::FetchAll();
+			$directions = Direction::FetchAll();
+			$projects = array();
+			for ($i = 0, $size = count($directions); $i < $size; ++$i) {
+				$tmp = Project::FetchByDirectionID($directions[$i]->id);
+				if ($tmp !== NULL) {
+					$projects = array_merge($projects, $tmp);
+				}
+			}
 			$size = count($projects);
 			if ($size) {
 				require($link_to_pagination_init_template);
@@ -64,26 +71,26 @@
 					if (($i === $from) || ($i > $from) && ($projects[$i - 1]->direction_id != $project->direction_id)) {
 						if ($i != $from) $content .= '<hr>';
 						$content .= '<div align="left" style="padding: 15px; background-color: #eeeeee;">';
-						$content .= 	'Направление: '.Direction::FetchByID($project->direction_id)->LinkToThis();
+						$content .= 	Language::Word('direction').': '.Direction::FetchByID($project->direction_id)->LinkToThis();
 						$content .= '</div><hr>';
 					}
 					$content .= ($project->ToHTMLAutoShortForTable(GetUserPrivileges()));
 				}
 			} else {
-				$content .= ToPageHeader("Отсутствуют", 'h3', 'black');
+				$content .= ToPageHeader(Language::Word('no projects'), 'h3', 'black');
 			}
 
-			$header .= 'Проекты';	
+			$header .= Language::PublicMenu('projects');	
 		}
 	} else {
 		//Manage articles
-		$content .= MenuButton('Новости', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['articles']);
+		$content .= MenuButton(Language::PublicMenu('articles'), $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['articles']);
 
 		//Manage directions
-		$content .=	MenuButton('Направления', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['directions']);
+		$content .=	MenuButton(Language::PublicMenu('directions'), $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['directions']);
 
 		//Manage projects
-		$content .=	MenuButton('Проекты', $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['projects']);		
+		$content .=	MenuButton(Language::PublicMenu('projects'), $_SERVER['PHP_SELF'].'?content_type='.$content_types_short['projects']);		
 	}
 
 	$pagination = '';

@@ -20,7 +20,7 @@
 		$header = htmlspecialchars($project->name);
 
 		$content .= '<br><div class="row" align="center">';
-		$content .= 	'Направление проекта: '.Direction::FetchByID($project->direction_id)->LinkToThis();
+		$content .= 	Language::Word('direction of project').': '.Direction::FetchByID($project->direction_id)->LinkToThis();
 		$content .= '</div>';
 		$content .= '<br><hr>';
 		$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$project->text_block.'</div></div>';

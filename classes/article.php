@@ -1,7 +1,7 @@
 <?php
 	//------------------------------------------------A R T I C L E------------------------------------------------
 	
-	class Article implements IAdminHTML, IUserHTML, IAutoHTML, IDelEdit, ISQLOps {
+	class Article implements IMultiLanguage {
 		//Methods and attributes for working with articles of lgmis.
 		
 		//--------Attributes--------
@@ -14,6 +14,7 @@
 		private $creating_date = time_undef;
 
 		public  $path_to_image = undef;
+		public 	$language = undef;
 		
 		public static $type = 'article';
 		public static $table = 'articles';
@@ -26,6 +27,11 @@
 		public function GetAuthorID()
 		{
 			return $this->author_id;
+		}
+
+		public function GetID()
+		{
+			return $this->id;
 		}
 		
 		//--------Methods--------
@@ -75,28 +81,28 @@
 			$res .= '<div class="form-horizontal">';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Дата создания</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('creating date').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(date('d : m : Y - H : i', $this->creating_date));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Автор</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Аннотация</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('annotation').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			SimplePanel(htmlspecialchars($this->annotation));
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">Обложка</label>';
+			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('cover').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
 			$res .= 			'<img src="'.$this->path_to_image.'" class="img-article-cover">';
 			$res .= 		'</div>';
@@ -105,7 +111,7 @@
 			$res .= '<hr>';
 
 			$res .= 	'<div class="row" align="center">';
-			$res .= 		'<label class="control-label">Текст</label>';
+			$res .= 		'<label class="control-label">'.Language::Word('text').'</label>';
 			$res .= 	'</div>';
 			$res .= 	'<div class="row" align="left">';
 			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
@@ -113,16 +119,21 @@
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
+			$res .= '<div class="row">';
 			if ((GetUserLogin() === User::FetchByID($this->author_id)->login) || (GetUserLogin() == 'admin')) {
-				$res .= '<div class="row">';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="right">';
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="right">';
 				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
 				$res .=		'</div>';
-				$res .= 	'<div class="'.ColAllTypes(6).'" align="left">';
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="center">';
 				$res .=			'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
 				$res .=		'</div>';
-				$res .= '</div>';
+				$res .= 	'<div class="'.ColAllTypes(4).'" align="left">';
+			} else {
+				$res .= 	'<div class="'.ColAllTypes(12).'" align="center">';
 			}
+			$res .=				'<div class="margin-sm">'.$this->ToHTMLAddLanguage().'</div>';
+			$res .=			'</div>';
+			$res .= '</div>';
 
 			$res .= '</div>';
 			return $res;
@@ -228,6 +239,19 @@
 		public function ToHTMLUserPublicFull() { return html_undef; }
 		//html code of short representation of object in string within public pages of lgmis
 		public function ToHTMLUserPublicShort() { return html_undef; }
+
+		public function ToHTMLAddLanguage()
+		{
+			global $link_to_admin_article;
+			$args = array(
+				'action_link' => $link_to_admin_article,
+				'action_type' => 'add_lang',
+				'obj_type' => Article::$type,
+				'id' => $this->id,
+				'btn_color' => 'btn-primary',
+			);
+			return ActionButton($args);
+		}
 		
 		public function ToHTMLDel()
 		{
@@ -237,7 +261,7 @@
 				'action_type' => 'del',
 				'obj_type' => Article::$type,
 				'id' => $this->id,
-				'info' => 'Вы уверены, что хотите удалить статью с заголовком '.htmlspecialchars($this->name).'?',
+				'info' => Language::Word('are you shure that you want to delete article with header').' '.htmlspecialchars($this->name).'?',
 			);
 			return ActionButton($args);
 		}
@@ -301,23 +325,33 @@
 		{
 			global $db_connection;
 			$res = NULL;
-			$result = $db_connection->query("SELECT * FROM `".Article::$table."` WHERE `id`=".$id);
+			$lang = GetLanguage();
+			$fetch_table = Article::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `id`=".$id);
 			if ((!$result) || ($result->num_rows != 1)) {
 				return NULL;
 			}
-			return Article::FetchFromAssoc($result->fetch_assoc());
+			$tmp = $result->fetch_assoc();
+			$tmp['language'] = $lang;
+			return Article::FetchFromAssoc($tmp);
 		}
 
 		public static function FetchByAuthorID($id)
 		{
 			global $db_connection;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".Article::$table."` WHERE author_id=\"".$id."\"");
+			$lang = GetLanguage();
+			$fetch_table = Article::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE author_id=\"".$id."\"");
 			if (!$result) {
 				return NULL;
 			}
 			while ($row = $result->fetch_assoc()) {
-				array_push($res, Article::FetchFromAssoc($row));
+				$tmp = Article::FetchFromAssoc($row);
+				$tmp->language = $lang;
+				array_push($res, $tmp);
 			}
 			return $res;
 		}
@@ -334,10 +368,11 @@
 			if (isset($assoc['id']) && (strlen($assoc['id']))) $art->id = $assoc['id'];
 			else $art->id = id_undef;
 			if (isset($assoc['annotation']) && (strlen($assoc['annotation']))) $art->annotation = $assoc['annotation'];
-			else $art->annotation = 'Нет аннотации';
+			else $art->annotation = Language::Word('no annotation');
 			$art->author_id = $assoc['author_id'];
 			$art->name = $assoc['name'];
 			$art->text_block = $assoc['text_block'];
+			if (ArrayElemIsValidStr($assoc, 'language')) $art->language = $assoc['language'];
 			try {
 				if (isset($assoc['creating_date']) && (strlen($assoc['creating_date'])))
 					$art->creating_date = strtotime($assoc['creating_date']);
@@ -345,7 +380,11 @@
 			} catch(Exception $e) {
 				$art->creating_date = time_undef;
 			}
-			$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png');
+			if (ArrayElemIsValidStr($assoc, 'language')) {
+				global $image_extensions;
+				$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png', $image_extensions, $art->language);
+			} else
+				$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png');
 			return $art;
 		}
 
@@ -358,44 +397,71 @@
 		{
 			global $db_connection;
 			$res = array();
-			$result = $db_connection->query("SELECT * FROM `".Article::$table."` ORDER BY creating_date DESC");
+			$from_table = Article::$table;
+			$lang = GetLanguage();
+			if ($lang !== 'rus') $from_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$from_table."` ORDER BY creating_date DESC");
 			if (!$result) {
 				return NULL;
 			}
 			while ($row = $result->fetch_assoc()) {
+				$row['language'] = $lang;
 				array_push($res, Article::FetchFromAssoc($row));
 			}
 			return $res;
 		}
 
-		public static function InsertToDB($request)
+		public function FetchLanguages()
+		{
+			global $languages;
+			global $db_connection;
+			$res = array();
+			foreach ($languages as $key => $value) {
+				$from_table = Article::$table;
+				if ($key !== 'rus') $from_table .= '_'.$key;
+				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$this->id);
+				if ($q) {
+					$cnt = $q->fetch_array()[0];
+					if ($cnt > 0) $res[$key] = $value;
+				}
+			}
+			return $res;
+		}
+
+		public static function InsertToDB($request, $lang_vers = 'rus', $glob_id = 0)
 		{
 			global $db_connection;
 			global $link_to_article_images;
+			global $languages;
 
 			$author_id 	= $db_connection->real_escape_string($request->author_id);
 			$name 		= $db_connection->real_escape_string($request->name);
 			$annotation = $db_connection->real_escape_string($request->annotation);
-			$res = $db_connection->query("INSERT INTO `".Article::$table."` (`id`, `author_id`, `name`, `annotation`, `text_block`, `creating_date`) VALUES ('0', '".$author_id."', '".$name."', '".$annotation."', '', CURRENT_TIMESTAMP)");
+			$insert_table = Article::$table;
+			if ($lang_vers !== 'rus') {
+				$insert_table .= '_'.$lang_vers;
+			}
+			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `author_id`, `name`, `annotation`, `text_block`, `creating_date`) VALUES ('".$glob_id."', '".$author_id."', '".$name."', '".$annotation."', '', CURRENT_TIMESTAMP)");
 			if (!$res) {
 				return false;
 			}
 			$id = $db_connection->insert_id;
 
-			$request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
+			if ($glob_id === 0) $request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
 			$text_block = $db_connection->real_escape_string($request->text_block);
-			$res = $db_connection->query("UPDATE `".Article::$table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
+			$res = $db_connection->query("UPDATE `".$insert_table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
 			if (!$res) {
 				echo $db_connection->error;
-				$db_connection->query("DELETE FROM `".Article::$table."` WHERE `id` = ".$id);
+				$db_connection->query("DELETE FROM `".$insert_table."` WHERE `id` = ".$id);
 				return false;
 			}
 
 			$request->id = $id;
 			$upload_path = '';
-			recurse_copy($link_to_article_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_article_images.$id);
+			if ($glob_id === 0) recurse_copy($link_to_article_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_article_images.$id);
 			if (is_uploaded_file($_FILES['cover']['tmp_name'])) {
 				$img_name = 'cover';
+				if ($lang_vers !== 'rus') $img_name .= '_'.$lang_vers;
 				$sepext = explode('.', strtolower($_FILES['cover']['name']));
 			    $type = end($sepext);
 			    $img_name .= '.'.$type;
@@ -419,11 +485,13 @@
 			if (isset($assoc['cover']['name']) && (is_uploaded_file($assoc['cover']['tmp_name']))) {
 				global $link_to_article_images;
 				$img_name = 'cover';
+				if ($this->language !== 'rus') $img_name .= '_'.$this->language;
+				$old_im = $img_name;
 				$sepext = explode('.', strtolower($assoc['cover']['name']));
 			    $type = end($sepext);
 			    $img_name .= '.'.$type;
 			    $upload_path = $link_to_article_images.$this->id.'/'.$img_name;
-			    if (!delete_image($link_to_article_images.$this->id.'/cover')) {
+			    if (!delete_image($link_to_article_images.$this->id.'/'.$old_im)) {
 			    	return -1;
 			    } else if (!move_uploaded_file($assoc['cover']['tmp_name'], $upload_path)) {
 			    	return -1;
@@ -438,7 +506,9 @@
 		public function Save()
 		{
 			global $db_connection;
-			$res = $db_connection->query("SELECT `id` FROM `".Article::$table."` WHERE (`id`=".$this->id.")");
+			$from_table = Article::$table;
+			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
+			$res = $db_connection->query("SELECT `id` FROM `".$from_table."` WHERE (`id`=".$this->id.")");
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -451,7 +521,7 @@
 			$name_tmp 		= $db_connection->real_escape_string($this->name);
 			$annotation_tmp = $db_connection->real_escape_string($this->annotation);
 			$text_block_tmp = $db_connection->real_escape_string($this->text_block);
-			$res = $db_connection->query("UPDATE `".Article::$table."` SET `name`=\"".$name_tmp."\", `annotation`=\"".$annotation_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
+			$res = $db_connection->query("UPDATE `".$from_table."` SET `name`=\"".$name_tmp."\", `annotation`=\"".$annotation_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -463,11 +533,21 @@
 		{
 			global $db_connection;
 			global $link_to_article_images;
+			global $link_to_logo;
 
-			if (!$db_connection->query("DELETE FROM `".Article::$table."` WHERE `id` = ".$id)) {
+			$article = Article::FetchByID($id);
+			$langs = $article->FetchLanguages();
+
+			$from_table = Article::$table;
+			if ($article->language !== 'rus') $from_table .= '_'.$article->language;
+
+			if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE `id` = ".$id)) {
 				return 0;
 			} else {
-				removeDirectory($link_to_article_images.$id);
+				if (count($langs) < 2) removeDirectory($link_to_article_images.$id);
+				else {
+					if ($article->path_to_image !== $link_to_logo) unlink($article->path_to_image);
+				}
 				return 1;
 			}
 		}

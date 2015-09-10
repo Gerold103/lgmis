@@ -24,7 +24,7 @@
 		$projects = Project::FetchByDirectionID($direction->id);
 		$size = count($projects);
 		if ($size > 0) {
-			$content .= '<hr><div class="row" align="center">'.ToPageHeader('Связанные проекты', 'h4', 'grey').'</div><hr>';
+			$content .= '<hr><div class="row" align="center">'.ToPageHeader(Language::Word('linked projects'), 'h4', 'grey').'</div><hr>';
 			
 			require($link_to_pagination_init_template);
 

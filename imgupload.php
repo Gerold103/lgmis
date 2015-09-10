@@ -14,7 +14,8 @@
         $upload_dir = $link_to_users_images.$dir_id.'/blocks/tmp_'.$author_id;
         break;
       case Article::$type:
-        $upload_dir = $link_to_article_images.'tmp_'.$author_id;
+        if (isset($_GET['glob_id'])) $upload_dir = $link_to_article_images.$_GET['glob_id'];
+        else $upload_dir = $link_to_article_images.'tmp_'.$author_id;
         break;
       case Direction::$type:
         $upload_dir = $link_to_direction_images.'tmp_'.$author_id;
@@ -55,7 +56,8 @@
   }
   file_put_contents('files/[debug].txt', $upload_dir."\xA");
   file_put_contents('files/[debug].txt', $request_buf, FILE_APPEND);
-  $img_id = count(array_diff(scandir($_SERVER['DOCUMENT_ROOT'].'/'.$upload_dir), array('.', '..'))) + 1;
+  file_put_contents('files/[debug].txt', 'Root: '.$_SERVER['DOCUMENT_ROOT'].$link_prefix.$upload_dir, FILE_APPEND);
+  $img_id = count(array_diff(scandir($_SERVER['DOCUMENT_ROOT'].$link_prefix.$upload_dir), array('.', '..'))) + 1;
   file_put_contents('files/[debug].txt', 'IMG_ID: '.$img_id."\xA", FILE_APPEND);
   file_put_contents('files/[debug].txt', $upload_dir."\xA", FILE_APPEND);
 

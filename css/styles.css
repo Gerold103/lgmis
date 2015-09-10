@@ -9,6 +9,8 @@ a {
     white-space: -pre-wrap !important; /* Opera 4-6 */    
     white-space: -o-pre-wrap !important; /* Opera 7 */    
     word-wrap: break-word !important; /* Internet Explorer 5.5+ */
+    color: inherit;
+    text-decoration: none !important;
 }
 
 hr {
@@ -16,6 +18,24 @@ hr {
 }
 
 a img {border:0; outline:0;}
+ 
+
+.company_name {
+	text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+}
+
+.lang_flag {
+	opacity: 0.4;
+	-webkit-transition: all 0.5s ease;
+	   -moz-transition: all 0.5s ease;
+	    -ms-transition: all 0.5s ease;
+	     -o-transition: all 0.5s ease;
+	        transition: all 0.5s ease;
+}
+
+.lang_flag:hover {
+	opacity: 1;
+}
 
 
 .button_as_link {

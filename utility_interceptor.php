@@ -1,6 +1,17 @@
 <?php
 	include_once('utility_lgmis_lib.php');
+	require_once($link_to_utility_authorization);
+
 	//----------------------------------------------------------------A U X I L I A R Y   F U N C T I O N S----------------------------------------------------------------
+	if (isset($_REQUEST['lang'])) {
+		$lang = $_REQUEST['lang'];
+		if (CheckLanguage($lang) === false) {
+			echo AlertMessage('danger', 'Язык '.$lang.' не найден');
+			exit();
+		}
+		$_SESSION['lang'] = $lang;
+		header('Location: '.Link::Get(''));
+	}
 
 	//------------------------------------------------D E L E T I N G------------------------------------------------
 	if (isset($_REQUEST['del'])) {
@@ -11,6 +22,8 @@
 				if (!isset($_REQUEST['info'])) {
 					if ($_REQUEST['type'] === RequestOnRegister::$type) {
 						$_REQUEST['info'] = 'Вы уверены, что хотите отклонить запрос пользователя '.RequestOnRegister::FetchByID($_REQUEST['id'])->name.'?';
+					} else if ($_REQUEST['type'] === Article::$type) {
+						$_REQUEST['info'] = 'Вы уверены, что хотите удалить новость с заголовком '.Article::FetchByID($_REQUEST['id'])->name.'?';
 					}
 				}
 				if (!isset($_REQUEST['info'])) {

@@ -13,8 +13,12 @@
 		public  $priority      = undef;
 		public 	$creating_date = undef;
 
+		public  $language = undef;
+
 		public static $type = 'user_block';
 		public static $table = 'user_blocks';
+
+		public function GetID() { return $this->id; }
 		
 		//--------Methods--------
 		
@@ -49,12 +53,10 @@
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShortInTable();
+				case admin_user_id: case simple_user_id:
+					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return html_undef;
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShortInTable();
 				default:
 					return html_undef;
 			}
@@ -100,7 +102,7 @@
 			$res .= 									ToPageHeader(htmlspecialchars($this->name), 'h3', 'black');
 			$res .= 								'</div>';
 			$res .= 								'<div class="'.ColAllTypes(5).'">';
-			$res .= 									ToPageHeader('Ранг: '.$this->priority, 'h4', 'grey');
+			$res .= 									ToPageHeader(Language::Word('rank').': '.$this->priority, 'h4', 'grey');
 			$res .= 								'</div>';
 			$res .= 							'</div>';
 			$res .=							'</a>';
@@ -172,15 +174,15 @@
 			$res .=					'<div class="panel-heading" role="tab" id="'.$this->id.'">';
 			$res .=						'<div class="panel-title">';
 			$res .=							'<a data-toggle="collapse" data-parent="#accordion" href="#collapse'.$this->id.'" aria-expanded="false" aria-controls="collapse'.$this->id.'" class="collapsed">';
-			if (GetUserLogin() === $author_login) {
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
 				$res .= 						'<div class="row">';
 				$res .= 							'<div class="'.ColAllTypes(7).'">';
 			}
 			$res .=										ToPageHeader(htmlspecialchars($this->name), 'h3', 'black');
-			if (GetUserLogin() === $author_login) {
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
 				$res .= 							'</div>';
 				$res .= 							'<div class="'.ColAllTypes(5).'">';
-				$res .= 								ToPageHeader('Ранг: '.$this->priority, 'h4', 'grey');
+				$res .= 								ToPageHeader(Language::Word('rank').': '.$this->priority, 'h4', 'grey');
 				$res .= 							'</div>';
 				$res .= 						'</div>';
 			}
@@ -194,13 +196,16 @@
 			$res .= 					'</div>';
 			$res .=					'</div>';
 			$res .=				'</div>';
-			if (GetUserLogin() === $author_login) {
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
 				$res .= 		'<div class="row">';
-				$res .=				'<div class="'.ColAllTypes(6).'" align="right">';
+				$res .=				'<div class="'.ColAllTypes(4).'" align="right">';
 				$res .=					$this->ToHTMLEdit();
 				$res .=				'</div>';
-				$res .=				'<div class="'.ColAllTypes(6).'" align="left">';
+				$res .=				'<div class="'.ColAllTypes(4).'" align="center">';
 				$res .=					$this->ToHTMLDel();
+				$res .=				'</div>';
+				$res .=				'<div class="'.ColAllTypes(4).'" align="left">';
+				$res .=					$this->ToHTMLAddLanguage();
 				$res .=				'</div>';
 				$res .= 		'</div>';
 			}
@@ -223,6 +228,19 @@
 		//html code of short representation of object in string within public pages of lgmis
 		public function ToHTMLUserPublicShort() { return html_undef; }
 
+		public function ToHTMLAddLanguage()
+		{
+			global $link_to_admin_user_block;
+			$args = array(
+				'action_link' => $link_to_admin_user_block,
+				'action_type' => 'add_lang',
+				'obj_type' => UserBlock::$type,
+				'id' => $this->id,
+				'btn_color' => 'btn-primary',
+			);
+			return ActionButton($args);
+		}
+
 		public function ToHTMLDel()
 		{
 			global $link_to_utility_interceptor;
@@ -231,7 +249,7 @@
 				'action_type' => 'del',
 				'obj_type' => UserBlock::$type,
 				'id' => $this->id,
-				'info' => 'Вы уверены, что хотите удалить блок '.$this->name.'?',
+				'info' => Language::Word('are you shure that you want to delete block').' '.$this->name.'?',
 			);
 			return ActionButton($args);
 		}
@@ -272,6 +290,7 @@
 			$usr_blck->name = $assoc['name'];
 			$usr_blck->text_block = $assoc['text_block'];
 			$usr_blck->priority = $assoc['priority'];
+			if (ArrayElemIsValidStr($assoc, 'language')) $usr_blck->language = $assoc['language'];
 			try {
 				if (ArrayElemIsValidStr($assoc, 'creating_date'))
 					$usr_blck->creating_date = strtotime($assoc['creating_date']);
@@ -292,18 +311,23 @@
 		public static function FetchByID($id)
 		{
 			global $db_connection;
-			$result = $db_connection->query("SELECT * FROM `".UserBlock::$table."` WHERE id='".$id."'");
+			$lang = GetLanguage();
+			$fetch_table = UserBlock::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE id='".$id."'");
 			if ($result->num_rows != 1) {
 				return NULL;
 			}
-			return UserBlock::FetchFromAssoc($result->fetch_assoc());
+			$tmp = $result->fetch_assoc();
+			$tmp['language'] = $lang;
+			return UserBlock::FetchFromAssoc($tmp);
 		}
 
 		public static function FetchFromPost() { return html_undef; }
 
 		public static function FetchAll() { return html_undef; }
 
-		public static function InsertToDB($request)
+		public static function InsertToDB($request, $lang_vers = 'rus', $glob_id = 0)
 		{
 			global $db_connection;
 			global $link_to_users_images;
@@ -311,37 +335,59 @@
 			$name 		= $db_connection->real_escape_string($request->name);
 			$text_block = $db_connection->real_escape_string($request->text_block);
 			$priority   = $db_connection->real_escape_string($request->priority);
-			$res = $db_connection->query("INSERT INTO `".UserBlock::$table."` (`id`, `author_id`, `name`, `text_block`, `priority`, `creating_date`) VALUES ('0', '".$author_id."', '".$name."', '".$text_block."', '".$priority."', CURRENT_TIMESTAMP)");
+			$insert_table = UserBlock::$table;
+			if ($lang_vers !== 'rus') {
+				$insert_table .= '_'.$lang_vers;
+			}
+			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `author_id`, `name`, `text_block`, `priority`, `creating_date`) VALUES ('".$glob_id."', '".$author_id."', '".$name."', '".$text_block."', '".$priority."', CURRENT_TIMESTAMP)");
 			if (!$res) {
 				return false;
 			}
 			$id = $db_connection->insert_id;
 
-			$request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
+			if ($glob_id === 0) $request->text_block = preg_replace('/tmp_(\d+)\//', $id.'/', $request->text_block);
 			$text_block = $db_connection->real_escape_string($request->text_block);
-			$res = $db_connection->query("UPDATE `".UserBlock::$table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
+			$res = $db_connection->query("UPDATE `".$insert_table."` SET `text_block`=\"".$text_block."\" WHERE `id`=".$id);
 			if (!$res) {
 				echo $db_connection->error;
-				$db_connection->query("DELETE FROM `".UserBlock::$table."` WHERE `id` = ".$id);
+				$db_connection->query("DELETE FROM `".$insert_table."` WHERE `id` = ".$id);
 				return false;
 			}
 
 			$request->id = $id;
 			$upload_path = '';
-			recurse_copy($link_to_users_images.$request->author_id.'/blocks/tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_users_images.$request->author_id.'/blocks/'.$id);
+			if ($glob_id === 0) recurse_copy($link_to_users_images.$request->author_id.'/blocks/tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_users_images.$request->author_id.'/blocks/'.$id);
 			return true;
 		}
 
-		public static function FetchAllByAuthorID($id)
+		public static function FetchAllByAuthorID($id, $kwargs = array())
 		{
 			global $db_connection;
-			$result = $db_connection->query("SELECT * FROM `".UserBlock::$table."` WHERE author_id='".$id."' ORDER BY priority DESC, creating_date DESC;");
-			if ($result->num_rows < 1) {
-				return NULL;
-			}
+			global $languages;
 			$res = array();
-			for ($i = 0; $i < $result->num_rows; ++$i) {
-				array_push($res, UserBlock::FetchFromAssoc($result->fetch_assoc()));
+			if (!isset($kwargs['all'])) {
+				$lang = '';
+				if (isset($kwargs['lang'])) $lang = $kwargs['lang'];
+				else $lang = GetLanguage();
+				$fetch_table = UserBlock::$table;
+				if ($lang != 'rus') $fetch_table .= '_'.$lang;
+				$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE author_id='".$id."' ORDER BY priority DESC, creating_date DESC;");
+				if ($result->num_rows < 1) {
+					echo $db_connection->error;
+					return NULL;
+				}
+				$res = array();
+				for ($i = 0; $i < $result->num_rows; ++$i) {
+					$tmp = $result->fetch_assoc();
+					$tmp['language'] = $lang;
+					array_push($res, UserBlock::FetchFromAssoc($tmp));
+				}
+			} else {
+				foreach ($languages as $key => $value) {
+					$tmp = $this->FetchAllByAuthorID($id, array('lang' => $key));
+					if (($tmp !== NULL) && (count($tmp) > 0))
+						$res = array_merge($res, $tmp);
+				}
 			}
 			return $res;
 		}
@@ -352,13 +398,16 @@
 			$this->author_id = $author_id;
 			$this->name = $name;
 			$this->text_block = $text_block;
+			$this->language = GetLanguage();
 		}
 		
 		//Methods for pushing
 		public function Save()
 		{
 			global $db_connection;
-			$res = $db_connection->query("SELECT `id` FROM `".UserBlock::$table."` WHERE (`id`=".$this->id.")");
+			$from_table = UserBlock::$table;
+			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
+			$res = $db_connection->query("SELECT `id` FROM `".$from_table."` WHERE (`id`=".$this->id.")");
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
@@ -371,12 +420,29 @@
 			$name_tmp 		= $db_connection->real_escape_string($this->name);
 			$priority_tmp   = $db_connection->real_escape_string($this->priority);
 			$text_block_tmp = $db_connection->real_escape_string($this->text_block);
-			$res = $db_connection->query("UPDATE `".UserBlock::$table."` SET `name`=\"".$name_tmp."\", `priority`=\"".$priority_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
+			$res = $db_connection->query("UPDATE `".$from_table."` SET `name`=\"".$name_tmp."\", `priority`=\"".$priority_tmp."\", `text_block`=\"".$text_block_tmp."\" WHERE `id`=".$this->id);
 			if (!$res) {
 				echo $db_connection->error;
 				return false;
 			}
 			return true;
+		}
+
+		public function FetchLanguages()
+		{
+			global $languages;
+			global $db_connection;
+			$res = array();
+			foreach ($languages as $key => $value) {
+				$from_table = UserBlock::$table;
+				if ($key !== 'rus') $from_table .= '_'.$key;
+				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$this->id);
+				if ($q) {
+					$cnt = $q->fetch_array()[0];
+					if ($cnt > 0) $res[$key] = $value;
+				}
+			}
+			return $res;
 		}
 
 		public static function Delete($id)
@@ -385,13 +451,18 @@
 			global $link_to_users_images;
 
 			$usr_blck = UserBlock::FetchByID($id);
-			if ($usr_blck == NULL) return 0;
+			$langs = $usr_blck->FetchLanguages();
+
+			$from_table = UserBlock::$table;
+			if ($usr_blck->language !== 'rus') $from_table .= '_'.$usr_blck->language;
+
 			$author_id = $usr_blck->author_id;
 
-			if (!$db_connection->query("DELETE FROM `".UserBlock::$table."` WHERE `id` = ".$id)) {
+			if (!$db_connection->query("DELETE FROM `".$from_table."` WHERE `id` = ".$id)) {
+				echo $db_connection->error;
 				return 0;
 			} else {
-				removeDirectory($link_to_users_images.$author_id.'/blocks/'.$id);
+				if (count($langs) < 2) removeDirectory($link_to_users_images.$author_id.'/blocks/'.$id);
 				return 1;
 			}
 		}
