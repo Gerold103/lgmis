@@ -10,7 +10,7 @@
 			exit();
 		}
 		$_SESSION['lang'] = $lang;
-		header('Location: '.Link::Get(''));
+		header('Location: '.Link::Get($link_to_admin));
 	}
 
 	//------------------------------------------------D E L E T I N G------------------------------------------------

@@ -13,6 +13,7 @@
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
 		global $languages;
+		$content_types_full = Language::GetContentTypes();
 
 		$content .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
 		$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header')).'<br>';

@@ -26,4 +26,4 @@ RewriteRule ^contacts/page-([0-9]+)/?$ public_contacts.php?page=$1 [L]
 
 RewriteRule ^user/([0-9]+)/?$ public_user.php?type=user&id=$1&full=1 [L]
 
-RewriteRule ^lang/([a-z]+)/?$ utility_interceptor.php?lang=$1 [L]
+RewriteRule ^lang/([a-z]+)/?$ utility_language_change.php?lang=$1 [L]

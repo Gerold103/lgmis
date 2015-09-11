@@ -81,5 +81,8 @@
     <div style="position: absolute; top: 20px; right: 50px;">
         <a href=<?php echo '"'.Link::Get('/lang/rus').'"'; ?> ><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'rus_flag.png"'; ?> ></a><a href=<?php echo '"'.Link::Get('/lang/eng').'"'; ?>><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'eng_flag.png"'; ?> ></a>
     </div>
+    <div style="position: fixed; top: 20px; left: 50px;">
+        <a class="btn btn" href=<?php echo '"'.$link_to_admin.'"'; ?> ><?php echo Language::Word('private office'); ?></a>
+    </div>
     </body>
 </html>

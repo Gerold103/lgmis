@@ -1147,6 +1147,13 @@
 						default: return 'incorrect language';
 					}
 				}
+				case 'private office': {
+					switch ($lang) {
+						case 'rus': return 'Личный кабинет';
+						case 'eng': return 'Private office';						
+						default: return 'incorrect language';
+					}
+				}
 				default: return 'incorrect word';
 			}
 		}
@@ -1300,6 +1307,18 @@
 				60 => Language::Position(60, $lang),
 			);
 			return $positions;
+		}
+
+		function GetContentTypes($lang = 0) {
+			if ($lang === 0) $lang = GetLanguage();
+			global $content_types_full;
+			$content_types_full = array(
+				'articles' => Language::PublicMenu('articles', $lang),
+				'directions' => Language::PublicMenu('directions', $lang),
+				'projects' => Language::PublicMenu('projects', $lang),
+				'about_us' => Language::PublicMenu('about_us', $lang),
+			);
+			return $content_types_full;
 		}
 
 		function Address($lang = 0) {

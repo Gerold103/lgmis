@@ -107,7 +107,7 @@
 			$content .=		'<script>';
 			$content .=			'CKEDITOR.replace("text_block",';
 			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Article::$type.'&id='.$author_id.'&add=add&glob_id='.$article->GetID().'",';
-			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Article::$type.'&id='.$art_id.'&edit=edit",';
+			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Article::$type.'&id='.$_REQUEST['id'].'&edit=edit",';
 			$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 			$content .= 			'allowedContent: true, });';
 			$content .=			'CKEDITOR.config.height = 400;';

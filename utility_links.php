@@ -23,6 +23,7 @@ $link_to_img_upload = 'imgupload.php';
 $link_to_img_browse = 'imgbrowse.php';
 $link_to_utility_lgmis_lib = 'ulitity_lgmis_lib.php';
 $link_to_utility_languages = 'utility_languages.php';
+$link_to_utility_language_change = 'utility_language_change.php';
 $link_to_utility_links = 'utility_links.php';
 $link_to_utility_sql_worker = 'utility_sql_worker.php';
 $link_to_utility_defines = 'utility_defines.php';
