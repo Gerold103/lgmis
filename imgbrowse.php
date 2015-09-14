@@ -50,7 +50,7 @@
 	        	break;
 	    }
 	}
-
+	echo $upload_dir;
 	try{
       	$obdr = new DirectoryIterator($_SERVER['DOCUMENT_ROOT'].'/'.$link_prefix.$upload_dir);         // object of the dir
     }
