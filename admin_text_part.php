@@ -63,7 +63,7 @@
 		$content .= 	'</div>';
 		$content .=		'<script>';
 		$content .=			'CKEDITOR.replace("text_block",';
-		$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.TextPart::$type.'&id='.$txt_id.'&edit=edit",';
+		$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.TextPart::$type.'&id='.$txt_id.'&edit=edit&glob_id='.$txt_id.'",';
 		$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.TextPart::$type.'&id='.$txt_id.'&edit=edit",';
 		$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 		$content .= 			'allowedContent: true, });';
@@ -104,7 +104,7 @@
 			$content .= 	'</div>';
 			$content .=		'<script>';
 			$content .=			'CKEDITOR.replace("text_block",';
-			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.TextPart::$type.'&id='.$id.'&add=add",';
+			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.TextPart::$type.'&id='.$id.'&add=add&glob_id='.$text_part->GetID().'",';
 			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.TextPart::$type.'&id='.$text_part->GetID().'&edit=edit",';
 			$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 			$content .= 			'allowedContent: true, });';

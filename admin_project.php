@@ -75,8 +75,8 @@
 		$content .= 	'</div>';
 		$content .=		'<script>';
 		$content .=			'CKEDITOR.replace("text_block",';
-		$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Project::$type.'&id='.$proj_id.'&edit=edit",';
-		$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Project::$type.'&id='.$art_id.'&edit=edit",';
+		$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Project::$type.'&id='.$proj_id.'&edit=edit&glob_id='.$proj_id.'",';
+		$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Project::$type.'&id='.$proj_id.'&edit=edit",';
 		$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 		$content .= 			'allowedContent: true, });';
 		$content .=			'CKEDITOR.config.height = 400;';
@@ -120,7 +120,7 @@
 			$content .= 	'</div>';
 			$content .=		'<script>';
 			$content .=			'CKEDITOR.replace("text_block",';
-			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Project::$type.'&id='.$id.'&add=add",';
+			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Project::$type.'&id='.$id.'&add=add&glob_id='.$project->id.'",';
 			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Project::$type.'&id='.$project->id.'&edit=edit",';
 			$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 			$content .= 			'allowedContent: true, });';
