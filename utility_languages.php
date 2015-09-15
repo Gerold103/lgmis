@@ -58,7 +58,7 @@
 				case 'directions': {
 					switch ($lang) {
 						case 'rus': return 'Направления';
-						case 'eng': return 'Directions';						
+						case 'eng': return 'Research areas';						
 						default: return 'incorrect language';
 					}
 				}
@@ -996,7 +996,7 @@
 				case 'our collective': {
 					switch ($lang) {
 						case 'rus': return 'Наш коллектив';
-						case 'eng': return 'Our collective';
+						case 'eng': return 'Our group';
 						default: return 'incorrect language';
 					}
 				}
@@ -1122,7 +1122,7 @@
 				case 'employees': {
 					switch ($lang) {
 						case 'rus': return 'Сотрудники';
-						case 'eng': return 'Employees';
+						case 'eng': return 'Our team';
 						default: return 'incorrect language';
 					}
 				}
@@ -1164,7 +1164,7 @@
 				case 'private office': {
 					switch ($lang) {
 						case 'rus': return 'Личный кабинет';
-						case 'eng': return 'Private office';						
+						case 'eng': return 'My account';						
 						default: return 'incorrect language';
 					}
 				}
@@ -1206,21 +1206,21 @@
 				case 30: {
 					switch ($lang) {
 						case 'rus': return 'Программист';
-						case 'eng': return 'Programmer';
+						case 'eng': return 'Developer';
 						default: return 'incorrect language';
 					}
 				}
 				case 40: {
 					switch ($lang) {
 						case 'rus': return 'Старший программист';
-						case 'eng': return 'Senior programmer';
+						case 'eng': return 'Senior developer';
 						default: return 'incorrect language';
 					}
 				}
 				case 50: {
 					switch ($lang) {
 						case 'rus': return 'Ведущий программист';
-						case 'eng': return 'Leading programmer';
+						case 'eng': return 'Lead developer';
 						default: return 'incorrect language';
 					}
 				}
@@ -1239,6 +1239,7 @@
 			if ($to === 0) $to = GetLanguage();
 			if ($from === $to) return $str;
 		    $converter = array(
+		    	'тья' => 'tia',
 		        'а' => 'a',   'б' => 'b',   'в' => 'v',
 		        'г' => 'g',   'д' => 'd',   'е' => 'e',
 		        'ё' => 'e',   'ж' => 'zh',  'з' => 'z',
@@ -1339,7 +1340,7 @@
 			if ($lang === 0) $lang = GetLanguage();
 			switch ($lang) {
 				case 'rus': return '119991 ГСП-1 Москва, Ленинские горы, МГУ имени М.В. Ломоносова, 2-й учебный корпус, факультет ВМК, этаж 5, аудитория 528<br><br>Телефон: 8-495-930-52-87';
-				case 'eng': return '119991 GSP-1 Moscow, Leninskie Gory, Lomonosov MSU, 2-th study case, CMC faculty, 5-th floor, audience 528<br><br>Telephone: 8-495-930-52-87';				
+				case 'eng': return '119991 GSP-1 Moscow, Leninskie Gory, Lomonosov MSU, 2nd educational building, CMC faculty, 5-th floor, audience 528<br><br>Telephone: 8-495-930-52-87';				
 				default: return 'incorrect language';
 			}
 		}
