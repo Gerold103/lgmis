@@ -232,7 +232,7 @@
 		{
 			global $positions;
 			$res = '';
-			$res .= '<div class="row" style="display: table;" align="center">';
+			$res .= '<div class="row" style="display: table; width: 100%;" align="center">';
 			$res .= 	'<div class="'.ColAllTypes(4).'" style="float: none; display: table-cell; vertical-align: middle;">';
 			$res .= 		'<img src="'.Link::Get($this->path_to_photo).'" class="img-rounded img-avatar-sm">';
 			$res .= 	'</div>';
