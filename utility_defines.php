@@ -358,7 +358,8 @@
 		'articles' => 'arts',
 		'directions' => 'dirs',
 		'projects' => 'projs',
-		'about_us' => 'abt_us',   
+		'about_us' => 'abt_us', 
+		'reports' => 'reps',  
 	);
 
 	$content_types_full = array(

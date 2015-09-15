@@ -3,7 +3,7 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
-RewriteBase /
+RewriteBase /lgmis2/lgmis/
 RewriteRule ^article/([0-9]+)/?$ public_article.php?type=article&id=$1&full=1 [L]
 RewriteRule ^direction/([0-9]+)/?$ public_direction.php?type=direction&id=$1&full=1 [L]
 RewriteRule ^project/([0-9]+)/?$ public_project.php?type=project&id=$1&full=1 [L]

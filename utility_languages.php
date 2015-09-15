@@ -76,6 +76,20 @@
 		function Word($word, $lang = 0) {
 			if ($lang === 0) $lang = GetLanguage();
 			switch ($word) {
+				case 'reports': {
+					switch ($lang) {
+						case 'rus': return 'Отчеты';
+						case 'eng': return 'Reports';
+						default: return 'incorrect language';
+					}
+				}
+				case 'bookkeeping': {
+					switch ($lang) {
+						case 'rus': return 'Бухгалтерия';
+						case 'eng': return 'Bookkeeping';
+						default: return 'incorrect language';
+					}
+				}
 				case 'project adding': {
 					switch ($lang) {
 						case 'rus': return 'Добавление проекта';

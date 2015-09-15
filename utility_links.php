@@ -1,5 +1,5 @@
 <?php
-$link_prefix = '/';
+$link_prefix = '/lgmis2/lgmis/';
 
 $link_to_admin_manage_staff = 'admin_manage_staff.php';
 $link_to_admin_manage_content = 'admin_manage_content.php';
@@ -45,6 +45,7 @@ $link_to_request_on_register_class = 'classes/requestonregister.php';
 $link_to_project_class = 'classes/project.php';
 $link_to_user_block_class = 'classes/user_block.php';
 $link_to_text_part_class = 'classes/text_part.php';
+$link_to_report_class = 'classes/report.php';
 
 $link_to_public_article = 'public_article.php';
 $link_to_index = 'index.php';
@@ -65,6 +66,7 @@ $link_to_admin_direction = 'admin_direction.php';
 $link_to_admin_project = 'admin_project.php';
 $link_to_admin_user_block = 'admin_user_block.php';
 $link_to_admin_text_part = 'admin_text_part.php';
+$link_to_admin_bookkeeping = 'admin_bookkeeping.php';
 
 $link_to_public_template = 'php_templates/public_template.php';
 $link_to_public_menu_template = 'php_templates/public_menu_template.php';

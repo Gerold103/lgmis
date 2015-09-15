@@ -145,6 +145,7 @@
 		{
 			global $user_blocks_in_db;
 			global $link_to_admin_user_block;
+			global $link_to_admin_bookkeeping;
 			global $positions;
 
 			$res = '';
@@ -185,6 +186,18 @@
 					);
 				$res .= 		'<span style="margin: 3px;">'.ActionButton($args).'</span>';
 				$res .= 	'</div>';
+				// $res .= 	'<div class="'.ColAllTypes(5).'">';
+				// 	$args = array(
+				// 		'action_link' => $link_to_admin_bookkeeping,
+				// 		'action_type' => 'full',
+				// 		'obj_type' => Report::$type,
+				// 		'id' => $this->id,
+				// 		'btn_text' => Language::Word('bookkeeping'),
+				// 		'btn_size' => 'btn-lg',
+				// 		'method' => 'get',
+				// 	);
+				// $res .= 		'<span style="margin: 3px;">'.ActionButton($args).'</span>';
+				// $res .= 	'</div>';
 				$res .= '</div>';
 			}
 
