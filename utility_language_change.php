@@ -11,5 +11,4 @@
 		}
 		$_SESSION['lang'] = $lang;
 	}
-	header('Location: '.Link::Get(''));
 ?>

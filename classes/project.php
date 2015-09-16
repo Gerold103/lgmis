@@ -344,6 +344,14 @@
 			if ($lang != 'rus') $fetch_table .= '_'.$lang;
 			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `id`=".$id);
 			if ((!$result) || ($result->num_rows != 1)) {
+				if (!$result) {
+					echo $db_connection->error;
+					return NULL;
+				}
+				$langs = Project::FetchLanguagesByID($id);
+				if (count($langs) > 0) {
+					return Error::no_translation;
+				}
 				return NULL;
 			}
 			$tmp = $result->fetch_assoc();
@@ -464,20 +472,25 @@
 
 		public function FetchLanguages()
 		{
+			return Project::FetchLanguagesByID($this->id);
+		}
+
+		public static function FetchLanguagesByID($id)
+		{
 			global $languages;
 			global $db_connection;
 			$res = array();
 			foreach ($languages as $key => $value) {
 				$from_table = Project::$table;
 				if ($key !== 'rus') $from_table .= '_'.$key;
-				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$this->id);
+				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$id);
 				if ($q) {
 					$cnt = $q->fetch_array()[0];
 					if ($cnt > 0) $res[$key] = $value;
 				}
 			}
 			return $res;
-		}
+		}		
 
 		public static function Delete($id)
 		{

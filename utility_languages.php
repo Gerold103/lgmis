@@ -75,375 +75,81 @@
 
 		function Word($word, $lang = 0) {
 			if ($lang === 0) $lang = GetLanguage();
+			if (($lang !== 'rus') && ($lang !== 'eng')) return 'incorrect language';
 			switch ($word) {
-				case 'reports': {
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ A ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'absense': {
 					switch ($lang) {
-						case 'rus': return 'Отчеты';
-						case 'eng': return 'Reports';
-						default: return 'incorrect language';
+						case 'rus': return 'Отсутствуют';
+						case 'eng': return 'Absense';
 					}
 				}
-				case 'bookkeeping': {
+				case 'actions': {
 					switch ($lang) {
-						case 'rus': return 'Бухгалтерия';
-						case 'eng': return 'Bookkeeping';
-						default: return 'incorrect language';
+						case 'rus': return 'Действия';
+						case 'eng': return 'Actions';
 					}
 				}
-				case 'project adding': {
+				case 'add article': {
 					switch ($lang) {
-						case 'rus': return 'Добавление проекта';
-						case 'eng': return 'Project adding';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавить новость';
+						case 'eng': return 'Add article';
 					}
 				}
-				case 'error during project inserting': {
+				case 'add block': {
 					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке проекта в базу';
-						case 'eng': return 'Error during project inserting';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавить блок';
+						case 'eng': return 'Add block';
 					}
 				}
-				case 'project is successfully added': {
+				case 'add direction': {
 					switch ($lang) {
-						case 'rus': return 'Проект успешно добавлен';
-						case 'eng': return 'Project is successfully added';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавить направление';
+						case 'eng': return 'Add direction';
 					}
 				}
-				case 'error during project adding': {
+				case 'add project': {
 					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении проекта';
-						case 'eng': return 'Error during project adding';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавить проект';
+						case 'eng': return 'Add project';
 					}
 				}
-				case 'error during text block inserting': {
+				case 'add text block': {
 					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке текстового блока в базу';
-						case 'eng': return 'Error during text block inserting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text block is successfully added': {
-					switch ($lang) {
-						case 'rus': return 'Текстовый блок успешно добавлен';
-						case 'eng': return 'Text block is successfully added';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error during text block adding': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении текстового блока';
-						case 'eng': return 'Error during text block adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error during direction inserting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке направления в базу';
-						case 'eng': return 'Error during direction inserting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'direction is successfully added': {
-					switch ($lang) {
-						case 'rus': return 'Направление успешно добавлено';
-						case 'eng': return 'Direction is successfully added';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error during direction adding': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении направления';
-						case 'eng': return 'Error during direction adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error during article inserting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке новости в базу';
-						case 'eng': return 'Error during article inserting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'article is successfully added': {
-					switch ($lang) {
-						case 'rus': return 'Новость успешно добавлена';
-						case 'eng': return 'Article is successfully added';
-						default: return 'incorrect language';
-					}
-				}
-				case 'request is accepted': {
-					switch ($lang) {
-						case 'rus': return 'Заявка принята';
-						case 'eng': return 'Request is accepted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while article adding': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении новости';
-						case 'eng': return 'Error while article adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error during user block inserting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке блока пользователя в базу';
-						case 'eng': return 'Error during user block inserting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user block is successfully added': {
-					switch ($lang) {
-						case 'rus': return 'Блок пользователя успешно добавлен';
-						case 'eng': return 'User block is successfully added';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while user block adding': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении блока пользователя';
-						case 'eng': return 'Error while user block adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while user adding': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при добавлении пользователя';
-						case 'eng': return 'Error while user adding';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавить блок текста';
+						case 'eng': return 'Add text block';
 					}
 				}
 				case 'adding result': {
 					switch ($lang) {
 						case 'rus': return 'Результат добавления';
 						case 'eng': return 'Adding result';
-						default: return 'incorrect language';
 					}
 				}
-				case 'cover was not uploaded': {
+				case 'all languages of this article is implemented': {
 					switch ($lang) {
-						case 'rus': return 'Обожка не была загружена';
-						case 'eng': return 'Cover was not uploaded';
-						default: return 'incorrect language';
+						case 'rus': return 'Все языки этой новости уже реализованы';
+						case 'eng': return 'All languages of this article is implemented';
 					}
 				}
-				case 'photo was not uploaded': {
+				case 'all languages of this direction is implemented': {
 					switch ($lang) {
-						case 'rus': return 'Фото не было загружено';
-						case 'eng': return 'Photo was not uploaded';
-						default: return 'incorrect language';
+						case 'rus': return 'Все языки этого направления уже реализованы';
+						case 'eng': return 'All languages of this direction is implemented';
 					}
 				}
-				case 'changes are saved': {
+				case 'all languages of this project is implemented': {
 					switch ($lang) {
-						case 'rus': return 'Изменения сохранены';
-						case 'eng': return 'Changes are saved';
-						default: return 'incorrect language';
+						case 'rus': return 'Все языки этого направления уже реализованы';
+						case 'eng': return 'All languages of this project is implemented';
 					}
 				}
-				case 'it was not succeeded to save': {
+				case 'all languages of this text block is implemented': {
 					switch ($lang) {
-						case 'rus': return 'Не удалось сохранить';
-						case 'eng': return 'It was not succeeded to save';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user was not changed': {
-					switch ($lang) {
-						case 'rus': return 'Пользователь не был изменен';
-						case 'eng': return 'User was not changed';
-						default: return 'incorrect language';
-					}
-				}
-				case 'editing is canceled': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование отменено';
-						case 'eng': return 'Editing is canceled';
-						default: return 'incorrect language';
-					}
-				}
-				case 'editing result': {
-					switch ($lang) {
-						case 'rus': return 'Результат редактирования';
-						case 'eng': return 'Editing result';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text block is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Текстовый блок удален';
-						case 'eng': return 'Text block is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while text block deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении текстового блока';
-						case 'eng': return 'Error while text block deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'project is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Проект удален';
-						case 'eng': return 'Project is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while project deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении проекта';
-						case 'eng': return 'Error while project deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user block is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Блок пользователя удален';
-						case 'eng': return 'User block is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while user block deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении блока пользователя';
-						case 'eng': return 'Error while user block deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'direction is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Направление удалено';
-						case 'eng': return 'Direction is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while direction deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении направления';
-						case 'eng': return 'Error while direction deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'article is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Новость удалена';
-						case 'eng': return 'Article is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while article deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении новости';
-						case 'eng': return 'Error while article deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user is deleted': {
-					switch ($lang) {
-						case 'rus': return 'Пользователь удален';
-						case 'eng': return 'User is deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while user deleting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при удалении пользователя';
-						case 'eng': return 'Error while user deleting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'request is rejected': {
-					switch ($lang) {
-						case 'rus': return 'Заявка отклонена';
-						case 'eng': return 'Request is rejected';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while request rejecting': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при отклонении заявки';
-						case 'eng': return 'Error while request rejecting';
-						default: return 'incorrect language';
-					}
-				}
-				case 'deleting is canceled': {
-					switch ($lang) {
-						case 'rus': return 'Удаление отменено';
-						case 'eng': return 'Deleting is canceled';
-						default: return 'incorrect language';
-					}
-				}
-				case 'deleting result': {
-					switch ($lang) {
-						case 'rus': return 'Результат удаления';
-						case 'eng': return 'Deleting result';
-						default: return 'incorrect language';
-					}
-				}
-				case 'request was successfully sended': {
-					switch ($lang) {
-						case 'rus': return 'Request was successfully sended';
-						case 'eng': return 'Заявка успешно отправлена';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error while inserting register request': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка при вставке заявки на регистрацию';
-						case 'eng': return 'Error while inserting register request';
-						default: return 'incorrect language';
-					}
-				}
-				case 'not all fields are filled': {
-					switch ($lang) {
-						case 'rus': return 'Не все поля заполнены';
-						case 'eng': return 'Not all fields are filled';
-						default: return 'incorrect language';
-					}
-				}
-				case 'login': {
-					switch ($lang) {
-						case 'rus': return 'Войти';
-						case 'eng': return 'Login';
-						default: return 'incorrect language';
-					}
-				}
-				case 'login please': {
-					switch ($lang) {
-						case 'rus': return 'Войдите, пожалуйста';
-						case 'eng': return 'Login, please';
-						default: return 'incorrect language';
-					}
-				}
-				case 'registration': {
-					switch ($lang) {
-						case 'rus': return 'Регистрация';
-						case 'eng': return 'Registration';
-						default: return 'incorrect language';
-					}
-				}
-				case 'it was not succeeded to be authorized': {
-					switch ($lang) {
-						case 'rus': return 'Не удалось авторизироваться';
-						case 'eng': return 'It was not succeeded to be authorized';
-						default: return 'incorrect language';
-					}
-				}
-				case 'incorrect password': {
-					switch ($lang) {
-						case 'rus': return 'Неверный пароль';
-						case 'eng': return 'Incorrect password';
-						default: return 'incorrect password';
-					}
-				}
-				case 'you logout': {
-					switch ($lang) {
-						case 'rus': return 'Вы вышли';
-						case 'eng': return 'You logout';
+						case 'rus': return 'Все языки этого текстового блока уже реализованы';
+						case 'eng': return 'All languages of this text block is implemented';
 						default: return 'incorrect language';
 					}
 				}
@@ -454,720 +160,1066 @@
 						default: return 'incorrect language';
 					}
 				}
-				case 'user block': {
+				case 'all linked projects also will be deleted': {
 					switch ($lang) {
-						case 'rus': return 'Блок пользователя';
-						case 'eng': return 'User block';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user block editing': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование блока';
-						case 'eng': return 'User block editing';
-						default: return 'incorrect language';
-					}
-				}
-				case 'user block adding': {
-					switch ($lang) {
-						case 'rus': return 'Добавление блока пользователя';
-						case 'eng': return 'Adding user block';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text block': {
-					switch ($lang) {
-						case 'rus': return 'Текстовый блок';
-						case 'eng': return 'Text block';
-						default: return 'incorrect language';
-					}
-				}
-				case 'all languages of this text block is implemented': {
-					switch ($lang) {
-						case 'rus': return 'Все языки этого текстового блока уже реализованы';
-						case 'eng': return 'All languages of this text block is implemented';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text editing': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование текста';
-						case 'eng': return 'Text editing';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text adding': {
-					switch ($lang) {
-						case 'rus': return 'Добавление текста';
-						case 'eng': return 'Text adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'number': {
-					switch ($lang) {
-						case 'rus': return 'Число';
-						case 'eng': return 'Number';
-						default: return 'incorrect language';
-					}
-				}
-				case 'choose role': {
-					switch ($lang) {
-						case 'rus': return 'Выберите роль';
-						case 'eng': return 'Choose role';
-						default: return 'incorrect language';
-					}
-				}
-				case 'comment': {
-					switch ($lang) {
-						case 'rus': return 'Комментарий';
-						case 'eng': return 'Comment';
-						default: return 'incorrect language';
-					}
-				}
-				case 'project': {
-					switch ($lang) {
-						case 'rus': return 'Проект';
-						case 'eng': return 'Project';
-						default: return 'incorrect language';
-					}
-				}
-				case 'all languages of this project is implemented': {
-					switch ($lang) {
-						case 'rus': return 'Все языки этого направления уже реализованы';
-						case 'eng': return 'All languages of this project is implemented';
-						default: return 'incorrect language';
-					}
-				}
-				case 'project editing': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование проекта';
-						case 'eng': return 'Project editing';
-						default: return 'incorrect language';
-					}
-				}
-				case 'choose direction': {
-					switch ($lang) {
-						case 'rus': return 'Выберите направление';
-						case 'eng': return 'Choose direction';
-						default: return 'incorrect language';
-					}
-				}
-				case 'error': {
-					switch ($lang) {
-						case 'rus': return 'Ошибка';
-						case 'eng': return 'Error';
-						default: return 'incorrect language';
-					}
-				}
-				case 'add text block': {
-					switch ($lang) {
-						case 'rus': return 'Добавить блок текста';
-						case 'eng': return 'Add text block';
-						default: return 'incorrect language';
-					}
-				}
-				case 'add project': {
-					switch ($lang) {
-						case 'rus': return 'Добавить проект';
-						case 'eng': return 'Add project';
-						default: return 'incorrect language';
-					}
-				}
-				case 'add direction': {
-					switch ($lang) {
-						case 'rus': return 'Добавить направление';
-						case 'eng': return 'Add direction';
-						default: return 'incorrect language';
-					}
-				}
-				case 'absense': {
-					switch ($lang) {
-						case 'rus': return 'Отсутствуют';
-						case 'eng': return 'Absense';
-						default: return 'incorrect language';
-					}
-				}
-				case 'add article': {
-					switch ($lang) {
-						case 'rus': return 'Добавить новость';
-						case 'eng': return 'Add article';
-						default: return 'incorrect language';
-					}
-				}
-				case 'language adding': {
-					switch ($lang) {
-						case 'rus': return 'Добавление языка';
-						case 'eng': return 'Language adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'all languages of this direction is implemented': {
-					switch ($lang) {
-						case 'rus': return 'Все языки этого направления уже реализованы';
-						case 'eng': return 'All languages of this direction is implemented';
-						default: return 'incorrect language';
-					}
-				}
-				case 'all languages of this article is implemented': {
-					switch ($lang) {
-						case 'rus': return 'Все языки этой новости уже реализованы';
-						case 'eng': return 'All languages of this article is implemented';
-						default: return 'incorrect language';
-					}
-				}
-				case 'direction editing': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование направления';
-						case 'eng': return 'Direction editing';
-						default: return 'incorrect language';
-					}
-				}
-				case 'article editing': {
-					switch ($lang) {
-						case 'rus': return 'Редактирование новости';
-						case 'eng': return 'Article editing';
-						default: return 'incorrect language';
-					}
-				}
-				case 'change cover': {
-					switch ($lang) {
-						case 'rus': return 'Сменить обложку';
-						case 'eng': return 'Change cover';
-						default: return 'incorrect language';
-					}
-				}
-				case 'direction adding': {
-					switch ($lang) {
-						case 'rus': return 'Добавление направления';
-						case 'eng': return 'Direction adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'article adding': {
-					switch ($lang) {
-						case 'rus': return 'Добавление новости';
-						case 'eng': return 'Article adding';
-						default: return 'incorrect language';
-					}
-				}
-				case 'language': {
-					switch ($lang) {
-						case 'rus': return 'Язык';
-						case 'eng': return 'Language';
-						default: return 'incorrect language';
-					}
-				}
-				case 'insert annotation text': {
-					switch ($lang) {
-						case 'rus': return 'Введите текст аннотации';
-						case 'eng': return 'Insert annotation text';
-						default: return 'incorrect language';
-					}
-				}
-				case 'insert header': {
-					switch ($lang) {
-						case 'rus': return 'Введите заголовок';
-						case 'eng': return 'Insert header';
-						default: return 'incorrect language';
-					}
-				}
-				case 'header': {
-					switch ($lang) {
-						case 'rus': return 'Заголовок';
-						case 'eng': return 'Header';
-						default: return 'incorrect language';
-					}
-				}
-				case 'our content': {
-					switch ($lang) {
-						case 'rus': return 'Наш контент';
-						case 'eng': return 'Our content';
-						default: return 'incorrect language';
-					}
-				}
-				case 'yes': {
-					switch ($lang) {
-						case 'rus': return 'Да';
-						case 'eng': return 'Yes';
-						default: return 'incorrect language';
-					}
-				}
-				case 'no': {
-					switch ($lang) {
-						case 'rus': return 'Нет';
-						case 'eng': return 'No';
-						default: return 'incorrect language';
-					}
-				}
-				case 'rank': {
-					switch ($lang) {
-						case 'rus': return 'Ранг';
-						case 'eng': return 'Rank';
-						default: return 'incorrect language';
-					}
-				}
-				case 'role': {
-					switch ($lang) {
-						case 'rus': return 'Роль';
-						case 'eng': return 'Role';
-						default: return 'incorrect language';
-					}
-				}
-				case 'priority': {
-					switch ($lang) {
-						case 'rus': return 'Приоритет';
-						case 'eng': return 'Priority';
-						default: return 'incorrect language';
-					}
-				}
-				case 'text': {
-					switch ($lang) {
-						case 'rus': return 'Текст';
-						case 'eng': return 'Text';
-						default: return 'incorrect language';
-					}
-				}
-				case 'cover': {
-					switch ($lang) {
-						case 'rus': return 'Обложка';
-						case 'eng': return 'Cover';
-						default: return 'incorrect language';
+						case 'rus': return 'Все связанные проекты так же будут удалены';
+						case 'eng': return 'All linked projects also will be deleted';
 					}
 				}
 				case 'annotation': {
 					switch ($lang) {
 						case 'rus': return 'Аннотация';
 						case 'eng': return 'Annotation';
-						default: return 'incorrect language';
-					}
-				}
-				case 'date': {
-					switch ($lang) {
-						case 'rus': return 'Дата';
-						case 'eng': return 'Date';
-						default: return 'incorrect language';
-					}
-				}
-				case 'creating date': {
-					switch ($lang) {
-						case 'rus': return 'Дата создания';
-						case 'eng': return 'Creating date';
-						default: return 'incorrect language';
-					}
-				}
-				case 'author': {
-					switch ($lang) {
-						case 'rus': return 'Автор';
-						case 'eng': return 'Author';
-						default: return 'incorrect language';
-					}
-				}
-				case 'no annotation': {
-					switch ($lang) {
-						case 'rus': return 'Нет аннотации';
-						case 'eng': return 'No annotation';
-						default: return 'incorrect language';
-					}
-				}
-				case 'all linked projects also will be deleted': {
-					switch ($lang) {
-						case 'rus': return 'Все связанные проекты так же будут удалены';
-						case 'eng': return 'All linked projects also will be deleted';
-						default: return 'incorrect language';
-					}
-				}
-				case 'are you shure that you want to delete block': {
-					switch ($lang) {
-						case 'rus': return 'Вы уверены, что хотите удалить блок';
-						case 'eng': return 'Are you shure that you want to delete block';
-						default: return 'incorrect language';
-					}
-				}
-				case 'are you shure that you want to delete text block with header': {
-					switch ($lang) {
-						case 'rus': return 'Вы уверены, что хотите удалить текстовый блок с заголовком';
-						case 'eng': return 'Are you shure that you want to delete text block with header';
-						default: return 'incorrect language';
-					}
-				}
-				case 'are you shure that yuo want to delete direction with header': {
-					switch ($lang) {
-						case 'rus': return 'Вы уверены, что хотите удалить направление с заголовком';
-						case 'eng': return 'Are you shure that yuo want to delete direction with header';
-						default: return 'incorrect language';
 					}
 				}
 				case 'are you shure that you want to delete article with header': {
 					switch ($lang) {
 						case 'rus': return 'Вы уверены, что хотите удалить статью с заголовком';
 						case 'eng': return 'Are you shure that you want to delete article with header';
-						default: return 'incorrect language';
 					}
 				}
-				case 'are you sure that you want to delete user': {
+				case 'are you shure that you want to delete block': {
 					switch ($lang) {
-						case 'rus': return 'Вы уверены, что хотите удалить пользователя';
-						case 'eng': return 'Are you sure that you want to delete user';
-						default: return 'incorrect language';
+						case 'rus': return 'Вы уверены, что хотите удалить блок';
+						case 'eng': return 'Are you shure that you want to delete block';
+					}
+				}
+				case 'are you shure that yuo want to delete direction with header': {
+					switch ($lang) {
+						case 'rus': return 'Вы уверены, что хотите удалить направление с заголовком';
+						case 'eng': return 'Are you shure that yuo want to delete direction with header';
 					}
 				}
 				case 'are you shure that you want to delete project with header': {
 					switch ($lang) {
 						case 'rus': return 'Вы уверены, что хотите удалить проект с заголовком';
 						case 'eng': return 'Are you shure that you want to delete project with header';
-						default: return 'incorrect language';
 					}
 				}
-				case 'save': {
+				case 'are you shure that you want to delete text block with header': {
 					switch ($lang) {
-						case 'rus': return 'Сохранить';
-						case 'eng': return 'Save';
-						default: return 'incorrect language';
+						case 'rus': return 'Вы уверены, что хотите удалить текстовый блок с заголовком';
+						case 'eng': return 'Are you shure that you want to delete text block with header';
 					}
 				}
-				case 'cancel': {
+				case 'are you sure that you want to delete user': {
 					switch ($lang) {
-						case 'rus': return 'Отмена';
-						case 'eng': return 'Cancel';
-						default: return 'incorrect language';
+						case 'rus': return 'Вы уверены, что хотите удалить пользователя';
+						case 'eng': return 'Are you sure that you want to delete user';
 					}
 				}
-				case 'upload image': {
+				case 'article adding': {
 					switch ($lang) {
-						case 'rus': return 'Загрузить изображение';
-						case 'eng': return 'Upload image';
-						default: return 'incorrect language';
+						case 'rus': return 'Добавление новости';
+						case 'eng': return 'Article adding';
 					}
 				}
-				case 'no users': {
+				case 'article editing': {
 					switch ($lang) {
-						case 'rus': return 'Пользователей нет';
-						case 'eng': return 'No users';
-						default: return 'incorrect language';
+						case 'rus': return 'Редактирование новости';
+						case 'eng': return 'Article editing';
 					}
 				}
-				case 'add block': {
+				case 'article is deleted': {
 					switch ($lang) {
-						case 'rus': return 'Добавить блок';
-						case 'eng': return 'Add block';
-						default: return 'incorrect language';
+						case 'rus': return 'Новость удалена';
+						case 'eng': return 'Article is deleted';
 					}
 				}
-				case 'old password': {
+				case 'article is successfully added': {
 					switch ($lang) {
-						case 'rus': return 'Старый пароль';
-						case 'eng': return 'Old password';						
-						default: return 'incorrect language';
+						case 'rus': return 'Новость успешно добавлена';
+						case 'eng': return 'Article is successfully added';
 					}
 				}
-				case 'new password': {
+				case 'author': {
 					switch ($lang) {
-						case 'rus': return 'Новый пароль';
-						case 'eng': return 'New password';
-						default: return 'incorrect language';
+						case 'rus': return 'Автор';
+						case 'eng': return 'Author';
 					}
 				}
-				case 'repeat new password': {
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ B ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'birthday': {
 					switch ($lang) {
-						case 'rus': return 'Повторите новый пароль';
-						case 'eng': return 'Repeat new password';
-						default: return 'incorrect language';
-					}
-				}
-				case 'only for password changing': {
-					switch ($lang) {
-						case 'rus': return 'Только для смены пароля';
-						case 'eng': return 'Only for password changing';
-						default: return 'incorrect language';
+						case 'rus': return 'День рождения';
+						case 'eng': return 'Birthday';
 					}
 				}
 				case 'birthmonth': {
 					switch ($lang) {
 						case 'rus': return 'Месяц рождения';
 						case 'eng': return 'Birthmonth';
-						default: return 'incorrect language';
 					}
 				}
 				case 'birthyear': {
 					switch ($lang) {
 						case 'rus': return 'Год рождения';
 						case 'eng': return 'Birthyear';
-						default: return 'incorrect language';
 					}
 				}
-				case 'birthday': {
+				case 'bookkeeping': {
 					switch ($lang) {
-						case 'rus': return 'День рождения';
-						case 'eng': return 'Birthday';
-						default: return 'incorrect language';
+						case 'rus': return 'Бухгалтерия';
+						case 'eng': return 'Bookkeeping';
 					}
 				}
-				case 'insert login': {
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ C ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'cancel': {
 					switch ($lang) {
-						case 'rus': return 'Введите логин';
-						case 'eng': return 'Insert login';
-						default: return 'incorrect language';
+						case 'rus': return 'Отмена';
+						case 'eng': return 'Cancel';
 					}
 				}
-				case 'login': {
+				case 'change cover': {
 					switch ($lang) {
-						case 'rus': return 'Логин';
-						case 'eng': return 'Login';
-						default: return 'incorrect language';
+						case 'rus': return 'Сменить обложку';
+						case 'eng': return 'Change cover';
 					}
 				}
-				case 'insert telephone': {
+				case 'changes are saved': {
 					switch ($lang) {
-						case 'rus': return 'Введите телефон';
-						case 'eng': return 'Insert telephone';
-						default: return 'incorrect language';
+						case 'rus': return 'Изменения сохранены';
+						case 'eng': return 'Changes are saved';
 					}
 				}
-				case 'telephone': {
+				case 'choose direction': {
 					switch ($lang) {
-						case 'rus': return 'Телефон';
-						case 'eng': return 'Telephone';
-						default: return 'incorrect language';
+						case 'rus': return 'Выберите направление';
+						case 'eng': return 'Choose direction';
 					}
 				}
-				case 'full name': {
+				case 'choose role': {
 					switch ($lang) {
-						case 'rus': return 'ФИО';
-						case 'eng': return 'Full name';
-						default: return 'incorrect language';
+						case 'rus': return 'Выберите роль';
+						case 'eng': return 'Choose role';
 					}
 				}
-				case 'profile edit': {
+				case 'comment': {
 					switch ($lang) {
-						case 'rus': return 'Редактирование профиля';
-						case 'eng': return 'Profile editing';
-						default: return 'incorrect language';
+						case 'rus': return 'Комментарий';
+						case 'eng': return 'Comment';
 					}
 				}
-				case 'insert name': {
+				case 'comment for request': {
 					switch ($lang) {
-						case 'rus': return 'Введите имя';
-						case 'eng': return ' Insert name';
-						default: return 'incorrect language';
-					}
-				}
-				case 'insert surname': {
-					switch ($lang) {
-						case 'rus': return 'Введите фамилию';
-						case 'eng': return 'Insert surname';
-						default: return 'incorrect language';
-					}
-				}
-				case 'insert fathername': {
-					switch ($lang) {
-						case 'rus': return 'Введите отчество';
-						case 'eng': return 'Insert fathername';
-						default: return 'incorrect language';
-					}
-				}
-				case 'fathername': {
-					switch ($lang) {
-						case 'rus': return 'Отчество';
-						case 'eng': return 'Fathername';
-						default: return 'incorrect language';
-					}
-				}
-				case 'name': {
-					switch ($lang) {
-						case 'rus': return 'Имя';
-						case 'eng': return 'Name';
-						default: return 'incorrect language';
-					}
-				}
-				case 'object name': {
-					switch ($lang) {
-						case 'rus': return 'Название';
-						case 'eng': return 'Name';
-						default: return 'incorrect language';
-					}
-				}
-				case 'surname': {
-					switch ($lang) {
-						case 'rus': return 'Фамилия';
-						case 'eng': return 'Surname';
-						default: return 'incorrect language';
-					}
-				}
-				case 'our collective': {
-					switch ($lang) {
-						case 'rus': return 'Наш коллектив';
-						case 'eng': return 'Our group';
-						default: return 'incorrect language';
-					}
-				}
-				case 'requests on register': {
-					switch ($lang) {
-						case 'rus': return 'Заявки на регистрацию';
-						case 'eng': return 'Requests on register';
-						default: return 'incorrect language';
+						case 'rus': return 'Комментарий к заявке';
+						case 'eng': return 'Comment for request';
 					}
 				}
 				case 'content management': {
 					switch ($lang) {
 						case 'rus': return 'Управление контентом';
 						case 'eng': return 'Content management';
-						default: return 'incorrect language';
 					}
 				}
-				case 'staff management': {
+				case 'cover': {
 					switch ($lang) {
-						case 'rus': return 'Управление штатом';
-						case 'eng': return 'Staff management';
-						default: return 'incorrect language';
+						case 'rus': return 'Обложка';
+						case 'eng': return 'Cover';
 					}
 				}
-				case 'main admin page': {
+				case 'cover was not uploaded': {
 					switch ($lang) {
-						case 'rus': return 'Главная';
-						case 'eng': return 'Main page';
-						default: return 'incorrect language';
+						case 'rus': return 'Обожка не была загружена';
+						case 'eng': return 'Cover was not uploaded';
 					}
 				}
-				case 'on previous admin page': {
+				case 'creating date': {
 					switch ($lang) {
-						case 'rus': return 'На предыдущую страницу';
-						case 'eng': return 'On previous page';
-						default: return 'incorrect language';
+						case 'rus': return 'Дата создания';
+						case 'eng': return 'Creating date';
 					}
 				}
-				case 'on start admin page': {
+
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ D ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'date': {
 					switch ($lang) {
-						case 'rus': return 'На главную страницу';
-						case 'eng': return 'On main page';
-						default: return 'incorrect language';
+						case 'rus': return 'Дата';
+						case 'eng': return 'Date';
 					}
 				}
-				case 'my page': {
+				case 'deleting is canceled': {
 					switch ($lang) {
-						case 'rus': return 'Моя страница';
-						case 'eng': return 'My profile';
-						default: return 'incorrect language';
+						case 'rus': return 'Удаление отменено';
+						case 'eng': return 'Deleting is canceled';
 					}
 				}
-				case 'actions': {
+				case 'deleting result': {
 					switch ($lang) {
-						case 'rus': return 'Действия';
-						case 'eng': return 'Actions';
-						default: return 'incorrect language';
-					}
-				}
-				case 'logout': {
-					switch ($lang) {
-						case 'rus': return 'Выйти';
-						case 'eng': return 'Logout';
-						default: return 'incorrect language';
-					}
-				}
-				case 'welcome': {
-					switch ($lang) {
-						case 'rus': return 'Добро пожаловать';
-						case 'eng': return 'Welcome';						
-						default: return 'incorrect language';
-					}
-				}
-				case 'direction of project': {
-					switch ($lang) {
-						case 'rus': return 'Направление проекта';
-						case 'eng': return 'Direction of project';
-						default: return 'incorrect language';
-					}
-				}
-				case 'linked projects': {
-					switch ($lang) {
-						case 'rus': return 'Связанные проекты';
-						case 'eng': return 'Linked projects';
-						default: return 'incorrect language';
-					}
-				}
-				case 'insert mail': {
-					switch ($lang) {
-						case 'rus': return 'Введите почту';
-						case 'eng': return 'Insert mail';
-						default: return 'incorrect language';
-					}
-				}
-				case 'mail': {
-					switch ($lang) {
-						case 'rus': return 'Почта';
-						case 'eng': return 'Mail';
-						default: return 'incorrect language';
-					}
-				}
-				case 'news published': {
-					switch ($lang) {
-						case 'rus': return 'Новостей опубликовано';
-						case 'eng': return 'News published';
-						default: return 'incorrect language';
-					}
-				}
-				case 'position': {
-					switch ($lang) {
-						case 'rus': return 'Должность';
-						case 'eng': return 'Position';
-						default: return 'incorrect language';
+						case 'rus': return 'Результат удаления';
+						case 'eng': return 'Deleting result';
 					}
 				}
 				case 'direction': {
 					switch ($lang) {
 						case 'rus': return 'Направление';
 						case 'eng': return 'Direction';
-						default: return 'incorrect language';
+					}
+				}
+				case 'direction adding': {
+					switch ($lang) {
+						case 'rus': return 'Добавление направления';
+						case 'eng': return 'Direction adding';
+					}
+				}
+				case 'direction editing': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование направления';
+						case 'eng': return 'Direction editing';
+					}
+				}
+				case 'direction is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Направление удалено';
+						case 'eng': return 'Direction is deleted';
+					}
+				}
+				case 'direction is successfully added': {
+					switch ($lang) {
+						case 'rus': return 'Направление успешно добавлено';
+						case 'eng': return 'Direction is successfully added';
+					}
+				}
+				case 'direction of project': {
+					switch ($lang) {
+						case 'rus': return 'Направление проекта';
+						case 'eng': return 'Direction of project';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ E ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'editing is canceled': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование отменено';
+						case 'eng': return 'Editing is canceled';
+					}
+				}
+				case 'editing result': {
+					switch ($lang) {
+						case 'rus': return 'Результат редактирования';
+						case 'eng': return 'Editing result';
 					}
 				}
 				case 'employees': {
 					switch ($lang) {
 						case 'rus': return 'Сотрудники';
 						case 'eng': return 'Our team';
-						default: return 'incorrect language';
 					}
 				}
-				case 'open profile': {
+				case 'error': {
 					switch ($lang) {
-						case 'rus': return 'Открыть профиль';
-						case 'eng': return 'Open profile';
-						default: return 'incorrect language';
+						case 'rus': return 'Ошибка';
+						case 'eng': return 'Error';
 					}
 				}
+				case 'error during article inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке новости в базу';
+						case 'eng': return 'Error during article inserting';
+					}
+				}
+				case 'error during direction adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении направления';
+						case 'eng': return 'Error during direction adding';
+					}
+				}
+				case 'error during direction inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке направления в базу';
+						case 'eng': return 'Error during direction inserting';
+					}
+				}
+				case 'error during project adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении проекта';
+						case 'eng': return 'Error during project adding';
+					}
+				}
+				case 'error during project inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке проекта в базу';
+						case 'eng': return 'Error during project inserting';
+					}
+				}
+				case 'error during text block adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении текстового блока';
+						case 'eng': return 'Error during text block adding';
+					}
+				}
+				case 'error during text block inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке текстового блока в базу';
+						case 'eng': return 'Error during text block inserting';
+					}
+				}
+				case 'error during user block inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке блока пользователя в базу';
+						case 'eng': return 'Error during user block inserting';
+					}
+				}
+				case 'error while article adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении новости';
+						case 'eng': return 'Error while article adding';
+					}
+				}
+				case 'error while article deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении новости';
+						case 'eng': return 'Error while article deleting';
+					}
+				}
+				case 'error while direction deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении направления';
+						case 'eng': return 'Error while direction deleting';
+					}
+				}
+				case 'error while inserting register request': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке заявки на регистрацию';
+						case 'eng': return 'Error while inserting register request';
+					}
+				}
+				case 'error while project deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении проекта';
+						case 'eng': return 'Error while project deleting';
+					}
+				}
+				case 'error while request rejecting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при отклонении заявки';
+						case 'eng': return 'Error while request rejecting';
+					}
+				}
+				case 'error while text block deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении текстового блока';
+						case 'eng': return 'Error while text block deleting';
+					}
+				}
+				case 'error while user adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении пользователя';
+						case 'eng': return 'Error while user adding';
+					}
+				}
+				case 'error while user block adding': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при добавлении блока пользователя';
+						case 'eng': return 'Error while user block adding';
+					}
+				}
+				case 'error while user block deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении блока пользователя';
+						case 'eng': return 'Error while user block deleting';
+					}
+				}
+				case 'error while user deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении пользователя';
+						case 'eng': return 'Error while user deleting';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ F ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'fathername': {
+					switch ($lang) {
+						case 'rus': return 'Отчество';
+						case 'eng': return 'Fathername';
+					}
+				}
+				case 'full name': {
+					switch ($lang) {
+						case 'rus': return 'ФИО';
+						case 'eng': return 'Full name';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ G ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ H ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'header': {
+					switch ($lang) {
+						case 'rus': return 'Заголовок';
+						case 'eng': return 'Header';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ I ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'incorrect email': {
+					switch ($lang) {
+						case 'rus': return 'Некорректная почта';
+						case 'eng': return 'Incorrect email';
+					}
+				}
+				case 'incorrect fathername': {
+					switch ($lang) {
+						case 'rus': return 'Некорректное отчество';
+						case 'eng': return 'Incorrect fathername';
+					}
+				}
+				case 'incorrect login': {
+					switch ($lang) {
+						case 'rus': return 'Некорректный логин';
+						case 'eng': return 'Incorrect login';
+					}
+				}
+				case 'incorrect name': {
+					switch ($lang) {
+						case 'rus': return 'Неверное имя';
+						case 'eng': return 'Incorrect name';
+					}
+				}
+				case 'incorrect password': {
+					switch ($lang) {
+						case 'rus': return 'Неверный пароль';
+						case 'eng': return 'Incorrect password';
+					}
+				}
+				case 'incorrect phone': {
+					switch ($lang) {
+						case 'rus': return 'Некорректный телефон';
+						case 'eng': return 'Incorrect phone';
+					}
+				}
+				case 'incorrect surname': {
+					switch ($lang) {
+						case 'rus': return 'Некорректная фамилия';
+						case 'eng': return 'Incorrect surname';
+					}
+				}
+				case 'insert annotation text': {
+					switch ($lang) {
+						case 'rus': return 'Введите текст аннотации';
+						case 'eng': return 'Insert annotation text';
+					}
+				}
+				case 'insert fathername': {
+					switch ($lang) {
+						case 'rus': return 'Введите отчество';
+						case 'eng': return 'Insert fathername';
+					}
+				}
+				case 'insert header': {
+					switch ($lang) {
+						case 'rus': return 'Введите заголовок';
+						case 'eng': return 'Insert header';
+					}
+				}
+				case 'insert login': {
+					switch ($lang) {
+						case 'rus': return 'Введите логин';
+						case 'eng': return 'Insert login';
+					}
+				}
+				case 'insert mail': {
+					switch ($lang) {
+						case 'rus': return 'Введите почту';
+						case 'eng': return 'Insert mail';
+					}
+				}
+				case 'insert name': {
+					switch ($lang) {
+						case 'rus': return 'Введите имя';
+						case 'eng': return ' Insert name';
+					}
+				}
+				case 'insert password': {
+					switch ($lang) {
+						case 'rus': return 'Введите пароль';
+						case 'eng': return 'Insert password';
+					}
+				}
+				case 'insert surname': {
+					switch ($lang) {
+						case 'rus': return 'Введите фамилию';
+						case 'eng': return 'Insert surname';
+					}
+				}
+				case 'insert telephone': {
+					switch ($lang) {
+						case 'rus': return 'Введите телефон';
+						case 'eng': return 'Insert telephone';
+					}
+				}
+				case 'internal server error': {
+					switch ($lang) {
+						case 'rus': return 'Внутренняя ошибка сервера';
+						case 'eng': return 'Internal server error';
+					}
+				}
+				case 'it was not succeeded to be authorized': {
+					switch ($lang) {
+						case 'rus': return 'Не удалось авторизироваться';
+						case 'eng': return 'It was not succeeded to be authorized';
+					}
+				}
+				case 'it was not succeeded to save': {
+					switch ($lang) {
+						case 'rus': return 'Не удалось сохранить';
+						case 'eng': return 'It was not succeeded to save';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ J ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ K ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ L ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'language': {
+					switch ($lang) {
+						case 'rus': return 'Язык';
+						case 'eng': return 'Language';
+					}
+				}
+				case 'language adding': {
+					switch ($lang) {
+						case 'rus': return 'Добавление языка';
+						case 'eng': return 'Language adding';
+					}
+				}	
 				case 'learn more': {
 					switch ($lang) {
 						case 'rus': return 'Узнать больше';
 						case 'eng': return 'Learn more';
-						default: return 'incorrect language';
 					}
 				}
-				case 'no news': {
+				case 'linked projects': {
 					switch ($lang) {
-						case 'rus': return 'Новостей пока нет';
-						case 'eng': return "News aren't present so far";
-						default: return 'incorrect language';
+						case 'rus': return 'Связанные проекты';
+						case 'eng': return 'Linked projects';
+					}
+				}
+				case 'a login': {
+					switch ($lang) {
+						case 'rus': return 'Логин';
+						case 'eng': return 'Login';
+					}
+				}
+				case 'login': {
+					switch ($lang) {
+						case 'rus': return 'Войти';
+						case 'eng': return 'Login';
+					}
+				}
+				case 'login please': {
+					switch ($lang) {
+						case 'rus': return 'Войдите, пожалуйста';
+						case 'eng': return 'Login, please';
+					}
+				}
+				case 'logout': {
+					switch ($lang) {
+						case 'rus': return 'Выйти';
+						case 'eng': return 'Logout';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ M ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'mail': {
+					switch ($lang) {
+						case 'rus': return 'Почта';
+						case 'eng': return 'Mail';
+					}
+				}
+				case 'main admin page': {
+					switch ($lang) {
+						case 'rus': return 'Главная';
+						case 'eng': return 'Main page';
+					}
+				}
+				case 'my page': {
+					switch ($lang) {
+						case 'rus': return 'Моя страница';
+						case 'eng': return 'My profile';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ N ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'name': {
+					switch ($lang) {
+						case 'rus': return 'Имя';
+						case 'eng': return 'Name';
+					}
+				}
+				case 'new password': {
+					switch ($lang) {
+						case 'rus': return 'Новый пароль';
+						case 'eng': return 'New password';
+					}
+				}
+				case 'news published': {
+					switch ($lang) {
+						case 'rus': return 'Новостей опубликовано';
+						case 'eng': return 'News published';
+					}
+				}
+				case 'no': {
+					switch ($lang) {
+						case 'rus': return 'Нет';
+						case 'eng': return 'No';
+					}
+				}
+				case 'no annotation': {
+					switch ($lang) {
+						case 'rus': return 'Нет аннотации';
+						case 'eng': return 'No annotation';
 					}
 				}
 				case 'no directions': {
 					switch ($lang) {
 						case 'rus': return 'Направлений пока нет';
 						case 'eng': return "Directions aren't present so far";
-						default: return 'incorrect language';
 					}
 				}
 				case 'no projects': {
 					switch ($lang) {
 						case 'rus': return 'Проектов пока нет';
 						case 'eng': return "Projects aren't present so far";
-						default: return 'incorrect language';
+					}
+				}
+				case 'no news': {
+					switch ($lang) {
+						case 'rus': return 'Новостей пока нет';
+						case 'eng': return "News aren't present so far";
+					}
+				}
+				case 'no translation for this article': {
+					switch ($lang) {
+						case 'rus': return 'Нет перевода для этой новости';
+						case 'eng': return 'No translation for this article';
+					}
+				}
+				case 'no translation for this direction': {
+					switch ($lang) {
+						case 'rus': return 'Нет перевода для этого направления';
+						case 'eng': return 'No translation for this direction';
+					}
+				}
+				case 'no translation for this project': {
+					switch ($lang) {
+						case 'rus': return 'Нет перевода для этого проекта';
+						case 'eng': return 'No translation for this project';
+					}
+				}
+				case 'no users': {
+					switch ($lang) {
+						case 'rus': return 'Пользователей нет';
+						case 'eng': return 'No users';
+					}
+				}
+				case 'not all fields are filled': {
+					switch ($lang) {
+						case 'rus': return 'Не все поля заполнены';
+						case 'eng': return 'Not all fields are filled';
+					}
+				}
+				case 'number': {
+					switch ($lang) {
+						case 'rus': return 'Число';
+						case 'eng': return 'Number';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ O ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'object name': {
+					switch ($lang) {
+						case 'rus': return 'Название';
+						case 'eng': return 'Name';
+					}
+				}
+				case 'old password': {
+					switch ($lang) {
+						case 'rus': return 'Старый пароль';
+						case 'eng': return 'Old password';						
+					}
+				}
+				case 'on previous admin page': {
+					switch ($lang) {
+						case 'rus': return 'На предыдущую страницу';
+						case 'eng': return 'On previous page';
+					}
+				}
+				case 'on start admin page': {
+					switch ($lang) {
+						case 'rus': return 'На главную страницу';
+						case 'eng': return 'On main page';
+					}
+				}
+				case 'only for password changing': {
+					switch ($lang) {
+						case 'rus': return 'Только для смены пароля';
+						case 'eng': return 'Only for password changing';
+					}
+				}
+				case 'open profile': {
+					switch ($lang) {
+						case 'rus': return 'Открыть профиль';
+						case 'eng': return 'Open profile';
+					}
+				}
+				case 'our collective': {
+					switch ($lang) {
+						case 'rus': return 'Наш коллектив';
+						case 'eng': return 'Our group';
+					}
+				}
+				case 'our content': {
+					switch ($lang) {
+						case 'rus': return 'Наш контент';
+						case 'eng': return 'Our content';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ P ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'password': {
+					switch ($lang) {
+						case 'rus': return 'Пароль';
+						case 'eng': return 'Password';
+					}
+				}
+				case 'photo was not uploaded': {
+					switch ($lang) {
+						case 'rus': return 'Фото не было загружено';
+						case 'eng': return 'Photo was not uploaded';
+					}
+				}
+				case 'position': {
+					switch ($lang) {
+						case 'rus': return 'Должность';
+						case 'eng': return 'Position';
+					}
+				}
+				case 'priority': {
+					switch ($lang) {
+						case 'rus': return 'Приоритет';
+						case 'eng': return 'Priority';
 					}
 				}
 				case 'private office': {
 					switch ($lang) {
 						case 'rus': return 'Личный кабинет';
 						case 'eng': return 'My account';						
-						default: return 'incorrect language';
 					}
 				}
+				case 'profile edit': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование профиля';
+						case 'eng': return 'Profile editing';
+					}
+				}
+				case 'project': {
+					switch ($lang) {
+						case 'rus': return 'Проект';
+						case 'eng': return 'Project';
+					}
+				}
+				case 'project adding': {
+					switch ($lang) {
+						case 'rus': return 'Добавление проекта';
+						case 'eng': return 'Project adding';
+					}
+				}
+				case 'project editing': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование проекта';
+						case 'eng': return 'Project editing';
+					}
+				}
+				case 'project is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Проект удален';
+						case 'eng': return 'Project is deleted';
+					}
+				}
+				case 'project is successfully added': {
+					switch ($lang) {
+						case 'rus': return 'Проект успешно добавлен';
+						case 'eng': return 'Project is successfully added';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Q ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ R ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'rank': {
+					switch ($lang) {
+						case 'rus': return 'Ранг';
+						case 'eng': return 'Rank';
+					}
+				}
+				case 'registration': {
+					switch ($lang) {
+						case 'rus': return 'Регистрация';
+						case 'eng': return 'Registration';
+					}
+				}
+				case 'repeat new password': {
+					switch ($lang) {
+						case 'rus': return 'Повторите новый пароль';
+						case 'eng': return 'Repeat new password';
+					}
+				}
+				case 'reports': {
+					switch ($lang) {
+						case 'rus': return 'Отчеты';
+						case 'eng': return 'Reports';
+					}
+				}
+				case 'request is accepted': {
+					switch ($lang) {
+						case 'rus': return 'Заявка принята';
+						case 'eng': return 'Request is accepted';
+					}
+				}
+				case 'request is rejected': {
+					switch ($lang) {
+						case 'rus': return 'Заявка отклонена';
+						case 'eng': return 'Request is rejected';
+					}
+				}
+				case 'request was successfully sended': {
+					switch ($lang) {
+						case 'rus': return 'Request was successfully sended';
+						case 'eng': return 'Заявка успешно отправлена';
+					}
+				}
+				case 'requests on register': {
+					switch ($lang) {
+						case 'rus': return 'Заявки на регистрацию';
+						case 'eng': return 'Requests on register';
+					}
+				}
+				case 'role': {
+					switch ($lang) {
+						case 'rus': return 'Роль';
+						case 'eng': return 'Role';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ S ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'save': {
+					switch ($lang) {
+						case 'rus': return 'Сохранить';
+						case 'eng': return 'Save';
+					}
+				}
+				case 'send request': {
+					switch ($lang) {
+						case 'rus': return 'Отправить запрос';
+						case 'eng': return 'Send request';
+					}
+				}
+				case 'sorry': {
+					switch ($lang) {
+						case 'rus': return 'Извините';
+						case 'eng': return 'Sorry';
+					}
+				}
+				case 'staff management': {
+					switch ($lang) {
+						case 'rus': return 'Управление штатом';
+						case 'eng': return 'Staff management';
+					}
+				}
+				case 'surname': {
+					switch ($lang) {
+						case 'rus': return 'Фамилия';
+						case 'eng': return 'Surname';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ T ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'telephone': {
+					switch ($lang) {
+						case 'rus': return 'Телефон';
+						case 'eng': return 'Telephone';
+					}
+				}
+				case 'text': {
+					switch ($lang) {
+						case 'rus': return 'Текст';
+						case 'eng': return 'Text';
+					}
+				}
+				case 'text block': {
+					switch ($lang) {
+						case 'rus': return 'Текстовый блок';
+						case 'eng': return 'Text block';
+					}
+				}
+				case 'text adding': {
+					switch ($lang) {
+						case 'rus': return 'Добавление текста';
+						case 'eng': return 'Text adding';
+					}
+				}
+				case 'text editing': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование текста';
+						case 'eng': return 'Text editing';
+					}
+				}
+				case 'text block is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Текстовый блок удален';
+						case 'eng': return 'Text block is deleted';
+					}
+				}
+				case 'text block is successfully added': {
+					switch ($lang) {
+						case 'rus': return 'Текстовый блок успешно добавлен';
+						case 'eng': return 'Text block is successfully added';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ U ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'upload image': {
+					switch ($lang) {
+						case 'rus': return 'Загрузить изображение';
+						case 'eng': return 'Upload image';
+					}
+				}
+				case 'user block': {
+					switch ($lang) {
+						case 'rus': return 'Блок пользователя';
+						case 'eng': return 'User block';
+					}
+				}
+				case 'user block adding': {
+					switch ($lang) {
+						case 'rus': return 'Добавление блока пользователя';
+						case 'eng': return 'Adding user block';
+					}
+				}
+				case 'user block editing': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование блока';
+						case 'eng': return 'User block editing';
+					}
+				}
+				case 'user block is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Блок пользователя удален';
+						case 'eng': return 'User block is deleted';
+					}
+				}
+				case 'user block is successfully added': {
+					switch ($lang) {
+						case 'rus': return 'Блок пользователя успешно добавлен';
+						case 'eng': return 'User block is successfully added';
+					}
+				}
+				case 'user is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Пользователь удален';
+						case 'eng': return 'User is deleted';
+					}
+				}
+				case 'user was not changed': {
+					switch ($lang) {
+						case 'rus': return 'Пользователь не был изменен';
+						case 'eng': return 'User was not changed';
+					}
+				}
+				case 'user with such login already exists': {
+					switch ($lang) {
+						case 'rus': return 'Пользователь с таким логином уже существует';
+						case 'eng': return 'User with such login already exists';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ V ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ W ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'welcome': {
+					switch ($lang) {
+						case 'rus': return 'Добро пожаловать';
+						case 'eng': return 'Welcome';						
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ X ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Y ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+				case 'yes': {
+					switch ($lang) {
+						case 'rus': return 'Да';
+						case 'eng': return 'Yes';
+					}
+				}
+				case 'your email': {
+					switch ($lang) {
+						case 'rus': return 'Ваш адрес электронной почты';
+						case 'eng': return 'Your email';
+					}
+				}
+				case 'your fathername': {
+					switch ($lang) {
+						case 'rus': return 'Ваше отчество';
+						case 'eng': return 'Your fathername';
+					}
+				}
+				case 'you logout': {
+					switch ($lang) {
+						case 'rus': return 'Вы вышли';
+						case 'eng': return 'You logout';
+					}
+				}
+				case 'your login': {
+					switch ($lang) {
+						case 'rus': return 'Ваш логин';
+						case 'eng': return 'Your login';
+					}
+				}
+				case 'your name': {
+					switch ($lang) {
+						case 'rus': return 'Ваше имя';
+						case 'eng': return 'Your name';
+					}
+				}
+				case 'your phone': {
+					switch ($lang) {
+						case 'rus': return 'Ваш телефон';
+						case 'eng': return 'Your phone';
+					}
+				}
+				case 'your surname': {
+					switch ($lang) {
+						case 'rus': return 'Ваша фамилия';
+						case 'eng': return 'Your surname';
+					}
+				}
+
+				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Z ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ end_line
 				default: return 'incorrect word';
 			}
 		}

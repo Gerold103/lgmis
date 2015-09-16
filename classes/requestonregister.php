@@ -194,18 +194,18 @@
 		{
 			global $link_to_utility_sql_worker;
 			$res = '';
-			$res .= '<form method="post" action="'.$link_to_utility_sql_worker.'">';
+			$res .= '<form method="post" action="'.$link_to_utility_sql_worker.'" onsubmit="return checkRegistrationForm(this);">';
 			$res .= 	WrapToHiddenInputs(array('type' => RequestOnRegister::$type));
-			$res .= 	PairLabelAndInput(4, 5, 'Ваше имя', 'name', 'Имя').'<br>';
-			$res .= 	PairLabelAndInput(4, 5, 'Ваша фамилия', 'surname', 'Фамилия').'<br>';
-			$res .= 	PairLabelAndInput(4, 5, 'Ваше отчество', 'fathername', 'Отчество').'<br>';
-			$res .= 	PairLabelAndInput(4, 5, 'Ваш логин', 'login', 'Логин').'<br>';
-			$res .= 	PairLabelAndPassword(4, 5, 'Введите пароль', 'password', 'Пароль').'<br>';
-			$res .= 	PairLabelAndInput(4, 5, 'Ваш адрес электронной почты', 'email', 'example@mail.ru').'<br>';
-			$res .= 	PairLabelAndInput(4, 5, 'Ваш телефон', 'telephone', '8-123-456-78-90').'<br>';
-			$res .= 	PairLabelAndTextarea(4, 5, 'Комментарий к заявке', 'text').'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your name'), 'name', Language::Word('name')).'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your surname'), 'surname', Language::Word('surname')).'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your fathername'), 'fathername', Language::Word('fathername')).'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your login'), 'login', Language::Word('a login')).'<br>';
+			$res .= 	PairLabelAndPassword(4, 5, Language::Word('insert password'), 'password', Language::Word('password')).'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your email'), 'email', 'example@mail.ru').'<br>';
+			$res .= 	PairLabelAndInput(4, 5, Language::Word('your phone'), 'telephone', '8-123-456-78-90').'<br>';
+			$res .= 	PairLabelAndTextarea(4, 5, Language::Word('comment for request'), 'text').'<br>';
 			$res .= 	'<div class="row">';
-			$res .= 		'<input type="submit" class="btn btn-primary btn-lg" name="new" value="Отправить заявку">';
+			$res .= 		'<input type="submit" class="btn btn-primary btn-lg" name="new" value="'.Language::Word('send request').'">';
 			$res .= 	'</div>';
 			$res .= '</form>';
 			return $res;
@@ -218,7 +218,7 @@
 
 			$res = User::FetchByLogin($this->login);
 			if ($res !== NULL) {
-				RequestOnRegister::$last_error = 'Пользователь с таким логином уже существует в системе';
+				RequestOnRegister::$last_error = Language::Word('user with such login already exists');
 				return false;
 			}
 

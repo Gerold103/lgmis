@@ -12,6 +12,7 @@
         	?>
         </title>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_ckeditor).'contents.css"'; ?> >
+        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'utility_links.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'script.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'jquery-1.11.1.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_ckeditor).'ckeditor.js"'; ?> ></script>
@@ -79,7 +80,7 @@
         ?>
     </div>
     <div style="position: absolute; top: 20px; right: 50px;">
-        <a href=<?php echo '"'.Link::Get('lang/rus').'"'; ?> ><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'rus_flag.png"'; ?> ></a><a href=<?php echo '"'.Link::Get('lang/eng').'"'; ?>><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'eng_flag.png"'; ?> ></a>
+        <a onclick="changeLanguage('rus');"><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'rus_flag.png"'; ?> ></a><a onclick="changeLanguage('eng');"><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'eng_flag.png"'; ?> ></a>
     </div>
     <div style="position: fixed; top: 20px; left: 50px;">
         <a class="btn btn" href=<?php echo '"'.$link_to_admin.'"'; ?> ><?php echo Language::Word('private office'); ?></a>

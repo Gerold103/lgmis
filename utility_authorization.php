@@ -50,11 +50,6 @@
 				echo Language::Word('it was not succeeded to be authorized').'<br>'.OnStartAdminPage();
 				exit();
 			}
-		} else if (isset($_POST['register'])) {
-			$header = Language::Word('registration');
-			$content = RequestOnRegister::FormForCreating();
-			require_once($link_to_registering_template);
-			exit();
 		} else {
 			echo 'Ошибка 1';
 			exit();
@@ -68,35 +63,60 @@
 	
 	if (((!isset($is_public)) || ($is_public === false)) && (!isset($_SESSION['user_login']))) {
 		echo Language::Word('login please').'<br>';
-		$login_form = '';
-		$login_form .= '<table height="100%" align="center">';
-		$login_form .= 		'<tr>';
-		$login_form .= 			'<td>';
-		$login_form .= 				'<form action="" method="post">';
-		$login_form .=					'<table align="center">';
-		$login_form .=						'<tr>';
-		$login_form .=							'<td>Login</td>';
-		$login_form .=							'<td><input type="text" name="login" /></td>';
-		$login_form .=						'</tr>';
-		$login_form .=						'<tr>';
-		$login_form .=							'<td>Password</td>';
-		$login_form .=							'<td><input type="password" name="password" /></td>';
-		$login_form .=						'</tr>';
-		$login_form .=						'<tr>';
-		$login_form .=							'<td>';
-		$login_form .=								'<input type="submit" name="enter" value="'.Language::Word('login').'"/>';
-		$login_form .=							'</td>';
-		$login_form .=							'<td>';
-		$login_form .=								'<input type="submit" name="register" value="'.Language::Word('registration').'"/>';
-		$login_form .=							'</td>';						
-		$login_form .=						'</tr>';
-		$login_form .=					'</table>';
-		$login_form .= 				'</form>';
-		$login_form .= 			'</td>';
-		$login_form .= 		'</tr>';
-		$login_form .= 	'</table>';
-		
-		echo $login_form;
+		?>
+		<script type="text/javascript">
+			function checkLoginField(field_id) {
+				var field = document.getElementById(field_id);
+				var errors = document.getElementById("errors");
+				if (/^[\w]+$/.test(field.value) == false) {
+					errors.innerHTML = '<font color="red">Такого логина не существует</font>';
+					return false;
+				}
+				return true;
+			}
+
+			function checkAuthForm(form_obj) {
+				if (checkLoginField("login") == true) {
+					form_obj.submit();
+					return true;
+				}
+				return false;
+			}
+
+			function toRegisterPage() {
+				window.location.href = <?php echo '"'.$link_to_admin_registration.'"'; ?>;
+			}
+		</script>
+		<table height="100%" align="center">
+			<tr>
+				<td>
+					<form action="" method="post" onsubmit="return checkAuthForm(this);" id="register_form">
+						<table align="center">
+							<tr>
+								<span id="errors"></span>
+							</tr>
+							<tr>
+								<td>Login</td>
+								<td><input type="text" id="login" name="login"/></td>
+							</tr>
+							<tr>
+								<td>Password</td>
+								<td><input type="password" name="password" /></td>
+							</tr>
+							<tr>
+								<td>
+									<input type="submit" name="enter" value=<?php echo '"'.Language::Word('login').'"'; ?> />
+								</td>
+								<td>
+									<input type="button" name="register" value=<?php echo '"'.Language::Word('registration').'"'; ?> onclick="toRegisterPage();" />
+								</td>
+							</tr>
+						</table>
+					</form>
+				</td>
+			</tr>
+		</table>
+		<?php
 		exit();
 	}
 ?>

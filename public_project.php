@@ -15,17 +15,28 @@
 
 		$header_type = 'h4';
 
-		$title = $project->name;
+		if ($project === NULL) {
+			$title = Language::Word('error');
+			$header = $title;
+			$content = Language::Word('internal server error');
+		} else if ($project === Error::no_translation) {
+			$title = Language::Word('error');
+			$header = Language::Word('sorry');
+			$content = Language::Word('no translation for this project');
+		} else {
 
-		$header = htmlspecialchars($project->name);
+			$title = $project->name;
 
-		$content .= '<br><div class="row" align="center">';
-		$content .= 	Language::Word('direction of project').': '.Direction::FetchByID($project->direction_id)->LinkToThis();
-		$content .= '</div>';
-		$content .= '<br><hr>';
-		$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$project->text_block.'</div></div>';
+			$header = htmlspecialchars($project->name);
 
-		$no_content_center = true;
+			$content .= '<br><div class="row" align="center">';
+			$content .= 	Language::Word('direction of project').': '.Direction::FetchByID($project->direction_id)->LinkToThis();
+			$content .= '</div>';
+			$content .= '<br><hr>';
+			$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$project->text_block.'</div></div>';
+
+			$no_content_center = true;
+		}
 	}
 
 	include($link_to_public_template);

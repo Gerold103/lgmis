@@ -15,28 +15,39 @@
 
 		$header_type = 'h4';
 
-		$title = $direction->name;
+		if ($direction === NULL) {
+			$title = Language::Word('error');
+			$header = $title;
+			$content = Language::Word('internal server error');
+		} else if ($direction === Error::no_translation) {
+			$title = Language::Word('error');
+			$header = Language::Word('sorry');
+			$content = Language::Word('no translation for this direction');
+		} else {
 
-		$header = htmlspecialchars($direction->name);
+			$title = $direction->name;
 
-		$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$direction->text_block.'</div></div>';
+			$header = htmlspecialchars($direction->name);
 
-		$projects = Project::FetchByDirectionID($direction->id);
-		$size = count($projects);
-		if ($size > 0) {
-			$content .= '<hr><div class="row" align="center">'.ToPageHeader(Language::Word('linked projects'), 'h4', 'grey').'</div><hr>';
-			
-			require($link_to_pagination_init_template);
+			$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$direction->text_block.'</div></div>';
 
-			for ($i = $from; $i <= $to; ++$i) {
-				$content .= $projects[$i]->ToHTMLAutoShortForTable(GetUserPrivileges());
-				if ($i != $to) $content .= '<hr>';
+			$projects = Project::FetchByDirectionID($direction->id);
+			$size = count($projects);
+			if ($size > 0) {
+				$content .= '<hr><div class="row" align="center">'.ToPageHeader(Language::Word('linked projects'), 'h4', 'grey').'</div><hr>';
+				
+				require($link_to_pagination_init_template);
+
+				for ($i = $from; $i <= $to; ++$i) {
+					$content .= $projects[$i]->ToHTMLAutoShortForTable(GetUserPrivileges());
+					if ($i != $to) $content .= '<hr>';
+				}
+
+				require($link_to_pagination_show_template);
 			}
 
-			require($link_to_pagination_show_template);
+			$no_content_center = true;
 		}
-
-		$no_content_center = true;
 	}
 
 	include($link_to_public_template);
