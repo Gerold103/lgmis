@@ -31,6 +31,9 @@
         if (isset($_GET['glob_id'])) $upload_dir = $link_to_text_part_images.$_GET['glob_id'];
         else $upload_dir = $link_to_text_part_images.'tmp_'.$author_id;
         break;
+      case Report::$type:
+        $upload_dir = $link_to_report_images.'tmp_'.$author_id;
+        break;
       default:
         break;
     }

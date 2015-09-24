@@ -27,6 +27,7 @@ $link_to_utility_language_change = 'utility_language_change.php';
 $link_to_utility_links = 'utility_links.php';
 $link_to_utility_sql_worker = 'utility_sql_worker.php';
 $link_to_utility_defines = 'utility_defines.php';
+$link_to_utility_download = 'utility_download.php';
 
 $link_to_users_images = 'files/images/users/';
 $link_to_article_images = 'files/images/articles/';
@@ -34,6 +35,8 @@ $link_to_direction_images = 'files/images/directions/';
 $link_to_projects_images = 'files/images/projects/';
 $link_to_service_images = 'files/images/service_images/';
 $link_to_text_part_images = 'files/images/text_parts/';
+$link_to_report_images = 'files/images/reports/';
+$link_to_report_files = 'files/other/reports/';
 $link_to_logo = 'files/images/service_images/Logo.png';
 
 $link_to_element_templates = 'php_templates/element_templates.php';

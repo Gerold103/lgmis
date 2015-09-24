@@ -3,6 +3,13 @@ function elem(id)
 	return document.getElementById(id);
 }
 
+function deleteChilds(ob)
+{
+	while (ob.firstChild) {
+	    ob.removeChild(ob.firstChild);
+	}
+}
+
 function checkLoginField(field) {
 	return /^[\w]+$/.test(field.value); 
 }
@@ -52,21 +59,41 @@ function changeLanguage(lang) {
     server.send(data);
 }
 
-function showUsersList() {
-	if (server.readyState == 4) {
-		var ulist = elem("users_list");
-		ulist.style.display = 'block';
-		var users = JSON.parse(server.responseText);
-		
-	}
-}
-
 function hideUsers() {
 	var ulist = elem("users_list");
 	ulist.style.display = 'none';
 }
 
+function chooseUser(link) {
+	elem("recipient_id").value = link.getAttribute("id");
+	elem("recipient_input").value = link.innerHTML;
+	hideUsers();
+}
+
+function showUsersList() {
+	if (server.readyState == 4) {
+		var ulist = elem("users_list");
+		ulist.style.display = 'block';
+		var users = JSON.parse(server.responseText);
+		deleteChilds(ulist);
+		if (users.length == 0) {
+			hideUsers();
+			return;
+		}
+		for (var i = 0; i < users.length; ++i) {
+			var link = document.createElement('li');
+			link.innerHTML = '<a onclick="chooseUser(this);" id="' + users[i].id + '">' + users[i].name + ' ' + users[i].surname + '</a>';
+			ulist.appendChild(link);
+		}
+	}
+}
+
 function showUsers(input) {
+	elem("recipient_id").value = '';
+	if (input.value == '') {
+		hideUsers();
+		return;
+	}
 	var prefix = input.value;
 	server = getXmlHttp();
 	var data = 'load_users=true&prefix=' + prefix;

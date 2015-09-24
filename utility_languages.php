@@ -280,6 +280,12 @@
 						case 'eng': return 'Change cover';
 					}
 				}
+				case 'change receiver': {
+					switch ($lang) {
+						case 'rus': return 'Изменить получателя';
+						case 'eng': return 'Change receiver';
+					}
+				}
 				case 'changes are saved': {
 					switch ($lang) {
 						case 'rus': return 'Изменения сохранены';
@@ -290,6 +296,12 @@
 					switch ($lang) {
 						case 'rus': return 'Выберите направление';
 						case 'eng': return 'Choose direction';
+					}
+				}
+				case 'choose receiver': {
+					switch ($lang) {
+						case 'rus': return 'Выберите получателя';
+						case 'eng': return 'Choose receiver';
 					}
 				}
 				case 'choose role': {
@@ -332,6 +344,18 @@
 					switch ($lang) {
 						case 'rus': return 'Дата создания';
 						case 'eng': return 'Creating date';
+					}
+				}
+				case 'current file': {
+					switch ($lang) {
+						case 'rus': return 'Прикрепленный файл';
+						case 'eng': return 'Current file';
+					}
+				}
+				case 'current receiver': {
+					switch ($lang) {
+						case 'rus': return 'Установленный получатель';
+						case 'eng': return 'Current receiver';
 					}
 				}
 
@@ -390,6 +414,12 @@
 					switch ($lang) {
 						case 'rus': return 'Направление проекта';
 						case 'eng': return 'Direction of project';
+					}
+				}
+				case 'download file': {
+					switch ($lang) {
+						case 'rus': return 'Скачать файл';
+						case 'eng': return 'Download file';
 					}
 				}
 
@@ -497,6 +527,18 @@
 						case 'eng': return 'Error while project deleting';
 					}
 				}
+				case 'error while report inserting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при вставке отчета в базу';
+						case 'eng': return 'Error while report inserting to base';
+					}
+				}
+				case 'error while report sending': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при отправке отчета';
+						case 'eng': return 'Error while report sending';
+					}
+				}
 				case 'error while request rejecting': {
 					switch ($lang) {
 						case 'rus': return 'Ошибка при отклонении заявки';
@@ -540,6 +582,12 @@
 					switch ($lang) {
 						case 'rus': return 'Отчество';
 						case 'eng': return 'Fathername';
+					}
+				}
+				case 'file': {
+					switch ($lang) {
+						case 'rus': return 'Файл';
+						case 'eng': return 'File';
 					}
 				}
 				case 'full name': {
@@ -982,6 +1030,18 @@
 						case 'eng': return 'Repeat new password';
 					}
 				}
+				case 'report is successfully sended': {
+					switch ($lang) {
+						case 'rus': return 'Отчет успешно отправлен';
+						case 'eng': return 'Report is successfully sended';
+					}
+				}
+				case 'report sending': {
+					switch ($lang) {
+						case 'rus': return 'Отправка отчета';
+						case 'eng': return 'Report sending';
+					}
+				}
 				case 'reports': {
 					switch ($lang) {
 						case 'rus': return 'Отчеты';
@@ -1049,6 +1109,12 @@
 					switch ($lang) {
 						case 'rus': return 'Управление штатом';
 						case 'eng': return 'Staff management';
+					}
+				}
+				case 'start to insert name': {
+					switch ($lang) {
+						case 'rus': return 'Начните вводить имя';
+						case 'eng': return 'Start to insert name';
 					}
 				}
 				case 'surname': {

@@ -481,8 +481,11 @@
 		{
 			global $db_connection;
 
-			$parts = preg_split('/\s+/', $prefix);
+			$parts = array_map('trim', preg_split('/\s+/', $prefix));
+			array_filter($parts);
 			$where_clause = '';
+			for ($i = 0, $size = count($parts); $i < $size; ++$i) if ($parts[$i] === '') unset($parts[$i]);
+
 			for ($i = 0, $size = count($parts); $i < $size; ++$i) {
 				$where_clause .= ' (UPPER(name) LIKE UPPER("'.$parts[$i].'%")) OR (UPPER(surname) LIKE UPPER("'.$parts[$i].'%")) ';
 				if ($i < $size - 1) $where_clause .= 'OR';

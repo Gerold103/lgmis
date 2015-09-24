@@ -59,7 +59,8 @@
 
     <body>
         <div class="dropdown">
-            <input onblur="hideUsers();" onkeyup="showUsers(this);" class="form-control dropdown-toggle" type="text" id="recipient_input" name="recipient_input" aria-haspopup="true">
+            <input onkeyup="showUsers(this);" class="form-control dropdown-toggle" type="text" id="recipient_input" name="recipient_input" aria-haspopup="true" value="">
+            <input type="hidden" id="recipient_id" name="recipient_id" value="">
             <ul class="dropdown-menu" id="users_list">
             </ul>
         </div>

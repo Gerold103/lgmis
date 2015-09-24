@@ -268,6 +268,20 @@
 									$content = AlertMessage('alert-danger', Language::Word('error during article inserting'));
 							}
 							break;
+						case Report::$type:
+							$assoc = $_POST;
+							$assoc['author_id'] = $_POST['id'];
+							unset($assoc['id']);
+							$ob = Report::FetchFromAssoc($assoc);
+							if (Error::IsError($ob)) {
+								$content = AlertMessage('alert-danger', Language::Word('error while report sending'));
+							} else {
+								if (Report::InsertToDB($ob))
+									$content = AlertMessage('alert-success', Language::Word('report is successfully sended'));
+								else
+									$content = AlertMessage('alert-danger', Language::Word('error while report inserting'));
+							}
+							break;
 						case Direction::$type:
 							$assoc = $_POST;
 							$assoc['author_id'] = $_POST['id'];

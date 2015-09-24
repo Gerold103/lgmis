@@ -20,6 +20,11 @@
 		public function GetTextBlock() 		{ return $this->text_block; }
 		public function GetCreatingDate() 	{ return date('d : m : Y - H : i', $this->creating_date); }
 		public function GetPathToFile()		{ return $this->path_to_file; }
+		public function GetLinkToFile()		{
+			global $link_to_utility_download;
+
+			$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($this->path_to_file).'">'.Language::Word('download file').'</a>';
+		}
 
 		public function ToHTMLAutoFull($user_privileges)
 		{
