@@ -172,16 +172,20 @@
 		return '<a href="'.$path_to.'">'.Language::Word('on previous admin page').'</a>';
 	}
 
-	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('jpg', 'png', 'gif'), $lang = 'rus')
-	{
-		if ($lang !== 'rus') $image_name .= '_'.$lang;
-		$res = $start_path.'/'.$image_name.'.';
+	function PathToFile($start_path, $file_name, $default_ans = '', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg', 'pdf', 'txt', 'zip', '7z', 'rar'), $lang = 'rus') {
+		if ($lang !== 'rus') $file_name .= '_'.$lang;
+		$res = $start_path.'/'.$file_name.'.';
 		for ($i = 0, $size = count($available); $i < $size; ++$i) {
 			if (file_exists($res.$available[$i])) {
 				return $res.$available[$i];
 			}
 		}
 		return $default_ans;
+	}
+
+	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg'), $lang = 'rus')
+	{
+		return PathToImage($start_path, $image_name, $default_ans, $available, $lang);
 	}
 
 	//------------------------B O O T S T R A P------------------------

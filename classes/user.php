@@ -28,6 +28,8 @@
 
 		public static $last_error = '';
 
+		public function GetID() { return $this->id; }
+
 		public function GetCount()
 		{
 			global $db_connection;
