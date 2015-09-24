@@ -1024,6 +1024,18 @@
 						case 'eng': return 'Rank';
 					}
 				}
+				case 'received reports': {
+					switch ($lang) {
+						case 'rus': return 'Полученные отчеты';
+						case 'eng': return 'Received reports';
+					}
+				}
+				case 'receiver': {
+					switch ($lang) {
+						case 'rus': return 'Получатель';
+						case 'eng': return 'Receiver';
+					}
+				}
 				case 'registration': {
 					switch ($lang) {
 						case 'rus': return 'Регистрация';
@@ -1115,6 +1127,12 @@
 					switch ($lang) {
 						case 'rus': return 'Отправить запрос';
 						case 'eng': return 'Send request';
+					}
+				}
+				case 'sended reports': {
+					switch ($lang) {
+						case 'rus': return 'Отправленные отчеты';
+						case 'eng': return 'Sended reports';
 					}
 				}
 				case 'sorry': {
