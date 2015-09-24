@@ -64,6 +64,7 @@
 					$content .= '</div>';
 
 					require($link_to_pagination_show_template);
+					$content .= $pagination;
 				} else {
 					$content .= ToPageHeader(Language::Word('absense'), "h3", "black");
 				}

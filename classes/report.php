@@ -138,7 +138,7 @@
 			return $res;
 		}
 
-		public static function FetchBy($args)
+		public static function FetchBy($args, $args2 = array())
 		{
 			global $db_connection;
 			$where_clause = '';
@@ -148,6 +148,9 @@
 				$where_clause .= ' ('.$key.' = '.$value.') ';
 				if ($i < $size - 1) $where_clause .= 'OR';
 				++$i;
+			}
+			if (ArrayElemIsValidStr($args2, 'order_by')) {
+				$where_clause .= ' ORDER BY '.$args2['order_by'];
 			}
 			$res = $db_connection->query("SELECT * FROM ".self::$table." WHERE ".$where_clause);
 			if (!$res) {
@@ -159,12 +162,12 @@
 
 		public static function FetchByRecipientID($id)
 		{
-			return self::FetchBy(array('recipient_id' => $id));
+			return self::FetchBy(array('recipient_id' => $id), array('order_by' => 'id DESC'));
 		}
 
 		public static function FetchByAuthorID($id)
 		{
-			return self::FetchBy(array('author_id' => $id));
+			return self::FetchBy(array('author_id' => $id), array('order_by' => 'id DESC'));
 		}
 
 		public static function FetchByID($id)
