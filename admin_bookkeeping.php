@@ -15,7 +15,7 @@
 				$title .= ' :'.Language::Word('reports');
 				$header = $title;
 
-				$content .= MenuButton(Language::Word('send report'), $link_to_admin_report, 'btn-primary', '', 'get');
+				$content .= MenuButton(Language::Word('send report'), $link_to_admin_report, 'btn-primary', 'add', 'get');
 
 				$content .= MenuButton(Language::Word('received reports'), $link_to_admin_bookkeeping.'?content_type=received_reps', 'btn-default', '', 'get');
 

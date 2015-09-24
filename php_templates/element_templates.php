@@ -185,7 +185,7 @@
 
 	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg'), $lang = 'rus')
 	{
-		return PathToImage($start_path, $image_name, $default_ans, $available, $lang);
+		return PathToFile($start_path, $image_name, $default_ans, $available, $lang);
 	}
 
 	//------------------------B O O T S T R A P------------------------

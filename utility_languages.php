@@ -196,6 +196,12 @@
 						case 'eng': return 'Are you shure that you want to delete project with header';
 					}
 				}
+				case 'are you shure that you want to delete report with header': {
+					switch ($lang) {
+						case 'rus': return 'Вы уверены, что хотите удалить отчет с заголовком';
+						case 'eng': return 'Are you shure that you want to delete report with header';
+					}
+				}
 				case 'are you shure that you want to delete text block with header': {
 					switch ($lang) {
 						case 'rus': return 'Вы уверены, что хотите удалить текстовый блок с заголовком';
@@ -533,6 +539,12 @@
 						case 'eng': return 'Error while project deleting';
 					}
 				}
+				case 'error while report deleting': {
+					switch ($lang) {
+						case 'rus': return 'Ошибка при удалении отчета';
+						case 'eng': return 'Error while report deleting';
+					}
+				}
 				case 'error while report inserting': {
 					switch ($lang) {
 						case 'rus': return 'Ошибка при вставке отчета в базу';
@@ -594,6 +606,12 @@
 					switch ($lang) {
 						case 'rus': return 'Файл';
 						case 'eng': return 'File';
+					}
+				}
+				case 'file was not uploaded': {
+					switch ($lang) {
+						case 'rus': return 'Файл не был загружен';
+						case 'eng': return 'File was not uploaded';
 					}
 				}
 				case 'full name': {
@@ -1058,6 +1076,12 @@
 					switch ($lang) {
 						case 'rus': return 'Редактирование отчета';
 						case 'eng': return 'Report editing';
+					}
+				}
+				case 'report is deleted': {
+					switch ($lang) {
+						case 'rus': return 'Отчет удален';
+						case 'eng': return 'Report is deleted';
 					}
 				}
 				case 'report is successfully sended': {

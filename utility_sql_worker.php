@@ -65,6 +65,14 @@
 							}
 							break;
 						}
+						case Report::$type: {
+							if (!Report::Delete($_POST['id'])) {
+								$content = AlertMessage('alert-danger', Language::Word('error while report deleting'));
+							} else {
+								$content = AlertMessage('alert-success', Language::Word('report is deleted'));
+							}
+							break;
+						}
 						case Direction::$type: {
 							if (!Direction::Delete($_POST['id'])) {
 								$content = AlertMessage('alert-danger', Language::Word('error while direction deleting'));
@@ -160,6 +168,20 @@
 								$content .= AlertMessage('alert-success', Language::Word('changes are saved'));
 								if ($article->FetchCoverFromAssocEditing($_FILES) < 0) {
 									$content .= AlertMessage('alert-warning', Language::Word('cover was not uploaded'));
+								}
+							}
+							break;
+						}
+						case Report::$type: {
+							$ob = Report::FetchByID($_POST['id']);
+							if (Error::IsError($ob)) break;
+							$ob->FetchFromAssocEditing($_POST);
+							if (Error::IsError($ob->Save())) {
+								$content .= AlertMessage('alert-danger', Language::Word('it was not succeeded to save'));
+							} else {
+								$content .= AlertMessage('alert-success', Language::Word('changes are saved'));
+								if ($ob->FetchFileFromAssocEditing($_FILES) < 0) {
+									$content .= AlertMessage('alert-warning', Language::Word('file was not uploaded'));
 								}
 							}
 							break;

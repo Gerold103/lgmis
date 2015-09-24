@@ -29,7 +29,7 @@
 		public function ToHTMLAutoFull($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
+				case admin_user_id: case simple_user_id:
 					return $this->ToHTMLUserPrivateFull();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicFull();
@@ -41,7 +41,7 @@
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
-				case admin_user_id:
+				case admin_user_id: case simple_user_id:
 					return $this->ToHTMLUserPrivateShortInTable();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicShortInTable();
@@ -52,7 +52,39 @@
 
 		public function ToHTMLUserPrivateFull()
 		{
+			$res = '';
 
+			$res .= '<div class="form-horizontal">';
+
+			$res .= PairLabelAndPanel(3, 5, Language::Word('receiver'), User::FetchByID($this->recipient_id)->LinkToThis());
+			$res .= PairLabelAndPanel(3, 5, Language::Word('creating date'), $this->GetCreatingDate());
+			$res .= PairLabelAndPanel(3, 5, Language::Word('author'), User::FetchByID($this->author_id)->LinkToThis());
+			$res .= PairLabelAndPanel(3, 5, Language::Word('file'), $this->GetLinkToFile());
+
+			$res .= '<hr>';
+
+			$res .= 	'<div class="row" align="center">';
+			$res .= 		'<label class="control-label">'.Language::Word('text').'</label>';
+			$res .= 	'</div>';
+			$res .= 	'<div class="row" align="left">';
+			$res .= 		'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'">';
+			$res .= 			SimplePanel($this->text_block);
+			$res .= 		'</div>';
+			$res .= 	'</div>';
+
+			$res .= '<div class="row">';
+			if ((GetUserLogin() === User::FetchByID($this->author_id)->login) || (GetUserLogin() == 'admin')) {
+				$res .= 	'<div class="'.ColAllTypes(6).'" align="right">';
+				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
+				$res .=		'</div>';
+				$res .= 	'<div class="'.ColAllTypes(6).'" align="left">';
+				$res .=			'<div class="margin-sm">'.$this->ToHTMLDel().'</div>';
+				$res .=		'</div>';
+			}
+			$res .= '</div>';
+
+			$res .= '</div>';
+			return $res;
 		}	
 		
 		public function ToHTMLUserPublicFull()
@@ -62,7 +94,33 @@
 
 		public function ToHTMLUserPrivateShortInTable()
 		{
-			
+			$res = '<tr>';
+			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
+			$res .= '<td>'.User::FetchByID($this->recipient_id)->LinkToThis().'</td>';
+			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
+			$res .= '<td>'.$this->GetCreatingDate().'</td>';
+			$res .= '<td>';
+			$res .=		'<div class="row">';
+			$author_login = User::FetchByID($this->author_id)->login;
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
+				$res .= 	'<div class="'.ColAllTypes(4).'">';
+			} else {
+				$res .= 	'<div class="'.ColAllTypes(12).'">';
+			}
+			$res .= 			$this->ToHTMLFullVers();
+			$res .=			'</div>';
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLEdit();
+				$res .=		'</div>';
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLDel();
+				$res .=		'</div>';
+			}
+			$res .= 	'</div>';
+			$res .= '</td>';
+			$res .= '</tr>';
+			return $res;
 		}	
 
 		public function ToHTMLUserPublicShortInTable()
@@ -70,9 +128,51 @@
 			
 		}
 
+		private static function ArrayFromDBResult($result)
+		{
+			$res = array();
+			while ($row = $result->fetch_assoc()) {
+				array_push($res, self::FetchFromAssoc($row));
+			}
+			return $res;
+		}
+
+		public static function FetchBy($args)
+		{
+			global $db_connection;
+			$where_clause = '';
+			$i = 0;
+			$size = count($args);
+			foreach ($args as $key => $value) {
+				$where_clause .= ' ('.$key.' = '.$value.') ';
+				if ($i < $size - 1) $where_clause .= 'OR';
+				++$i;
+			}
+			$res = $db_connection->query("SELECT * FROM ".self::$table." WHERE ".$where_clause);
+			if (!$res) {
+				echo $db_connection->error;
+				return Error::db_error;
+			}
+			return self::ArrayFromDBResult($res);
+		}
+
+		public static function FetchByRecipientID($id)
+		{
+			return self::FetchBy(array('recipient_id' => $id));
+		}
+
+		public static function FetchByAuthorID($id)
+		{
+			return self::FetchBy(array('author_id' => $id));
+		}
+
 		public static function FetchByID($id)
 		{
-
+			$res = self::FetchBy(array('id' => $id));
+			if (Error::IsError($res)) return $res;
+			if (count($res) > 1) return Error::ambiguously;
+			if (count($res) === 0) return Error::not_found;
+			return $res[0];
 		}	
 
 		public static function FetchFromAssoc($assoc)
@@ -112,7 +212,30 @@
 
 		public function FetchFromAssocEditing($assoc)
 		{
+			if (ArrayElemIsValidStr($assoc, 'name')) $this->name = $assoc['name'];
+			if (ArrayElemIsValidStr($assoc, 'recipient_id')) $this->annotation = $assoc['recipient_id'];
+			if (ArrayElemIsValidStr($assoc, 'text_block')) $this->text_block = $assoc['text_block'];
+		}
 
+		public function FetchFileFromAssocEditing($assoc)
+		{
+			if (isset($assoc['file']['name']) && (is_uploaded_file($assoc['file']['tmp_name']))) {
+				global $link_to_report_images;
+				$file_name = 'file';
+				$old_im = $file_name;
+				$sepext = explode('.', strtolower($assoc['file']['name']));
+			    $type = end($sepext);
+			    $file_name .= '.'.$type;
+			    $upload_path = $link_to_report_images.$this->id.'/'.$file_name;
+			    if (!delete_image($link_to_report_images.$this->id.'/'.$old_im)) {
+			    	return -1;
+			    } else if (!move_uploaded_file($assoc['file']['tmp_name'], $upload_path)) {
+			    	return -1;
+			    } else {
+			    	return 1;
+			    }
+			}
+			return 0;
 		}
 
 		public static function FetchAll()
@@ -122,17 +245,40 @@
 
 		public function ToHTMLDel()
 		{
-
+			global $link_to_utility_interceptor;
+			$args = array(
+				'action_link' => $link_to_utility_interceptor,
+				'action_type' => 'del',
+				'obj_type' => self::$type,
+				'id' => $this->id,
+				'info' => Language::Word('are you shure that you want to delete report with header').' '.htmlspecialchars($this->name).'?',
+			);
+			return ActionButton($args);
 		}
 
 		public function ToHTMLEdit()
 		{
-
+			global $link_to_admin_report;
+			$args = array(
+				'action_link' => $link_to_admin_report,
+				'action_type' => 'edit',
+				'obj_type' => self::$type,
+				'id' => $this->id,
+			);
+			return ActionButton($args);
 		}
 
 		public function ToHTMLFullVers()
 		{
-
+			global $link_to_admin_report;
+			$args = array(
+				'action_link' => $link_to_admin_report,
+				'action_type' => 'full',
+				'obj_type' => self::$type,
+				'id' => $this->id,
+				'method' => 'get',
+			);
+			return ActionButton($args);
 		}
 
 		public static function InsertToDB($request)
@@ -176,12 +322,36 @@
 
 		public function Save()
 		{
-
+			global $db_connection;
+			$res = self::FetchByID($this->id);
+			if (Error::IsError($res)) return $res;
+			$name 		= $db_connection->real_escape_string($this->name);
+			$recipient_id = $db_connection->real_escape_string($this->recipient_id);
+			$text_block = $db_connection->real_escape_string($this->text_block);
+			$res = $db_connection->query("UPDATE `".self::$table."` SET `name`=\"".$name."\", `recipient_id`=\"".$recipient_id."\", `text_block`=\"".$text_block."\" WHERE `id`=".$this->id);
+			if (!$res) {
+				echo $db_connection->error;
+				return Error::db_error;
+			}
+			return true;
 		}
 
 		public static function Delete($id)
 		{
-			
+			global $db_connection;
+			global $link_to_report_images;
+			global $link_to_report_files;
+			global $link_to_logo;
+
+			$ob = Report::FetchByID($id);
+
+			if (!$db_connection->query("DELETE FROM `".self::$type."` WHERE `id` = ".$id)) {
+				return 0;
+			} else {
+				removeDirectory($link_to_report_images.$id);
+				removeDirectory($link_to_report_files.$id);
+				return 1;
+			}
 		}
 	}
 

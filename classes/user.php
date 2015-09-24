@@ -462,7 +462,7 @@
 		{
 			$res = array();
 			while ($row = $result->fetch_assoc()) {
-				array_push($res, User::FetchFromAssoc($row));
+				array_push($res, self::FetchFromAssoc($row));
 			}
 			return $res;
 		}
