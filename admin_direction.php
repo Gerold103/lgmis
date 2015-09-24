@@ -101,7 +101,7 @@
 			$content .= 	'</div>';
 			$content .=		'<script>';
 			$content .=			'CKEDITOR.replace("text_block",';
-			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Direction::$type.'&id='.$id.'&add=add$glob_id='.$direction->id.'",';
+			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Direction::$type.'&id='.$id.'&add=add&glob_id='.$direction->id.'",';
 			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Direction::$type.'&id='.$direction->id.'&edit=edit",';
 			$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 			$content .= 			'allowedContent: true, });';

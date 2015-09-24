@@ -19,6 +19,25 @@
 		public static $table = 'user_blocks';
 
 		public function GetID() { return $this->id; }
+
+		public static function GetMaximalID()
+		{
+			global $languages;
+			global $db_connection;
+			$max_id = 0;
+			foreach ($languages as $key => $value) {
+				$from_table = self::$table;
+				if ($key !== 'rus') $from_table .= '_'.$key;
+				$res = $db_connection->query("SELECT MAX(id) FROM ".$from_table);
+				if (!$res) {
+					echo $db_connection->error;
+					return Error::db_error;
+				}
+				$row = $res->fetch_row();
+				$max_id = max($max_id, $row[0]);
+			}
+			return $max_id;
+		}
 		
 		//--------Methods--------
 		
@@ -339,7 +358,11 @@
 			if ($lang_vers !== 'rus') {
 				$insert_table .= '_'.$lang_vers;
 			}
-			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `author_id`, `name`, `text_block`, `priority`, `creating_date`) VALUES ('".$glob_id."', '".$author_id."', '".$name."', '".$text_block."', '".$priority."', CURRENT_TIMESTAMP)");
+			$max_id = self::GetMaximalID() + 1;
+			$insert_id = -1;
+			if ($glob_id !== 0) $insert_id = $glob_id;
+			else $insert_id = $max_id;
+			$res = $db_connection->query("INSERT INTO `".$insert_table."` (`id`, `author_id`, `name`, `text_block`, `priority`, `creating_date`) VALUES ('".$insert_id."', '".$author_id."', '".$name."', '".$text_block."', '".$priority."', CURRENT_TIMESTAMP)");
 			if (!$res) {
 				return false;
 			}
