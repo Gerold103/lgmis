@@ -45,6 +45,9 @@
       case Article::$type:
         $upload_dir = $link_to_article_images.$dir_id;
         break;
+      case Report::$type:
+        $upload_dir = $link_to_report_images.$dir_id;
+        break;
       case Direction::$type:
         $upload_dir = $link_to_direction_images.$dir_id;
         break;

@@ -280,6 +280,12 @@
 						case 'eng': return 'Change cover';
 					}
 				}
+				case 'change file': {
+					switch ($lang) {
+						case 'rus': return 'Изменить файл';
+						case 'eng': return 'Change file';
+					}
+				}
 				case 'change receiver': {
 					switch ($lang) {
 						case 'rus': return 'Изменить получателя';
@@ -1028,6 +1034,18 @@
 					switch ($lang) {
 						case 'rus': return 'Повторите новый пароль';
 						case 'eng': return 'Repeat new password';
+					}
+				}
+				case 'report': {
+					switch ($lang) {
+						case 'rus': return 'Отчет';
+						case 'eng': return 'Report';
+					}
+				}
+				case 'report editing': {
+					switch ($lang) {
+						case 'rus': return 'Редактирование отчета';
+						case 'eng': return 'Report editing';
 					}
 				}
 				case 'report is successfully sended': {
