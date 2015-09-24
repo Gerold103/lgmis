@@ -1,5 +1,5 @@
 <?php
-	require_once('ulitity_lgmis_lib.php')
+	require_once('utility_lgmis_lib.php');
 
 	$file_path = $_SERVER['DOCUMENT_ROOT'].$link_prefix;
 	if (isset($_GET['file_path'])) {

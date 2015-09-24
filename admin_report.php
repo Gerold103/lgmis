@@ -78,7 +78,7 @@
 		$content .= 	'</div>';
 		$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header'), htmlspecialchars($ob->GetName())).'<br>';
 		$content .= 	PairLabelAndPanel(4, 5, Language::Word('current file'), $ob->GetLinkToFile());
-		$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change file'), 'new_file');
+		$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change file'), 'file');
 		$content .= 	WrapToHiddenInputs(array('type' => Report::$type, 'yes' => '', 'id' => $ob_id));
 		$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
 		$content .=		'<div class="row">';

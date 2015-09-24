@@ -24,6 +24,7 @@
 			global $link_to_utility_download;
 
 			$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($this->path_to_file).'">'.Language::Word('download file').'</a>';
+			return $res;
 		}
 
 		public function ToHTMLAutoFull($user_privileges)
@@ -178,7 +179,7 @@
 		public static function FetchFromAssoc($assoc)
 		{
 			global $link_to_service_images;
-			global $link_to_report_images;
+			global $link_to_report_files;
 
 			if (!ArrayElemIsValidStr($assoc, 'recipient_id')) {
 				$users = User::FetchByPrefix($assoc['recipient_input']);
@@ -213,21 +214,21 @@
 		public function FetchFromAssocEditing($assoc)
 		{
 			if (ArrayElemIsValidStr($assoc, 'name')) $this->name = $assoc['name'];
-			if (ArrayElemIsValidStr($assoc, 'recipient_id')) $this->annotation = $assoc['recipient_id'];
+			if (ArrayElemIsValidStr($assoc, 'recipient_id')) $this->recipient_id = $assoc['recipient_id'];
 			if (ArrayElemIsValidStr($assoc, 'text_block')) $this->text_block = $assoc['text_block'];
 		}
 
 		public function FetchFileFromAssocEditing($assoc)
 		{
 			if (isset($assoc['file']['name']) && (is_uploaded_file($assoc['file']['tmp_name']))) {
-				global $link_to_report_images;
+				global $link_to_report_files;
 				$file_name = 'file';
 				$old_im = $file_name;
 				$sepext = explode('.', strtolower($assoc['file']['name']));
 			    $type = end($sepext);
 			    $file_name .= '.'.$type;
-			    $upload_path = $link_to_report_images.$this->id.'/'.$file_name;
-			    if (!delete_image($link_to_report_images.$this->id.'/'.$old_im)) {
+			    $upload_path = $link_to_report_files.$this->id.'/'.$file_name;
+			    if (!delete_image($link_to_report_files.$this->id.'/'.$old_im)) {
 			    	return -1;
 			    } else if (!move_uploaded_file($assoc['file']['tmp_name'], $upload_path)) {
 			    	return -1;
@@ -285,12 +286,14 @@
 		{
 			global $db_connection;
 			global $link_to_report_images;
+			global $link_to_report_files;
 
 			$author_id 	= $db_connection->real_escape_string($request->author_id);
 			$name 		= $db_connection->real_escape_string($request->name);
-			$annotation = $db_connection->real_escape_string($request->recipient_id);
+			$recipient_id = $db_connection->real_escape_string($request->recipient_id);
 			$res = $db_connection->query("INSERT INTO `".self::$table."` (`author_id`, `name`, `recipient_id`) VALUES ('".$author_id."', '".$name."', '".$recipient_id."')");
 			if (!$res) {
+				echo $db_connection->error;
 				return false;
 			}
 			$id = $db_connection->insert_id;
@@ -308,11 +311,12 @@
 			$upload_path = '';
 			recurse_copy($link_to_report_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_report_images.$id);
 			if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+				create_dir($link_to_report_files.$id);
 				$file_name = 'file';
 				$sepext = explode('.', strtolower($_FILES['file']['name']));
 			    $type = end($sepext);
 			    $file_name .= '.'.$type;
-			    $upload_path = $link_to_report_images.$id.'/'.$file_name;
+			    $upload_path = $link_to_report_files.$id.'/'.$file_name;
 			    if (move_uploaded_file($_FILES['file']['tmp_name'], $upload_path)) {
 			    	$request->path_to_file = $upload_path;
 			    }
@@ -345,7 +349,8 @@
 
 			$ob = Report::FetchByID($id);
 
-			if (!$db_connection->query("DELETE FROM `".self::$type."` WHERE `id` = ".$id)) {
+			if (!$db_connection->query("DELETE FROM `".self::$table."` WHERE `id` = ".$id)) {
+				echo $db_connection->error;
 				return 0;
 			} else {
 				removeDirectory($link_to_report_images.$id);
