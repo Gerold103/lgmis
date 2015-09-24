@@ -476,6 +476,29 @@
 			}
 			return User::ArrayFromDBResult($result);
 		}
+
+		public static function FetchByPrefix($prefix)
+		{
+			global $db_connection;
+
+			$parts = preg_split('/\s+/', $prefix);
+			$where_clause = '';
+			for ($i = 0, $size = count($parts); $i < $size; ++$i) {
+				$where_clause .= ' (UPPER(name) LIKE UPPER("'.$parts[$i].'%")) OR (UPPER(surname) LIKE UPPER("'.$parts[$i].'%")) ';
+				if ($i < $size - 1) $where_clause .= 'OR';
+			}
+			$result = $db_connection->query("SELECT id, name, surname FROM ".User::$table." WHERE ".$where_clause);
+			if (!$result) {
+				echo $db_connection->error;
+				return Error::db_error;
+			}
+			$res = array();
+			while ($row = $result->fetch_assoc()) {
+				$user = array('id' => $row['id'], 'name' => $row['name'], 'surname' => $row['surname']);
+				array_push($res, $user);
+			}
+			return $res;
+		}
 		
 		public static function FetchByLogin($login)
 		{

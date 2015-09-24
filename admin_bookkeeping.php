@@ -14,6 +14,8 @@
 			case $content_types_short['reports']: {
 				$title .= ' :'.Language::Word('reports');
 				$header = $title;
+
+				$content .= MenuButton(Language::Word('send report'), $link_to_admin_report, 'btn-primary', '', 'get');
 				break;
 			}
 			default: break;

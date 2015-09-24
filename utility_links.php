@@ -69,6 +69,8 @@ $link_to_admin_user_block = 'admin_user_block.php';
 $link_to_admin_text_part = 'admin_text_part.php';
 $link_to_admin_bookkeeping = 'admin_bookkeeping.php';
 $link_to_admin_registration = 'admin_registration.php';
+$link_to_admin_report = 'admin_report.php';
+$link_to_admin_ajax_interceptor = 'admin_ajax_interceptor.php';
 
 $link_to_public_template = 'php_templates/public_template.php';
 $link_to_public_menu_template = 'php_templates/public_menu_template.php';

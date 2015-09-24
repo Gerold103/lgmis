@@ -1027,6 +1027,12 @@
 						case 'eng': return 'Save';
 					}
 				}
+				case 'send report': {
+					switch ($lang) {
+						case 'rus': return 'Отправить отчет';
+						case 'eng': return 'Send report';
+					}
+				}
 				case 'send request': {
 					switch ($lang) {
 						case 'rus': return 'Отправить запрос';

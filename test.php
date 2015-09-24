@@ -9,10 +9,11 @@
         <title>Тест</title>
         <link rel="stylesheet" type="text/css" href="ckeditor/contents.css">
         <link rel="stylesheet" type="text/css" href="css/styles.css">
-        <script type="text/javascript" src="js/script.js"></script>
         <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
-        <!--<link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>-->
+        <script type="text/javascript" src="js/utility_links.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
         <script type="text/javascript">
 
@@ -57,12 +58,12 @@
     </head>
 
     <body>
-        <div onscroll="scrollProcess();" style="overflow-y: scroll; height: 100px; width: 500px; border: 1px solid black;" id="chatWindow">
-            <ul id="mesList">
+        <div class="dropdown">
+            <input onblur="hideUsers();" onkeyup="showUsers(this);" class="form-control dropdown-toggle" type="text" id="recipient_input" name="recipient_input" aria-haspopup="true">
+            <ul class="dropdown-menu" id="users_list">
             </ul>
         </div>
-        <textarea id="message"></textarea>
-        <button onClick="sendText();">Отправить</button>
+        
 
     </body>
 </html>

@@ -19,6 +19,7 @@
 
 		//Requests on register
 		$content .= MenuButton(Language::Word('requests on register'), $link_to_admin_requests_on_register, 'btn-default', '', 'get');
+
 	} else {
 		//Manage staff
 		$content .=	MenuButton(Language::Word('our collective'), $link_to_admin_manage_staff, 'btn-default', '', 'get');
@@ -26,6 +27,8 @@
 		//Manage content
 		$content .= MenuButton(Language::Word('our content'), $link_to_admin_manage_content, 'btn-default', '', 'get');
 	}
+
+	$content .= MenuButton(Language::Word('bookkeeping'), $link_to_admin_bookkeeping, 'btn-default', '', 'get');
 
 	include($link_to_admin_template);
 ?>
