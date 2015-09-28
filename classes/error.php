@@ -7,9 +7,12 @@
 		const ambiguously = 3;
 		const not_found = 4;
 
+		public static $type = 'error';
+		public $mesg = '';
+
 		public static function IsError($ob) {
 			return ($ob === Error::no_translation) || ($ob === Error::db_error) || ($ob === Error::arg_not_valid) ||
-			($ob === Error::ambiguously) || ($ob === Error::not_found);
+			($ob === Error::ambiguously) || ($ob === Error::not_found) || (is_a($ob, 'Error'));
 		}
 	}
 	

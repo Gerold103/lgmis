@@ -107,16 +107,20 @@
 		}
 
 		$ob = Report::FetchByID($_REQUEST['id']);
+		$user_id = GetUserID();
+		if (($user_id !== $ob->GetAuthorID()) && ($user_id !== $ob->GetRecipientID())){
+			$content = AlertMessage('alert-danger', Language::Word('access denied'));
+		} else {
+			$title = '';
+			$header = '';
+			$content = '';
 
-		$title = '';
-		$header = '';
-		$content = '';
+			$title = Language::Word('report');
 
-		$title = Language::Word('report');
+			$header = htmlspecialchars($ob->GetName());
 
-		$header = htmlspecialchars($ob->GetName());
-
-		$content = $ob->ToHTMLAutoFull(GetUserPrivileges());
+			$content = $ob->ToHTMLAutoFull(GetUserPrivileges());
+		}
 	}
 
 	include_once($link_to_admin_template);

@@ -138,7 +138,7 @@
 			return $res;
 		}
 
-		public static function FetchBy($args, $args2 = array())
+		public static function FetchBy($args = array(), $args2 = array())
 		{
 			global $db_connection;
 			$where_clause = '';
@@ -152,7 +152,8 @@
 			if (ArrayElemIsValidStr($args2, 'order_by')) {
 				$where_clause .= ' ORDER BY '.$args2['order_by'];
 			}
-			$res = $db_connection->query("SELECT * FROM ".self::$table." WHERE ".$where_clause);
+			if ($where_clause !== '') $where_clause = "WHERE ".$where_clause;
+			$res = $db_connection->query("SELECT * FROM ".self::$table." ".$where_clause);
 			if (!$res) {
 				echo $db_connection->error;
 				return Error::db_error;
@@ -244,7 +245,7 @@
 
 		public static function FetchAll()
 		{
-
+			return Report::FetchBy();
 		}
 
 		public function ToHTMLDel()

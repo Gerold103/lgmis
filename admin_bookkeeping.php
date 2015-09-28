@@ -21,18 +21,30 @@
 
 				$content .= MenuButton(Language::Word('sended reports'), $link_to_admin_bookkeeping.'?content_type=sended_reps', 'btn-default', '', 'get');
 
+				if (GetUserLogin() === 'admin') {
+					$content .= MenuButton(Language::Word('all reports'), $link_to_admin_bookkeeping.'?content_type=all_reps', 'btn-default', '', 'get');
+				}
+
 				break;
 			}
-			case 'received_reps': case 'sended_reps': {
+			case 'received_reps': case 'sended_reps': case 'all_reps': {
 				$content_type = $_REQUEST['content_type'];
+				if ($content_type === 'all_reps') {
+					if (GetUserLogin() !== 'admin') {
+						$content = AlertMessage('alert-danger', Language::Word('access denied'));
+						break;
+					}
+				}
 				if ($content_type === 'received_reps') $title .= ' :'.Language::Word('received reports');
-				else $title .= ' :'.Language::Word('sended reports');
+				else if ($content_type === 'sended_reps') $title .= ' :'.Language::Word('sended reports');
+				else $title .= ' :'.Language::Word('all reports');
 				$header = $title;
 
 				$reports = array();
 				$my_id = User::GetIDByLogin(GetUserLogin());
 				if ($content_type === 'received_reps') $reports = Report::FetchByRecipientID($my_id);
-				else $reports = Report::FetchByAuthorID($my_id);
+				else if ($content_type === 'sended_reps') $reports = Report::FetchByAuthorID($my_id);
+				else $reports = Report::FetchAll();
 
 				if (Error::IsError($reports)) exit();
 

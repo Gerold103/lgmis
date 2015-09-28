@@ -9,6 +9,12 @@
 	
 	$header .= Language::Word('requests on register');
 
+	if (GetUserPrivileges() !== admin_user_id) {
+		$content = AlertMessage('alert-danger', Language::Word('access denied'));
+		include($link_to_admin_template);
+		exit();
+	}
+
 	$reg_requests = RequestOnRegister::FetchAll();
 	$size = count($reg_requests);
 

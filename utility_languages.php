@@ -86,6 +86,12 @@
 						case 'eng': return 'Absense';
 					}
 				}
+				case 'access denied': {
+					switch ($lang) {
+						case 'rus': return 'Доступ запрещен';
+						case 'eng': return 'Access denied';
+					}
+				}
 				case 'actions': {
 					switch ($lang) {
 						case 'rus': return 'Действия';
@@ -164,6 +170,12 @@
 					switch ($lang) {
 						case 'rus': return 'Все связанные проекты так же будут удалены';
 						case 'eng': return 'All linked projects also will be deleted';
+					}
+				}
+				case 'all reports': {
+					switch ($lang) {
+						case 'rus': return 'Все отчеты';
+						case 'eng': return 'All reports';
 					}
 				}
 				case 'annotation': {

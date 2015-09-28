@@ -22,6 +22,12 @@
 		else return false;
 	}
 
+	function GetUserID()
+	{
+		if (!isset($_SESSION['user_login'])) return authorization_error;
+		return User::FetchByLogin($_SESSION['user_login'])->GetID();
+	}
+
 	//Проверка авторизационных данных
 	
 	if (isset($_POST['exit'])) {
