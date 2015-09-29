@@ -1,54 +1,8 @@
-function elem(id)
-{
-	return document.getElementById(id);
-}
-
-function deleteChilds(ob)
-{
-	while (ob.firstChild) {
-	    ob.removeChild(ob.firstChild);
-	}
-}
-
-function checkLoginField(field) {
-	return /^[\w]+$/.test(field.value); 
-}
-
-function checkEmailField(field) {
-	var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-	return re.test(field.value);
-}
-
-function checkPhoneField(field) {
-	var re = /^[\d-]+$/;
-	return re.test(field.value);
-}
-
 var server = null;
 
-function getXmlHttp(){
-	var xmlhttp;
-	try {
-		xmlhttp = new ActiveXObject("Msxml2.XMLHTTP");
-	} catch (e) {
-		try {
-			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		} catch (E) {
-			xmlhttp = false;
-		}
-	}
-	if (!xmlhttp && typeof XMLHttpRequest!='undefined') {
-		xmlhttp = new XMLHttpRequest();
-	}
-	return xmlhttp;
-}
-
-function refreshPage()
-{
-	if (server.readyState == 4) {
-		location.reload();
-	}
-}
+var window_bottom_callbacks = [
+	Article.WindowBottomCallback
+]
 
 function changeLanguage(lang) {
 	var data = 'lang=' + lang;
@@ -102,3 +56,14 @@ function showUsers(input) {
 	server.onreadystatechange = showUsersList;
 	server.send(data);
 }
+
+$(window).load(function(){
+    $(window).scroll(function() {   
+        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+            for (var i = 0; i < window_bottom_callbacks.length; ++i) {
+            	window_bottom_callbacks[i]();
+            }
+            window_bottom_called = true;
+        }
+    });
+});

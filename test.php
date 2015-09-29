@@ -15,6 +15,7 @@
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
         <script type="text/javascript">
 
             function lookForMessages() {
@@ -58,12 +59,7 @@
     </head>
 
     <body>
-        <div class="dropdown">
-            <input onkeyup="showUsers(this);" class="form-control dropdown-toggle" type="text" id="recipient_input" name="recipient_input" aria-haspopup="true" value="">
-            <input type="hidden" id="recipient_id" name="recipient_id" value="">
-            <ul class="dropdown-menu" id="users_list">
-            </ul>
-        </div>
+    <?php echo LoadWaiter(); ?>
         
 
     </body>

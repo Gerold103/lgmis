@@ -8,7 +8,9 @@ $link_to_admin_requests_on_register = 'admin_requests_on_register.php';
 
 $link_to_styles = 'css/styles.css';
 $link_to_bootstrap_styles = 'css/bootstrap.min.css';
+$link_to_animations_styles = 'css/animations.css';
 $link_to_js = 'js/';
+$link_to_classes = 'classes/';
 $link_to_ckeditor = 'ckeditor/';
 
 $link_to_articles_mod = 'articles';

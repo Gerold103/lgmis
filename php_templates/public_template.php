@@ -12,13 +12,15 @@
         	?>
         </title>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_ckeditor).'contents.css"'; ?> >
-        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'utility_links.js"'; ?> ></script>
-        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'script.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'jquery-1.11.1.js"'; ?> ></script>
+        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'utility_links.js"'; ?> ></script>
+        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_classes).'article.js"'; ?> ></script>
+        <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'script.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_ckeditor).'ckeditor.js"'; ?> ></script>
         <script type="text/javascript" src=<?php echo '"'.Link::Get($link_to_js).'bootstrap.min.js"'; ?> ></script>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_bootstrap_styles).'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_styles).'"'; ?>>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
         <script type="text/javascript">
             $(function () {
               $('[data-toggle="popover"]').popover()

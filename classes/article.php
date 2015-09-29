@@ -303,7 +303,7 @@
 			else return Link::Get('private_'.Article::$type).'/'.$this->id;
 		}
 
-		public function ToHTMLFullVers()
+		public function ToHTMLFullVers($to_public = NULL)
 		{
 			global $link_to_admin_article;
 			global $link_to_public_article;
@@ -312,12 +312,12 @@
 			global $content_types_short;
 			global $use_mod_rewrite;
 			$args = array();
-
+			if ($to_public === NULL) $to_public = IsSessionPublic();
 			$mod_rewrite = 0;
 			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
 				$mod_rewrite = 1;
 			}
-			if (IsSessionPublic()) {
+			if ($to_public) {
 				$args = array(
 					'action_link' => $link_to_public_article,
 					'action_type' => 'full',
@@ -337,6 +337,48 @@
 				);
 			}
 			return ActionButton($args);
+		}
+
+		private static function ArrayFromDBResult($result)
+		{
+			$res = array();
+			while ($row = $result->fetch_assoc()) {
+				array_push($res, self::FetchFromAssoc($row));
+			}
+			return $res;
+		}
+
+		public static function FetchBy($args = array(), $args2 = array())
+		{
+			global $db_connection;
+			$where_clause = '';
+			$i = 0;
+			$size = count($args);
+			foreach ($args as $key => $value) {
+				$where_clause .= ' ('.$key.' = '.$value.') ';
+				if ($i < $size - 1) $where_clause .= 'OR';
+				++$i;
+			}
+			if ($where_clause !== '') $where_clause = "WHERE ".$where_clause;
+			if (ArrayElemIsValidStr($args2, 'order_by')) {
+				$where_clause .= ' ORDER BY '.$args2['order_by'];
+			}
+
+			if (ArrayElemIsValidStr($args2, 'limit') && ArrayElemIsValidStr($args2, 'offset')) {
+				$where_clause .= ' LIMIT '.$args2['limit'].' OFFSET '.$args2['offset'];
+			}
+
+			$lang = 'rus';
+			if (isset($args2['lang'])) $lang = $args2['lang'];
+			else $lang = GetLanguage();
+			$from_table = self::$table;
+			if ($lang !== 'rus') $from_table .= '_'.$lang;
+			$res = $db_connection->query("SELECT * FROM ".$from_table." ".$where_clause);
+			if (!$res) {
+				echo $db_connection->error;
+				return Error::db_error;
+			}
+			return self::ArrayFromDBResult($res);
 		}
 		
 		//Methods for fetching
@@ -413,6 +455,21 @@
 			} else
 				$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png');
 			return $art;
+		}
+
+		public function ToJSON($needed = array('id', 'author_id', 'name', 'annotation', 'creating_date', 'path_to_image', 'text_block')) {
+			$res = array();
+			if (in_array('id', $needed)) $res['id'] = $this->id;
+			if (in_array('author_id', $needed)) $res['author_id'] = $this->author_id;
+			if (in_array('author_link', $needed)) $res['author_link'] = User::FetchByID($this->author_id)->LinkToThis('btn-sm');
+			if (in_array('name', $needed)) $res['name'] = $this->name;
+			if (in_array('annotation', $needed)) $res['annotation'] = $this->annotation;
+			if (in_array('creating_date', $needed)) $res['creating_date'] = $this->creating_date;
+			if (in_array('path_to_image', $needed)) $res['path_to_image'] = $this->path_to_image;
+			if (in_array('text_block', $needed)) $res['text_block'] = $this->text_block;
+
+			if (in_array('full_vers_link', $needed)) $res['full_vers_link'] = $this->ToHTMLFullVers(true);
+			return json_encode($res);
 		}
 
 		public static function FetchFromPost()

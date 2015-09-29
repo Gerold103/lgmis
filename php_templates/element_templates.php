@@ -23,6 +23,20 @@
 		return $res;
 	}
 
+	function LoadWaiter($display = 'none')
+	{
+		return '<div class="loadingMain" id="loadingMain" style="display: '.$display.';">
+			        <div id="loadingCircle_1" class="loadingUnit"></div>
+			        <div id="loadingCircle_2" class="loadingUnit"></div>
+			        <div id="loadingCircle_3" class="loadingUnit"></div>
+			        <div id="loadingCircle_4" class="loadingUnit"></div>
+			        <div id="loadingCircle_5" class="loadingUnit"></div>
+			        <div id="loadingCircle_6" class="loadingUnit"></div>
+			        <div id="loadingCircle_7" class="loadingUnit"></div>
+			        <div id="loadingCircle_8" class="loadingUnit"></div>
+			    </div>';
+	}
+
 	//here must be 'action_link', 'action_type', 'obj_type', 'id'
 	//'btn_text', 'prev_page', 'info' is optional
 	function ActionButton($args)

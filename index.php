@@ -13,6 +13,7 @@
 	$to = -1;
 	$pages = -1;
 	$cur_page = -1;
+	$need_pagination = true;
 
 	//----D I S P L A Y----
 	
@@ -21,13 +22,17 @@
 		$articles = Article::FetchAll();
 		$size = count($articles);
 		if ($size) {
+			$need_pagination = false;
 			require($link_to_pagination_init_template);
 
+			$content .= '<div onscroll="scrolled(this);" id="articles_list">';
 			for ($i = $from; $i <= $to; ++$i) {
 				$atricle = $articles[$i];
-				$content .= ($atricle->ToHTMLAutoShortForTable(GetUserPrivileges()));
+				$content .= '<div class="pbl_article">'.($atricle->ToHTMLAutoShortForTable(GetUserPrivileges())).'</div>';
 				if ($i != $to) $content .= '<hr><div style="background-color: #eeeeee;"><br></div><hr>';
 			}
+			$content .= LoadWaiter();
+			$content .= '</div>';
 		} else {
 			$content .= ToPageHeader(Language::Word('no news'), "h3", "black");
 		}

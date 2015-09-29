@@ -1,32 +1,5 @@
 <?php
-	session_set_cookie_params(0);
-	session_start();
 	include_once('utility_lgmis_lib.php');
-
-	function GetUserPrivileges()
-	{
-		if (!isset($_SESSION['user_login']) || (isset($_SESSION['is_public'])) && ($_SESSION['is_public'] === true)) return unauthorized_user_id;
-		if ($_SESSION['user_login'] == 'admin') return admin_user_id;
-		else return simple_user_id;
-	}
-
-	function GetUserLogin()
-	{
-		if (!isset($_SESSION['user_login'])) return authorization_error;
-		return $_SESSION['user_login'];
-	}
-
-	function IsSessionPublic()
-	{
-		if (isset($_SESSION['is_public'])) return $_SESSION['is_public'];
-		else return false;
-	}
-
-	function GetUserID()
-	{
-		if (!isset($_SESSION['user_login'])) return authorization_error;
-		return User::FetchByLogin($_SESSION['user_login'])->GetID();
-	}
 
 	//Проверка авторизационных данных
 	
@@ -67,62 +40,64 @@
 
 	//Проверка авторизации
 	
-	if (((!isset($is_public)) || ($is_public === false)) && (!isset($_SESSION['user_login']))) {
-		echo Language::Word('login please').'<br>';
-		?>
-		<script type="text/javascript">
-			function checkLoginField(field_id) {
-				var field = document.getElementById(field_id);
-				var errors = document.getElementById("errors");
-				if (/^[\w]+$/.test(field.value) == false) {
-					errors.innerHTML = '<font color="red">Такого логина не существует</font>';
-					return false;
-				}
-				return true;
-			}
-
-			function checkAuthForm(form_obj) {
-				if (checkLoginField("login") == true) {
-					form_obj.submit();
+	if (!isset($need_authorization) || ($need_authorization === true)) {
+		if (((!isset($is_public)) || ($is_public === false)) && (!isset($_SESSION['user_login']))) {
+			echo Language::Word('login please').'<br>';
+			?>
+			<script type="text/javascript">
+				function checkLoginField(field_id) {
+					var field = document.getElementById(field_id);
+					var errors = document.getElementById("errors");
+					if (/^[\w]+$/.test(field.value) == false) {
+						errors.innerHTML = '<font color="red">Такого логина не существует</font>';
+						return false;
+					}
 					return true;
 				}
-				return false;
-			}
 
-			function toRegisterPage() {
-				window.location.href = <?php echo '"'.$link_to_admin_registration.'"'; ?>;
-			}
-		</script>
-		<table height="100%" align="center">
-			<tr>
-				<td>
-					<form action="" method="post" onsubmit="return checkAuthForm(this);" id="register_form">
-						<table align="center">
-							<tr>
-								<span id="errors"></span>
-							</tr>
-							<tr>
-								<td>Login</td>
-								<td><input type="text" id="login" name="login"/></td>
-							</tr>
-							<tr>
-								<td>Password</td>
-								<td><input type="password" name="password" /></td>
-							</tr>
-							<tr>
-								<td>
-									<input type="submit" name="enter" value=<?php echo '"'.Language::Word('login').'"'; ?> />
-								</td>
-								<td>
-									<input type="button" name="register" value=<?php echo '"'.Language::Word('registration').'"'; ?> onclick="toRegisterPage();" />
-								</td>
-							</tr>
-						</table>
-					</form>
-				</td>
-			</tr>
-		</table>
-		<?php
-		exit();
+				function checkAuthForm(form_obj) {
+					if (checkLoginField("login") == true) {
+						form_obj.submit();
+						return true;
+					}
+					return false;
+				}
+
+				function toRegisterPage() {
+					window.location.href = <?php echo '"'.$link_to_admin_registration.'"'; ?>;
+				}
+			</script>
+			<table height="100%" align="center">
+				<tr>
+					<td>
+						<form action="" method="post" onsubmit="return checkAuthForm(this);" id="register_form">
+							<table align="center">
+								<tr>
+									<span id="errors"></span>
+								</tr>
+								<tr>
+									<td>Login</td>
+									<td><input type="text" id="login" name="login"/></td>
+								</tr>
+								<tr>
+									<td>Password</td>
+									<td><input type="password" name="password" /></td>
+								</tr>
+								<tr>
+									<td>
+										<input type="submit" name="enter" value=<?php echo '"'.Language::Word('login').'"'; ?> />
+									</td>
+									<td>
+										<input type="button" name="register" value=<?php echo '"'.Language::Word('registration').'"'; ?> onclick="toRegisterPage();" />
+									</td>
+								</tr>
+							</table>
+						</form>
+					</td>
+				</tr>
+			</table>
+			<?php
+			exit();
+		}
 	}
 ?>
