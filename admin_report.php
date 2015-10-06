@@ -108,7 +108,7 @@
 
 		$ob = Report::FetchByID($_REQUEST['id']);
 		$user_id = GetUserID();
-		if (($user_id !== $ob->GetAuthorID()) && ($user_id !== $ob->GetRecipientID())){
+		if (($user_id !== $ob->GetAuthorID()) && ($user_id !== $ob->GetRecipientID()) && (GetUserPrivileges() !== admin_user_id)){
 			$content = AlertMessage('alert-danger', Language::Word('access denied'));
 		} else {
 			$title = '';

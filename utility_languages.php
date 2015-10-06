@@ -875,6 +875,12 @@
 						case 'eng': return "Directions aren't present so far";
 					}
 				}
+				case 'no file': {
+					switch ($lang) {
+						case 'rus': return 'Нет файла';
+						case 'eng': return 'No file';
+					}
+				}
 				case 'no projects': {
 					switch ($lang) {
 						case 'rus': return 'Проектов пока нет';
@@ -1189,6 +1195,12 @@
 						case 'eng': return 'Start to insert name';
 					}
 				}
+				case 'start to insert something': {
+					switch ($lang) {
+						case 'rus': return 'Начните вводить что-нибудь';
+						case 'eng': return 'Start to insert something';
+					}
+				}
 				case 'surname': {
 					switch ($lang) {
 						case 'rus': return 'Фамилия';
@@ -1297,6 +1309,12 @@
 						case 'eng': return 'User with such login already exists';
 					}
 				}
+				case 'users': {
+					switch ($lang) {
+						case 'rus': return 'Пользователи';
+						case 'eng': return 'Users';
+					}
+				}
 
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ V ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1363,7 +1381,6 @@
 				}
 
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Z ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ end_line
 				default: return 'incorrect word';
 			}
 		}

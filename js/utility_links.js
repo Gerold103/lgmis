@@ -4,6 +4,8 @@ var link_to_admin_ajax_interceptor = 'admin_ajax_interceptor.php';
 
 var window_bottom_called = false;
 
+var records_on_page = 6;
+
 function ColAllTypes(width)
 {
 	return 'col-xs-' + width + ' col-sm-' + width + ' col-md-' + width + ' col-lg-' + width;
@@ -67,13 +69,14 @@ function refreshPage()
 function LoadWaiter()
 {
 	var loadingMain = document.createElement('div');
-	loadingMain.className = 'loadingMain';
-	for (var i = 1; i <= 8; ++i) {
-		var loadingUnit = document.createElement('div');
-		loadingUnit.className = 'loadingUnit';
-		loadingUnit.id = 'loadingCircle_' + i;
-		loadingMain.appendChild(loadingUnit);
-	}
+	loadingMain.style.marginBottom = "40px";
+	loadingMain.id = 'loadingMain';
+	var cssload_container = document.createElement('div');
+	cssload_container.className = 'cssload-container';
+	var cssload_wheel = document.createElement('div');
+	cssload_wheel.className = 'cssload-speeding-wheel';
+	loadingMain.appendChild(cssload_container);
+	loadingMain.appendChild(cssload_wheel);
 	return loadingMain;
 }
 

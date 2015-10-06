@@ -25,16 +25,13 @@
 
 	function LoadWaiter($display = 'none')
 	{
-		return '<div class="loadingMain" id="loadingMain" style="display: '.$display.';">
-			        <div id="loadingCircle_1" class="loadingUnit"></div>
-			        <div id="loadingCircle_2" class="loadingUnit"></div>
-			        <div id="loadingCircle_3" class="loadingUnit"></div>
-			        <div id="loadingCircle_4" class="loadingUnit"></div>
-			        <div id="loadingCircle_5" class="loadingUnit"></div>
-			        <div id="loadingCircle_6" class="loadingUnit"></div>
-			        <div id="loadingCircle_7" class="loadingUnit"></div>
-			        <div id="loadingCircle_8" class="loadingUnit"></div>
-			    </div>';
+		return '<div style="display: '.$display.'; margin-bottom: 40px;" id="loadingMain"><div class="cssload-container">
+					<div class="cssload-speeding-wheel"></div>
+				</div></div>';
+	}
+
+	function MakeScript($code) {
+		return '<script type="text/javascript">'.$code.'</script>';
 	}
 
 	//here must be 'action_link', 'action_type', 'obj_type', 'id'
@@ -123,6 +120,10 @@
 		if (isset($args['method'])) {
 			$method = $args['method'];
 		}
+		$style = '';
+		if (isset($args['style'])) {
+			$style = 'style="'.$args['style'].'"';
+		}
 
 		global $act_type_to_css_class;
 
@@ -136,9 +137,9 @@
 			$res .= '</form>';
 		} else if ($method === 'get') {
 			if (isset($args['mod_rewrite']) && ($args['mod_rewrite'] === 1)) {
-				$res .= '<a href="'.Link::Get($args['obj_type']).'/'.$args['id'].'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+				$res .= '<a '.$style.' href="'.Link::Get($args['obj_type']).'/'.$args['id'].'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
 			} else {
-				$res .= '<a href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
+				$res .= '<a '.$style.' href="'.$args['action_link'].'?'.WrapToGetVariables(array('type' => $args['obj_type'], 'id' => $args['id'], $args['action_type'] => '1')).'" class="btn btn-link '.($args['lnk_size']).'">'.$args['lnk_text'].'</a>';
 			}
 		}
 		return $res;

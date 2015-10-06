@@ -8,10 +8,10 @@
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
 		$article = Article::FetchByID($_REQUEST['id']);
-
 		$header = '';
 		$content = '';
 		$footer = '';
+		$title = '';
 
 		$header_type = 'h4';
 
@@ -24,7 +24,6 @@
 			$header = Language::Word('sorry');
 			$content = Language::Word('no translation for this article');
 		} else {
-
 			$title = $article->name;
 
 			$header = htmlspecialchars($article->name);

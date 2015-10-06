@@ -105,6 +105,14 @@ a img {border:0; outline:0;}
 	margin: 8px !important;
 }
 
+.margin-great-bottom {
+	margin-bottom: 50px !important;
+}
+
+.margin-great {
+	margin: 50px !important;
+}
+
 .menu-img-up {
 	width: 850px;
 	border-radius: 0 0 8px 8px;

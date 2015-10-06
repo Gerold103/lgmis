@@ -303,6 +303,43 @@
 			else return Link::Get('private_'.Article::$type).'/'.$this->id;
 		}
 
+		public static function LinkToThisUnsafe($id, $name, $link_size = 'btn-md', $args2 = array())
+		{
+			global $link_to_admin_article;
+			global $link_to_public_article;
+
+			global $use_mod_rewrite;
+			$args = array();
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			if (IsSessionPublic() === true) {
+				$args = array(
+					'action_link' => $link_to_public_article,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => $name,
+					'lnk_size' => $link_size,
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_article,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => $name,
+					'lnk_size' => $link_size,
+					'method' => 'get',
+				);
+			}
+			if (isset($args2['style'])) $args['style'] = $args2['style'];
+			return ActionLink($args);
+		}
+
 		public function ToHTMLFullVers($to_public = NULL)
 		{
 			global $link_to_admin_article;
@@ -379,6 +416,48 @@
 				return Error::db_error;
 			}
 			return self::ArrayFromDBResult($res);
+		}
+
+		public static function FetchByName($text, $args = array())
+		{
+			global $db_connection;
+			$text = $db_connection->real_escape_string($text);
+			$res = NULL;
+
+			$lang = GetLanguage();
+			$fetch_table = self::$table;
+			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+			$select_list = '*';
+			$complex_attrs = array();
+			if (isset($args['select_list'])) {
+				for ($i = count($args['select_list']) - 1; $i >= 0; --$i) {
+					if ($args['select_list'][$i] == 'link_to_full') {
+						array_push($complex_attrs, 'link_to_full');
+						unset($args['select_list'][$i]);
+					}
+				}
+				$args['select_list'] = array_values($args['select_list']);
+				$select_list = '';
+				for ($i = 0, $count = count($args['select_list']); $i < $count; ++$i) {
+					$select_list .= $args['select_list'][$i];
+					if ($i < $count - 1) $select_list .= ', ';
+				}
+			}
+			$result = $db_connection->query('SELECT '.$select_list.' from '.$fetch_table.' WHERE LOWER(name) LIKE LOWER("%'.$text.'%")');
+			if (!$result) {
+				echo $db_connection->error;
+				return Error::db_error;
+			}
+			$res = array();
+			while ($row = $result->fetch_assoc()) {
+				for ($i = 0; $i < count($complex_attrs); ++$i) {
+					if ($complex_attrs[$i] == 'link_to_full') {
+						$row['link_to_full'] = self::LinkToThisUnsafe($row['id'], $row['name'], 'btn-sm', array('style' => 'color: black;'));
+					}
+				}
+				array_push($res, $row);
+			}
+			return $res;
 		}
 		
 		//Methods for fetching

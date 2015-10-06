@@ -22,8 +22,11 @@
 		public function GetPathToFile()		{ return $this->path_to_file; }
 		public function GetLinkToFile()		{
 			global $link_to_utility_download;
+			global $link_to_logo;
 
-			$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($this->path_to_file).'">'.Language::Word('download file').'</a>';
+			if ($this->path_to_file === $link_to_logo) {
+				$res = '<a class="btn btn-default">'.Language::Word('no file').'</a>';
+			} else $res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($this->path_to_file).'">'.Language::Word('download file').'</a>';
 			return $res;
 		}
 

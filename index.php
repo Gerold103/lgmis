@@ -14,6 +14,7 @@
 	$pages = -1;
 	$cur_page = -1;
 	$need_pagination = true;
+	$head_addition = '';
 
 	//----D I S P L A Y----
 	
@@ -22,6 +23,7 @@
 		$articles = Article::FetchAll();
 		$size = count($articles);
 		if ($size) {
+			$head_addition = MakeScript('window_bottom_callbacks.push(Article.WindowBottomCallback);');
 			$need_pagination = false;
 			require($link_to_pagination_init_template);
 
@@ -31,7 +33,6 @@
 				$content .= '<div class="pbl_article">'.($atricle->ToHTMLAutoShortForTable(GetUserPrivileges())).'</div>';
 				if ($i != $to) $content .= '<hr><div style="background-color: #eeeeee;"><br></div><hr>';
 			}
-			$content .= LoadWaiter();
 			$content .= '</div>';
 		} else {
 			$content .= ToPageHeader(Language::Word('no news'), "h3", "black");

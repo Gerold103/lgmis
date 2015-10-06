@@ -385,7 +385,7 @@
 			return ActionButton($args);
 		}
 
-		public function ToHTMLFullVers()
+		public static function ToHTMLFullVersUnsafe($id)
 		{
 			global $link_to_admin_user;
 			global $link_to_public_user;
@@ -401,7 +401,7 @@
 					'action_link' => $link_to_public_user,
 					'action_type' => 'full',
 					'obj_type' => User::$type,
-					'id' => $this->id,
+					'id' => $id,
 					'prev_page' => $link_to_contacts,
 					'btn_text' => Language::Word('open profile'),
 					'method' => 'get',
@@ -412,12 +412,17 @@
 					'action_link' => $link_to_admin_user,
 					'action_type' => 'full',
 					'obj_type' => User::$type,
-					'id' => $this->id,
+					'id' => $id,
 					'prev_page' => $link_to_admin_manage_staff,
 					'method' => 'get',
 				);
 			}
 			return ActionButton($args);
+		}
+
+		public function ToHTMLFullVers()
+		{
+			return User::ToHTMLFullVersUnsafe($this->id);
 		}
 
 		public static function FetchFromAssoc($assoc)
@@ -479,7 +484,7 @@
 			return User::ArrayFromDBResult($result);
 		}
 
-		public static function FetchByPrefix($prefix)
+		public static function FetchByPrefix($prefix, $args = array())
 		{
 			global $db_connection;
 
@@ -489,17 +494,38 @@
 			for ($i = 0, $size = count($parts); $i < $size; ++$i) if ($parts[$i] === '') unset($parts[$i]);
 
 			for ($i = 0, $size = count($parts); $i < $size; ++$i) {
-				$where_clause .= ' (UPPER(name) LIKE UPPER("'.$parts[$i].'%")) OR (UPPER(surname) LIKE UPPER("'.$parts[$i].'%")) ';
+				$where_clause .= ' (LOWER(name) LIKE LOWER("'.$parts[$i].'%")) OR (LOWER(surname) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(name)) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(surname)) LIKE LOWER("'.$parts[$i].'%")) ';
 				if ($i < $size - 1) $where_clause .= 'OR';
 			}
-			$result = $db_connection->query("SELECT id, name, surname FROM ".User::$table." WHERE ".$where_clause);
+			$select_list = '*';
+			$complex_attrs = array();
+			if (isset($args['select_list'])) {
+				for ($i = count($args['select_list']) - 1; $i >= 0; --$i) {
+					if ($args['select_list'][$i] == 'link_to_full') {
+						array_push($complex_attrs, 'link_to_full');
+						unset($args['select_list'][$i]);
+					}
+				}
+				$args['select_list'] = array_values($args['select_list']);
+				$select_list = '';
+				for ($i = 0, $count = count($args['select_list']); $i < $count; ++$i) {
+					$select_list .= $args['select_list'][$i];
+					if ($i < $count - 1) $select_list .= ', ';
+				}
+			}
+			$result = $db_connection->query("SELECT ".$select_list." FROM ".self::$table." WHERE ".$where_clause);
 			if (!$result) {
 				echo $db_connection->error;
 				return Error::db_error;
 			}
 			$res = array();
 			while ($row = $result->fetch_assoc()) {
-				$user = array('id' => $row['id'], 'name' => $row['name'], 'surname' => $row['surname']);
+				$user = $row;
+				for ($i = 0; $i < count($complex_attrs); ++$i) {
+					if ($complex_attrs[$i] == 'link_to_full') {
+						$user['link_to_full'] = self::LinkToThisUnsafe($user['id'], $user['name'], $user['surname'], 'btn-sm', array('style' => 'color: black;'));
+					}
+				}
 				array_push($res, $user);
 			}
 			return $res;
@@ -693,7 +719,7 @@
 			}
 		}
 
-		public function LinkToThis($link_size = 'btn-md')
+		public static function LinkToThisUnsafe($id, $name, $surname, $link_size = 'btn-md', $args2 = array())
 		{
 			global $link_to_admin_user;
 			global $link_to_public_user;
@@ -707,9 +733,9 @@
 				$args = array(
 					'action_link' => $link_to_public_user,
 					'action_type' => 'full',
-					'obj_type' => User::$type,
-					'id' => $this->id,
-					'lnk_text' => Language::Translit(($this->surname).' '.($this->name)),
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => Language::Translit(($surname).' '.($name)),
 					'lnk_size' => $link_size,
 					'method' => 'get',
 					'mod_rewrite' => $mod_rewrite,
@@ -718,14 +744,20 @@
 				$args = array(
 					'action_link' => $link_to_admin_user,
 					'action_type' => 'full',
-					'obj_type' => User::$type,
-					'id' => $this->id,
-					'lnk_text' => Language::Translit(($this->surname).' '.($this->name)),
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => Language::Translit(($surname).' '.($name)),
 					'lnk_size' => $link_size,
 					'method' => 'get',
 				);
 			}
+			if (isset($args2['style'])) $args['style'] = $args2['style'];
 			return ActionLink($args);
+		}
+
+		public function LinkToThis($link_size = 'btn-md')
+		{
+			return self::LinkToThisUnsafe($this->id, $this->name, $this->surname, $link_size);
 		}
 	}
 ?>

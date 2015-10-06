@@ -1,54 +1,74 @@
 <?php
 	if (isset($menu) || ($menu != '')) echo $menu;
     else {
-        $menu = '
-        <nav class="navbar navbar-default">
-          <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
+?>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="'.$link_to_admin.'">LGMIS</a>
+                <a class="navbar-brand" href=<?php echo '"'.$link_to_admin.'"'; ?> >LGMIS</a>
             </div>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
-              <ul class="nav navbar-nav">
-                <li><p class="navbar-text">'.Language::Word('welcome').', <b>'.$_SESSION['user_login'].'</b></p></li>
+            <ul class="nav navbar-nav">
+                <li><p class="navbar-text"><?php echo Language::Word('welcome').', <b>'.$_SESSION['user_login']; ?></b></p></li>
                 <li>
                     <form class="navbar-form navbar-left" method="post" action="'.$link_to_utility_authorization.'">
-                        <button type="submit" class="btn btn-default" name="exit">'.Language::Word('logout').'</button>
+                        <button type="submit" class="btn btn-default" name="exit"><?php echo Language::Word('logout'); ?></button>
                     </form>
-                </li>';
+                </li>
 
+<?php
                 if ((!isset($on_start_page)) || ($on_start_page == false) || isset($_POST['prev_page']) || isset($prev_page) && ($prev_page != '')) {
-                    $menu .= '<li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.Language::Word('actions').' <span class="caret"></span></a>
-                      <ul class="dropdown-menu" role="menu">';
-                    if ((!isset($on_start_page)) || ($on_start_page == false)) {
-                        $menu .=  '<li>'.OnStartAdminPage().'</li>'; 
+?>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?php echo Language::Word('actions'); ?><span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+<?php
+                    if ((!isset($on_start_page)) || ($on_start_page == false)) { 
+?>
+                        <li><?php echo OnStartAdminPage(); ?></li> 
+<?php
                     }
                     if (isset($_POST['prev_page'])) {
-                        $menu .= '<li>'.OnPreviousPage($_POST['prev_page']).'</li>';
+?>
+                        <li><?php echo OnPreviousPage($_POST['prev_page']); ?></li>
+<?php
                     } else if (isset($prev_page) && ($prev_page != '')) {
-                        $menu .= '<li>'.OnPreviousPage($prev_page).'</li>';
+?>
+                        <li><?php echo OnPreviousPage($prev_page); ?></li>
+<?php 
                     }
-                    $menu .= '</ul>
-                    </li>';
+?>
+                    </ul>
+                </li>
+<?php
                 }
-
-                $menu .= '<li>
-                            <form class="navbar-form navbar-left" method="post" action="'.$link_to_admin_user.'">
-                                <input class="btn btn-default" name="full" type="submit" value="'.Language::Word('my page').'">
-                                <input type="hidden" name="type" value="'.User::$type.'">
-                                <input type="hidden" name="id" value="'.User::FetchByLogin($_SESSION['user_login'])->id.'">
-                                <input type="hidden" name="prev_page" value="'.$_SERVER['REQUEST_URI'].'">
-                            </form>
-                        </li>';
-              $menu .= '</ul>
-              <ul class="nav navbar-nav navbar-right">
-                <li><a style="margin: 0px; padding: 0px;" href="'.$link_to_utility_interceptor.'?lang=rus"><img class="lang_flag" src="'.$link_to_service_images.'rus_flag.png"></a></li>
-                <li><a style="margin: 0px; padding: 0px;" href="'.$link_to_utility_interceptor.'?lang=eng"><img class="lang_flag" src="'.$link_to_service_images.'eng_flag.png"></a></li>
-              </ul>
-          </div><!-- /.container-fluid -->
-        </nav>';
-        echo $menu;
+?>
+                <li>
+                    <form class="navbar-form navbar-left" method="post" action=<?php echo '"'.$link_to_admin_user.'"'; ?> >
+                        <input class="btn btn-default" name="full" type="submit" value=<?php echo '"'.Language::Word('my page').'"'; ?> >
+                        <input type="hidden" name="type" value=<?php echo '"'.User::$type.'"'; ?> >
+                        <input type="hidden" name="id" value=<?php echo '"'.User::FetchByLogin($_SESSION['user_login'])->id.'"'; ?> >
+                        <input type="hidden" name="prev_page" value=<?php echo '"'.$_SERVER['REQUEST_URI'].'"'; ?> >
+                    </form>
+                </li>
+                <li>
+                    <form class="navbar-form navbar-left dropdown" method="post" action="">
+                        <div class="input-group">
+                            <input style="min-width: 300px;" id="glob_search_input" placeholder=<?php echo '"'.Language::Word('start to insert something').'"'; ?> onkeyup="showGlobalSearch(this);" class="form-control" aria-haspopup="true" name="search" type="text">
+                            <ul id="glob_search_list" class="dropdown-menu" role="menu" style="display: none; overflow: scroll; max-height: 300px;">
+                            </ul>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon glyphicon-search" aria-hidden="true"></span></span>
+                            <!--<button type="button" class="btn btn-default">Test</button>-->
+                        </div>
+                    </form>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a style="margin: 0px; padding: 0px;" href=<?php echo '"'.$link_to_utility_interceptor.'?lang=rus"'; ?> ><img class="lang_flag" src=<?php echo '"'.$link_to_service_images.'rus_flag.png"'; ?> ></a></li>
+                <li><a style="margin: 0px; padding: 0px;" href=<?php echo '"'.$link_to_utility_interceptor.'?lang=eng"'; ?> ><img class="lang_flag" src=<?php echo '"'.$link_to_service_images.'eng_flag.png"'; ?> ></a></li>
+            </ul>
+        </div><!-- /.container-fluid -->
+    </nav>
+<?php
     }
 ?>

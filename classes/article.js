@@ -9,8 +9,10 @@ function Article() {
 }
 
 Article.type = 'article';
+Article.all_loaded = false;
 
 Article.WindowBottomCallback = function() {
+	if ((elem('loadingMain') != null) || Article.all_loaded) return;
 	var childs = $("#articles_list").children(".pbl_article").length;
 	var local_server = getXmlHttp();
 	var data = "download=more&type=" + Article.type + "&offset=" + childs;
@@ -19,14 +21,15 @@ Article.WindowBottomCallback = function() {
 	local_server.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 	local_server.onreadystatechange = function() { Article.AppendToBottom(local_server); }
 	local_server.send(data);
-	elem('loadingMain').style.display = 'inline';
+	if (Article.all_loaded == false) if (elem('loadingMain') == null) elem('articles_list').appendChild(LoadWaiter());
 }
 
 Article.AppendToBottom = function(local_server) {
 	if (local_server.readyState == 4) {
-		elem('loadingMain').style.display = 'none';
+		$('#loadingMain').remove();
 		var objs = JSON.parse(local_server.responseText);
 		var objs_list = elem("articles_list");
+		if (objs.length < records_on_page) Article.all_loaded = true;
 		for (var i = 0; i < objs.length; ++i) {
 			var cur_ob = document.createElement('div');
 			cur_ob.className = 'pbl_article';

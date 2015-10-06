@@ -21,6 +21,7 @@
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_bootstrap_styles).'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_styles).'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
+        <?php if (isset($head_addition)) echo $head_addition;  ?>
         <script type="text/javascript">
             $(function () {
               $('[data-toggle="popover"]').popover()
@@ -85,7 +86,7 @@
         <a onclick="changeLanguage('rus');"><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'rus_flag.png"'; ?> ></a><a onclick="changeLanguage('eng');"><img class="lang_flag" src=<?php echo '"'.Link::Get($link_to_service_images).'eng_flag.png"'; ?> ></a>
     </div>
     <div style="position: fixed; top: 20px; left: 50px;">
-        <a class="btn btn" href=<?php echo '"'.$link_to_admin.'"'; ?> ><?php echo Language::Word('private office'); ?></a>
+        <a class="btn btn" href=<?php echo '"'.Link::Get($link_to_admin).'"'; ?> ><?php echo Language::Word('private office'); ?></a>
     </div>
     </body>
 </html>
