@@ -7,7 +7,8 @@
 	if (isset($_GET['id']) && (isset($_POST['id'])) && ($_GET['id'] !== $_POST['id'])) {
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
-		$article = Article::FetchByID($_REQUEST['id']);
+		$ob = Article::FetchByID($_REQUEST['id']);
+
 		$header = '';
 		$content = '';
 		$footer = '';
@@ -15,25 +16,20 @@
 
 		$header_type = 'h4';
 
-		if ($article === NULL) {
+		if ($ob === NULL) {
 			$title = Language::Word('error');
 			$header = $title;
 			$content = Language::Word('internal server error');
-		} else if ($article === Error::no_translation) {
+		} else if ($ob === Error::no_translation) {
 			$title = Language::Word('error');
 			$header = Language::Word('sorry');
 			$content = Language::Word('no translation for this article');
 		} else {
-			$title = $article->name;
+			$title = $ob->name;
 
-			$header = htmlspecialchars($article->name);
+			$header = htmlspecialchars($ob->name);
 
-			$content .= '<br><div class="row" align="center">';
-			$content .= 	'<div class="'.ColAllTypes(3).'">'.$article->GetCreatingDateStr().'</div>';
-			$content .= 	'<div class="'.ColAllTypes(4).'">'.User::FetchByID($article->GetAuthorID())->LinkToThis().'</div>';
-			$content .= '</div>';
-			$content .= '<br><hr>';
-			$content .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$article->text_block.'</div></div>';
+			$content = $ob->ToHTMLUserPublicFull();
 
 			$no_content_center = true;
 		}

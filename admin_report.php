@@ -6,9 +6,12 @@
 	$title = '';
 	$header = '';
 	$content = '';
+	$head_addition = '';
 
 	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
+		$head_addition = '<script type="text/javascript" src="js/files_upload.js"></script>';
+		$head_addition .= MakeScript('files_type = "'.Report::$type.'"; author_id = '.$id.'; max_files = 1;');
 		clear_tmp_images_dir(Report::$type, $id);
 		clear_tmp_files_dir(Report::$type, $id);
 
@@ -31,7 +34,8 @@
 		$content .= 	'</div>';
 
 		$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header')).'<br>';
-		$content .= 	PairLabelAndInputFile(4, 5, Language::Word('file'), 'file');
+		$content .= 	PairLabelAndInputFileArea(4, 5, Language::Word('file'));
+
 		$content .= 	WrapToHiddenInputs(array('type' => Report::$type, 'yes' => '', 'id' => $id));
 		$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
 		$content .=		'<div class="row">';

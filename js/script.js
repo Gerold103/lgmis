@@ -67,6 +67,7 @@ function appendGlobalResults(ulist, json_res, list_name, extraction_f)
 
 function loadGlobalResults(local_server) {
 	if (local_server.readyState == 4) {
+		//alert(local_server.responseText);
 		var ulist = elem("glob_search_list");
 		ulist.style.display = 'block';
 		var res = JSON.parse(local_server.responseText);

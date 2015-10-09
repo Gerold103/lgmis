@@ -46,37 +46,37 @@
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
 		global $link_to_img_browse;
-		$art_id = $_POST['id'];
-		$article = Article::FetchByID($art_id);
-		$cover_src = $article->path_to_image;
+		$ob_id = $_POST['id'];
+		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id)]);
+		if (Error::IsError($ob)) {
+			$content = AlertMessage('alert-danger', 'Error during fetching article: '.Error::ToString($ob));
+		} else {
+			$ob = $ob[0];
+			$cover_src = $ob->path_to_image;
 
-		$content .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
-		$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header'), htmlspecialchars($article->name)).'<br>';
-		$content .=		PairLabelAndTextarea(4, 5, Language::Word('annotation'), 'annotation', Language::Word('insert annotation text'), htmlspecialchars($article->annotation));
-		$content .= 	PairLabelAndImage(4, 5, 'class="img-article-cover" src="'.$cover_src.'"', Language::Word('cover'));
-		$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change cover'), 'cover');
-		$content .= 	WrapToHiddenInputs(array('type' => Article::$type, 'yes' => '', 'id' => $art_id));
-		$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
-		$content .=		'<div class="row">';
-		$content .=			'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'" align="center">';
-		$content .= 			'<textarea id="text_block" name="text_block">'.htmlspecialchars($article->text_block).'</textarea>';
-		$content .=			'</div>';
-		$content .= 	'</div>';
-		$content .=		'<script>';
-		$content .=			'CKEDITOR.replace("text_block",';
-		$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Article::$type.'&id='.$art_id.'&edit=edit",';
-		$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Article::$type.'&id='.$art_id.'&edit=edit",';
-		$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
-		$content .= 			'allowedContent: true, });';
-		$content .=			'CKEDITOR.config.height = 400;';
-		$content .=		'</script>';
-		$content .= 	'<div class="row">';
-		$content .=			DialogInputsYesNo('edit', $_POST['type'], $art_id, Language::Word('save'), Language::Word('cancel'));
-		$content .=		'</div>';
-		$content .= '</form>';
+			$content .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
+			$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header'), htmlspecialchars($ob->GetName())).'<br>';
+			$content .=		PairLabelAndTextarea(4, 5, Language::Word('annotation'), 'annotation', Language::Word('insert annotation text'), htmlspecialchars($ob->annotation));
+			$content .= 	PairLabelAndImage(4, 5, 'class="img-article-cover" src="'.$cover_src.'"', Language::Word('cover'));
+			$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change cover'), 'cover');
+			$content .= 	WrapToHiddenInputs(array('type' => Article::$type, 'yes' => '', 'id' => $ob_id));
+			$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
+			$content .=		'<div class="row">';
+			$content .=			'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'" align="center">';
+			$content .= 			'<textarea id="text_block" name="text_block">'.htmlspecialchars($ob->text_block).'</textarea>';
+			$content .=			'</div>';
+			$content .= 	'</div>';
+			$content .=		'<script>';
+			$content .= 		CKEditorReplace('text_block', $link_to_img_upload.'?type='.Article::$type.'&id='.$ob_id.'&edit=edit', $link_to_img_browse.'?type='.Article::$type.'&id='.$ob_id.'&edit=edit');
+			$content .=		'</script>';
+			$content .= 	'<div class="row">';
+			$content .=			DialogInputsYesNo('edit', $_POST['type'], $ob_id, Language::Word('save'), Language::Word('cancel'));
+			$content .=		'</div>';
+			$content .= '</form>';
 
-		$title = Language::Word('article editing');
-		$header = $title;
+			$title = Language::Word('article editing');
+			$header = $title;
+		}
 	} else if (isset($_REQUEST['add_lang'])) {
 		$article = Article::FetchByID($_REQUEST['id']);
 		$art_langs = $article->FetchLanguages();

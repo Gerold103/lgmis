@@ -37,6 +37,21 @@ a img {border:0; outline:0;}
 	opacity: 1;
 }
 
+.files_area {
+    color: #555;
+    font-size: 18px;
+    text-align: center;
+    min-width: 300px;
+    min-height: 100px;
+    padding: 50px;
+    border: 1px solid #ccc;
+}
+.files_area_hover {
+    background: #ddd;
+}
+.files_area_drop {
+    background: #eee;
+}
 
 .button_as_link {
 	width: 100px;

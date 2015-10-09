@@ -2,7 +2,6 @@
 	//------------------------------------------------A R T I C L E------------------------------------------------
 	
 	class Article implements IMultiLanguage {
-		//Methods and attributes for working with articles of lgmis.
 		
 		//--------Attributes--------
 		
@@ -34,6 +33,11 @@
 			return $this->id;
 		}
 
+		public function GetName()
+		{
+			return $this->name;
+		}
+
 		public static function GetMaximalID()
 		{
 			global $languages;
@@ -53,7 +57,7 @@
 			return $max_id;
 		}
 		
-		//--------Methods--------
+		//---------------- IHTMLAuto implementation ----------------
 
 		public function ToHTMLAutoFull($user_privileges)
 		{
@@ -62,20 +66,6 @@
 					return $this->ToHTMLPrivateFull();
 				case unauthorized_user_id:
 					return $this->ToHTMLUserPublicFull();
-				default:
-					return html_undef;
-			}
-		}
-
-		public function ToHTMLAutoShort($user_privileges)
-		{
-			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShort();
-				case unauthorized_user_id:
-					return $this->ToHTMLUserPublicShort();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShort();
 				default:
 					return html_undef;
 			}
@@ -157,17 +147,45 @@
 			$res .= '</div>';
 			return $res;
 		}
-		
-		
-		//html code of short representation of object in string
-		public function ToHTMLAdminShort()
-		{
+
+		public function ToHTMLUserPublicFull() {
 			$res = '';
-			$res .= '<b>id</b>: '.$this->id.'; <b>author_id</b>: '.$this->author_id.'; <b>name</b>: '.htmlspecialchars($this->name).';<br>';
-			$res .= '<b>creating_date</b>: '.date('d : m : Y - H : i', $this->creating_date);
-			$res .= $this->ToHTMLDel().'<br>';
-			$res .= $this->ToHTMLEdit().'<br>';
-			$res .= $this->ToHTMLFullVers().'<br>';
+			$res .= '<br><div class="row" align="center">';
+			$res .= 	'<div class="'.ColAllTypes(3).'">'.$this->GetCreatingDateStr().'</div>';
+			$res .= 	'<div class="'.ColAllTypes(4).'">'.User::FetchByID($this->GetAuthorID())->LinkToThis().'</div>';
+			$res .= '</div>';
+			$res .= '<br><hr>';
+			$res .= '<div class="row"><div class="'.ColAllTypes(12).'">'.$this->text_block.'</div></div>';
+			return $res;
+		}
+
+		public function ToHTMLUserPrivateShortInTable()
+		{
+			$res = '<tr>';
+			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
+			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
+			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
+			$res .= '<td>';
+			$res .=		'<div class="row">';
+			$author_login = User::FetchByID($this->author_id)->login;
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
+				$res .= 	'<div class="'.ColAllTypes(4).'">';
+			} else {
+				$res .= 	'<div class="'.ColAllTypes(12).'">';
+			}
+			$res .= 			$this->ToHTMLFullVers();
+			$res .=			'</div>';
+			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLEdit();
+				$res .=		'</div>';
+				$res .=		'<div class="'.ColAllTypes(4).'">';
+				$res .=			$this->ToHTMLDel();
+				$res .=		'</div>';
+			}
+			$res .= 	'</div>';
+			$res .= '</td>';
+			$res .= '</tr>';
 			return $res;
 		}
 
@@ -209,55 +227,7 @@
 			return $res;
 		}
 
-		//html code of short representation of object in string within internal pages of lgmis
-		public function ToHTMLUserPrivateShort()
-		{
-			$res = '';
-			$author_login = User::FetchByID($this->author_id)->login;
-			if (GetUserLogin() == $author_login) $res .= '<b>id</b>: '.$this->id.'; ';
-			$res .= '<b>author_id</b>: '.$this->author_id.'; <b>name</b>: '.htmlspecialchars($this->name).';<br>';
-			if (GetUserLogin() == $author_login) {
-				$res .= $this->ToHTMLDel().'<br>';
-				$res .= $this->ToHTMLEdit().'<br>';
-			}
-			$res .= $this->ToHTMLFullVers().'<br>';
-			return $res;
-		}
-
-		public function ToHTMLUserPrivateShortInTable()
-		{
-			$res = '<tr>';
-			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
-			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
-			$res .= '<td>';
-			$res .=		'<div class="row">';
-			$author_login = User::FetchByID($this->author_id)->login;
-			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
-				$res .= 	'<div class="'.ColAllTypes(4).'">';
-			} else {
-				$res .= 	'<div class="'.ColAllTypes(12).'">';
-			}
-			$res .= 			$this->ToHTMLFullVers();
-			$res .=			'</div>';
-			if ((GetUserLogin() === $author_login) || (GetUserLogin() === 'admin')) {
-				$res .=		'<div class="'.ColAllTypes(4).'">';
-				$res .=			$this->ToHTMLEdit();
-				$res .=		'</div>';
-				$res .=		'<div class="'.ColAllTypes(4).'">';
-				$res .=			$this->ToHTMLDel();
-				$res .=		'</div>';
-			}
-			$res .= 	'</div>';
-			$res .= '</td>';
-			$res .= '</tr>';
-			return $res;
-		}
-		
-		//html code of full representation of object in string within public pages of lgmis
-		public function ToHTMLUserPublicFull() { return html_undef; }
-		//html code of short representation of object in string within public pages of lgmis
-		public function ToHTMLUserPublicShort() { return html_undef; }
+		//---------------- IMultiLanguage implementation ----------------
 
 		public function ToHTMLAddLanguage()
 		{
@@ -271,6 +241,8 @@
 			);
 			return ActionButton($args);
 		}
+
+		//---------------- IActions implementation ----------------
 		
 		public function ToHTMLDel()
 		{
@@ -295,49 +267,6 @@
 				'id' => $this->id,
 			);
 			return ActionButton($args);
-		}
-
-		public function LinkToThis()
-		{
-			if (IsSessionPublic()) return Link::Get(Article::$type).'/'.$this->id;
-			else return Link::Get('private_'.Article::$type).'/'.$this->id;
-		}
-
-		public static function LinkToThisUnsafe($id, $name, $link_size = 'btn-md', $args2 = array())
-		{
-			global $link_to_admin_article;
-			global $link_to_public_article;
-
-			global $use_mod_rewrite;
-			$args = array();
-			$mod_rewrite = 0;
-			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
-				$mod_rewrite = 1;
-			}
-			if (IsSessionPublic() === true) {
-				$args = array(
-					'action_link' => $link_to_public_article,
-					'action_type' => 'full',
-					'obj_type' => self::$type,
-					'id' => $id,
-					'lnk_text' => $name,
-					'lnk_size' => $link_size,
-					'method' => 'get',
-					'mod_rewrite' => $mod_rewrite,
-				);
-			} else {
-				$args = array(
-					'action_link' => $link_to_admin_article,
-					'action_type' => 'full',
-					'obj_type' => self::$type,
-					'id' => $id,
-					'lnk_text' => $name,
-					'lnk_size' => $link_size,
-					'method' => 'get',
-				);
-			}
-			if (isset($args2['style'])) $args['style'] = $args2['style'];
-			return ActionLink($args);
 		}
 
 		public function ToHTMLFullVers($to_public = NULL)
@@ -376,91 +305,182 @@
 			return ActionButton($args);
 		}
 
-		private static function ArrayFromDBResult($result)
+		//---------------- ILinkable implementation ----------------
+
+		public function LinkToThis()
+		{
+			if (IsSessionPublic()) return Link::Get(Article::$type).'/'.$this->id;
+			else return Link::Get('private_'.Article::$type).'/'.$this->id;
+		}
+
+		public static function LinkToThisUnsafe($id, $name, $link_size = 'btn-md', $kwargs = array())
+		{
+			global $link_to_admin_article;
+			global $link_to_public_article;
+
+			global $use_mod_rewrite;
+			$args = array();
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			if (IsSessionPublic() === true) {
+				$args = array(
+					'action_link' => $link_to_public_article,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => $name,
+					'lnk_size' => $link_size,
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_article,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => $name,
+					'lnk_size' => $link_size,
+					'method' => 'get',
+				);
+			}
+			extract($kwargs, EXTR_PREFIX_ALL, 't');
+			if (isset($t_style)) $args['style'] = $t_style;
+			return ActionLink($args);
+		}
+
+		//---------------- IFetches implementation ----------------
+
+		public static function FetchFromAssoc($assoc)
+		{
+			global $link_to_article_images;
+			global $link_to_service_images;
+
+			$ob = new self();
+			if (ArrayElemIsValidStr($assoc, 'id')) 			$ob->id = $assoc['id'];
+			if (ArrayElemIsValidStr($assoc, 'author_id')) 	$ob->author_id = $assoc['author_id'];
+			if (ArrayElemIsValidStr($assoc, 'name')) 		$ob->name = $assoc['name'];
+			if (ArrayElemIsValidStr($assoc, 'annotation')) 	$ob->annotation = $assoc['annotation'];
+			if (ArrayElemIsValidStr($assoc, 'text_block')) 	$ob->text_block = $assoc['text_block'];
+			try {
+				if (ArrayElemIsValidStr($assoc, 'creating_date')) $ob->creating_date = strtotime($assoc['creating_date']);
+			} catch(Exception $e) {
+				$ob->creating_date = $assoc['creating_date'];
+			}
+			if (ArrayElemIsValidStr($assoc, 'language')) {
+				$ob->language = $assoc['language'];
+				global $image_extensions;
+				$ob->path_to_image = PathToImage($link_to_article_images.$ob->id, 'cover', $link_to_service_images.'Logo.png', $image_extensions, $ob->language);
+			} else $ob->path_to_image = PathToImage($link_to_article_images.$ob->id, 'cover', $link_to_service_images.'Logo.png');
+
+			return $ob;
+		}
+
+		public static function ArrayFromDBResult($result, $is_assoc = false)
 		{
 			$res = array();
 			while ($row = $result->fetch_assoc()) {
-				array_push($res, self::FetchFromAssoc($row));
+				if ($is_assoc) array_push($res, $row);
+				else array_push($res, self::FetchFromAssoc($row));
 			}
 			return $res;
 		}
 
-		public static function FetchBy($args = array(), $args2 = array())
+		public static function FetchBy($kwargs)
 		{
+			extract($kwargs, EXTR_PREFIX_ALL, 't');
+
+			$select_list = '*';
+			$eq_conds = array();
+			$order_by = '';
+			$limit = '';
+			$offset = '';
+			$lang = '';
+			$where_addition = '';
+			$is_assoc = false;
+
+			if (isset($t_select_list)) $select_list = $t_select_list;
+			if (isset($t_eq_conds)) $eq_conds = $t_eq_conds;
+			if (isset($t_order_by)) $order_by = $t_order_by;
+			if (isset($t_limit)) $limit = $t_limit;
+			if (isset($t_offset)) $offset = $t_offset;
+			if (isset($t_lang)) $lang = $t_lang;
+			if (isset($t_where_addition)) $where_addition = $t_where_addition;
+			if (isset($t_is_assoc)) $is_assoc = $t_is_assoc;
+
 			global $db_connection;
+
 			$where_clause = '';
 			$i = 0;
-			$size = count($args);
-			foreach ($args as $key => $value) {
+			$size = count($eq_conds);
+			$need_where_word = ($size !== 0) || StringNotEmpty($where_addition);
+			foreach ($eq_conds as $key => $value) {
 				$where_clause .= ' ('.$key.' = '.$value.') ';
 				if ($i < $size - 1) $where_clause .= 'OR';
 				++$i;
 			}
-			if ($where_clause !== '') $where_clause = "WHERE ".$where_clause;
-			if (ArrayElemIsValidStr($args2, 'order_by')) {
-				$where_clause .= ' ORDER BY '.$args2['order_by'];
+			if ($need_where_word) $where_clause = "WHERE ".$where_clause.' '.$where_addition;
+
+			if (StringNotEmpty($order_by)) {
+				$where_clause .= ' ORDER BY '.$order_by;
 			}
 
-			if (ArrayElemIsValidStr($args2, 'limit') && ArrayElemIsValidStr($args2, 'offset')) {
-				$where_clause .= ' LIMIT '.$args2['limit'].' OFFSET '.$args2['offset'];
+			if (StringNotEmpty($limit))
+				$where_clause .= ' LIMIT '.$limit;
+			if (StringNotEmpty($offset)) {
+				$where_clause .= ' OFFSET '.$offset;
 			}
 
-			$lang = 'rus';
-			if (isset($args2['lang'])) $lang = $args2['lang'];
-			else $lang = GetLanguage();
+			if (!StringNotEmpty($lang)) $lang = GetLanguage();
+
 			$from_table = self::$table;
 			if ($lang !== 'rus') $from_table .= '_'.$lang;
-			$res = $db_connection->query("SELECT * FROM ".$from_table." ".$where_clause);
+
+			$res = $db_connection->query("SELECT ".$select_list." FROM ".$from_table." ".$where_clause);
 			if (!$res) {
-				echo $db_connection->error;
-				return Error::db_error;
+				return new Error($db_connection->error, Error::db_error);
 			}
-			return self::ArrayFromDBResult($res);
+			return self::ArrayFromDBResult($res, $is_assoc);
 		}
 
-		public static function FetchByName($text, $args = array())
-		{
-			global $db_connection;
-			$text = $db_connection->real_escape_string($text);
-			$res = NULL;
-
-			$lang = GetLanguage();
-			$fetch_table = self::$table;
-			if ($lang != 'rus') $fetch_table .= '_'.$lang;
+		public static function FetchLike($what, $kwargs) {
+			extract($kwargs, EXTR_PREFIX_ALL, 't');
+			if (!isset($t_text)) return Error::arg_not_valid;
+			$text = $t_text;
 			$select_list = '*';
-			$complex_attrs = array();
-			if (isset($args['select_list'])) {
-				for ($i = count($args['select_list']) - 1; $i >= 0; --$i) {
-					if ($args['select_list'][$i] == 'link_to_full') {
-						array_push($complex_attrs, 'link_to_full');
-						unset($args['select_list'][$i]);
+			$where_addition = 'LOWER('.$what.') LIKE LOWER("%'.$text.'%")';
+			$special = array();
+			$limit = '';
+			$is_assoc = false;
+
+			if (isset($t_limit)) $limit = $t_limit;
+			if (isset($t_special)) {
+				if (is_string($t_special)) $special = array($t_special);
+				else $special = $t_special;
+			}
+			if (isset($t_select_list)) $select_list = $t_select_list;
+			if (isset($t_is_assoc)) $is_assoc = $t_is_assoc;
+
+			$obs = self::FetchBy(['select_list' => $select_list, 'where_addition' => $where_addition, 'order_by' => 'id DESC', 'limit' => $limit, 'is_assoc' => $is_assoc]);
+			if (Error::IsError($obs)) return $obs;
+			foreach ($special as $key) {
+				switch ($key) {
+					case 'link_to_full': {
+						if (!$is_assoc) break;
+						for ($i = 0, $size = count($obs); $i < $size; ++$i) {
+							if (!isset($obs[$i]['id']) || !isset($obs[$i]['name'])) break;
+							$obs[$i]['link_to_full'] = self::LinkToThisUnsafe($obs[$i]['id'], $obs[$i]['name'], 'btn-sm', array('style' => 'color: black;'));
+						}
+						break;
 					}
-				}
-				$args['select_list'] = array_values($args['select_list']);
-				$select_list = '';
-				for ($i = 0, $count = count($args['select_list']); $i < $count; ++$i) {
-					$select_list .= $args['select_list'][$i];
-					if ($i < $count - 1) $select_list .= ', ';
+					default: break;
 				}
 			}
-			$result = $db_connection->query('SELECT '.$select_list.' from '.$fetch_table.' WHERE LOWER(name) LIKE LOWER("%'.$text.'%")');
-			if (!$result) {
-				echo $db_connection->error;
-				return Error::db_error;
-			}
-			$res = array();
-			while ($row = $result->fetch_assoc()) {
-				for ($i = 0; $i < count($complex_attrs); ++$i) {
-					if ($complex_attrs[$i] == 'link_to_full') {
-						$row['link_to_full'] = self::LinkToThisUnsafe($row['id'], $row['name'], 'btn-sm', array('style' => 'color: black;'));
-					}
-				}
-				array_push($res, $row);
-			}
-			return $res;
+			return $obs;
 		}
 		
-		//Methods for fetching
 		public static function FetchByID($id)
 		{
 			global $db_connection;
@@ -502,38 +522,6 @@
 				array_push($res, $tmp);
 			}
 			return $res;
-		}
-
-		public static function FetchFromAssoc($assoc)
-		{
-			global $link_to_article_images;
-			global $link_to_service_images;
-			if ((!ArrayElemIsValidStr($assoc, 'author_id')) || (!ArrayElemIsValidStr($assoc, 'name')) ||
-				(!ArrayElemIsValidStr($assoc, 'text_block'))) {
-				return NULL;
-			}
-			$art = new self();
-			if (isset($assoc['id']) && (strlen($assoc['id']))) $art->id = $assoc['id'];
-			else $art->id = id_undef;
-			if (isset($assoc['annotation']) && (strlen($assoc['annotation']))) $art->annotation = $assoc['annotation'];
-			else $art->annotation = Language::Word('no annotation');
-			$art->author_id = $assoc['author_id'];
-			$art->name = $assoc['name'];
-			$art->text_block = $assoc['text_block'];
-			if (ArrayElemIsValidStr($assoc, 'language')) $art->language = $assoc['language'];
-			try {
-				if (isset($assoc['creating_date']) && (strlen($assoc['creating_date'])))
-					$art->creating_date = strtotime($assoc['creating_date']);
-				else $art->creating_date = time_undef;
-			} catch(Exception $e) {
-				$art->creating_date = time_undef;
-			}
-			if (ArrayElemIsValidStr($assoc, 'language')) {
-				global $image_extensions;
-				$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png', $image_extensions, $art->language);
-			} else
-				$art->path_to_image = PathToImage($link_to_article_images.$art->id, 'cover', $link_to_service_images.'Logo.png');
-			return $art;
 		}
 
 		public function ToJSON($needed = array('id', 'author_id', 'name', 'annotation', 'creating_date', 'path_to_image', 'text_block')) {

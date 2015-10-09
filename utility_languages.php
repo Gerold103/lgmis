@@ -178,6 +178,12 @@
 						case 'eng': return 'All reports';
 					}
 				}
+				case 'ambigiously': {
+					switch ($lang) {
+						case 'rus': return 'Избыточно';
+						case 'eng': return 'Ambigiously';
+					}
+				}
 				case 'annotation': {
 					switch ($lang) {
 						case 'rus': return 'Аннотация';
@@ -224,6 +230,12 @@
 					switch ($lang) {
 						case 'rus': return 'Вы уверены, что хотите удалить пользователя';
 						case 'eng': return 'Are you sure that you want to delete user';
+					}
+				}
+				case 'argument not valid': {
+					switch ($lang) {
+						case 'rus': return 'Неверный аргумент';
+						case 'eng': return 'Argument not valid';
 					}
 				}
 				case 'article adding': {
@@ -742,6 +754,12 @@
 						case 'eng': return 'Insert telephone';
 					}
 				}
+				case 'internal database error': {
+					switch ($lang) {
+						case 'rus': return 'Внутренняя ошибка базы данных';
+						case 'eng': return 'Internal database error';
+					}
+				}
 				case 'internal server error': {
 					switch ($lang) {
 						case 'rus': return 'Внутренняя ошибка сервера';
@@ -893,6 +911,12 @@
 						case 'eng': return "News aren't present so far";
 					}
 				}
+				case 'no translation': {
+					switch ($lang) {
+						case 'rus': return 'Нет перевода';
+						case 'eng': return 'No translation';
+					}
+				}
 				case 'no translation for this article': {
 					switch ($lang) {
 						case 'rus': return 'Нет перевода для этой новости';
@@ -921,6 +945,12 @@
 					switch ($lang) {
 						case 'rus': return 'Не все поля заполнены';
 						case 'eng': return 'Not all fields are filled';
+					}
+				}
+				case 'not found': {
+					switch ($lang) {
+						case 'rus': return 'Не найдено';
+						case 'eng': return 'Not found';
 					}
 				}
 				case 'number': {

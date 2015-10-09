@@ -55,15 +55,102 @@
                 var chatWindow = document.getElementById("chatWindow");
                 if (chatWindow.scrollTop == 0) alert('top');
             }
+
+            var files_uploaded = 0;
+            $(document).ready(function() {
+                var files_area = $("#files_area");
+                max_file_size = 1024 * 1024 * 512;
+
+                files_area[0].ondragover = function() {
+                    files_area.addClass('files_area_hover');
+                    return false;
+                };
+                files_area[0].ondragleave = function() {
+                    files_area.removeClass('files_area_hover');
+                    return false;
+                };
+
+                files_area[0].ondrop = function(event) {
+                    event.preventDefault();
+                    files_area.removeClass('files_area_hover');
+                    files_area.addClass('files_area_drop');
+
+                    var files = event.dataTransfer.files;
+                    for (var i = files.length - 1; i >= 0; --i) {
+                        if (files[i].size > max_file_size) {
+                            alert('File with name ' + files[i].name + ' has too large size');
+                            return;
+                        }
+                        var local_server = getXmlHttp();
+                        local_server.upload.addEventListener('progress', (function(id, file) {
+                            return function(event) {
+                                var percent = parseInt(event.loaded / event.total * 100);
+                                //console.log('Загрузка i = ' + file.name + ': ' + percent + '%');
+                                elem('file' + id).setAttribute('aria-valuenow', percent);
+                                elem('file' + id).style.width = percent + '%';
+                            };
+                        })(files_uploaded, files[i]), false);
+                        local_server.onreadystatechange = (function(file) {
+                            return function(event) {
+                                if (event.target.readyState == 4) {
+                                    if (event.target.status == 200) {
+                                        console.log('Загрузка ' + file.name + ' успешно завершена!');
+                                    } else {
+                                        console.log('Произошла ' + file.name + ' ошибка!');
+                                    }
+                                }
+                            };
+                        })(files[i]);
+                        local_server.open("POST", "test2.php");
+                        console.log(files[i].name);
+                        local_server.setRequestHeader('x-filename', encodeURIComponent(files[i].name));
+                        var fd = new FormData();
+                        fd.append("file", files[i]);
+                        var progress = document.createElement('li');
+                        progress.innerHTML = '<div class="row">' +
+                            '<div class="' + ColAllTypes(8) + ' vcenter">' +
+                                '<div class="progress" style="margin: 0;">' +
+                                    '<div id="file' + files_uploaded + '" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="' + ColAllTypes(4) + ' vcenter">' +
+                                '<button class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+                            '</div>' +
+                        '</div>';
+                        elem('progress_bars').appendChild(progress);
+                        local_server.send(fd);
+                        files_uploaded++;
+                    };
+                };
+            });
         </script>
+        <style type="text/css">
+            .files_area {
+                color: #555;
+                font-size: 18px;
+                text-align: center;
+                width: 400px;
+                padding: 50px;
+                border: 1px solid #ccc;
+            }
+            .files_area_hover {
+                background: #ddd;
+            }
+            .files_area_drop {
+                background: #eee;
+            }
+        </style>
     </head>
 
     <body>
+
+    <div id="files_area" class="files_area">
+        <ul id="progress_bars" style="list-style-type: none;">
+        </ul>
+    </div>
+    <button class="btn btn-default">Сохранить</button>
     <?php
-        $res = $db_connection->query("SELECT translit('сазонов василий, романенко татьяна, семенов алексей, макарова елена, самыловский иван, казаков илья, медведев денис, павлов станислав, владислав шпилевой, ястребов кирилл, любимов артур, чаплыгин андрей') as res;");
-        if (!$res) echo $db_connection->error;
-        echo $res->fetch_assoc()['res'].'<br>';
-        echo Language::Translit('сазонов василий, романенко татьяна, семенов алексей, макарова елена, самыловский иван, казаков илья, медведев денис, павлов станислав, владислав шпилевой, ястребов кирилл, любимов артур, чаплыгин андрей', 'rus', 'eng');
+        
     ?>
         
 

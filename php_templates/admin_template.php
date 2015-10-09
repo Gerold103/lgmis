@@ -19,6 +19,7 @@
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_styles.'"'; ?>>
+        <?php if (isset($head_addition)) echo $head_addition;  ?>
         <script type="text/javascript">
             $(function () {
               $('[data-toggle="popover"]').popover()

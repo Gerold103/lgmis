@@ -22,7 +22,7 @@
 				}
 				$res = array('users' => $users, 'users_name' => Language::Word('users'));
 
-				$articles = Article::FetchByName($text, array('format' => 'assoc', 'select_list' => array('id', 'name', 'link_to_full')));
+				$articles = Article::FetchLike('name', ['text' => $text, 'select_list' => 'id, name', 'special' => 'link_to_full', 'is_assoc' => true]);
 				$res['articles'] = $articles;
 				$res['articles_name'] = Language::PublicMenu('articles');
 
@@ -64,6 +64,35 @@
 				break;
 			}
 			default: break;
+		}
+	} else if (isset($_REQUEST['upload'])) {
+		if (isset($_FILES['file'])) {
+			switch ($_REQUEST['type']) {
+				case Report::$type: {
+					$author_id = GetUserID();
+					global $link_to_report_files;
+					global $link_prefix;
+					$dir = $link_to_report_files.'tmp_'.$author_id.'/';
+					$file_name = 'file';
+					$type = fileExtension($_FILES['file']['name']);
+					$file_name .= '.'.$type;
+					move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].$link_prefix.$dir.$file_name);
+					break;
+				}
+				default:
+					break;
+			}
+		}
+	} else if (isset($_REQUEST['remove'])) {
+		if (isset($_REQUEST['file'])) {
+			switch ($_REQUEST['type']) {
+				case Report::$type: {
+					
+					break;
+				}
+				default:
+					break;
+			}
 		}
 	}
 	include_once($link_to_utility_authorization);

@@ -145,6 +145,19 @@
 		return $res;
 	}
 
+	function CKEditorReplace($replace_id, $upload_url = '', $browse_url = '', $height = 400)
+	{
+		$res .=	'CKEDITOR.replace("'.$replace_id.'",';
+		if ($upload_url !== '')
+			$res .= '{ filebrowserImageUploadUrl: "'.$upload_url.'",';
+		if ($browse_url !== '')
+			$res .= 'filebrowserImageBrowseUrl : "'.$browse_url.'",';
+		$res .= 	'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
+		$res .= 	'allowedContent: true, });';
+		$res .=	'CKEDITOR.config.height = '.$height.';';
+		return $res;
+	}
+
 	function DialogInputsYesNo($action_type, $object_type, $id_, $val_yes = 0, $val_no = 0, $need_prev_page = true)
 	{
 		if ($val_yes === 0) $val_yes = Language::Word('yes');
@@ -341,6 +354,23 @@
 		$res .= 	'</div>';
 		$res .= '</div>';
 		return $res;	
+	}
+
+	function PairLabelAndInputFileArea($labes_width, $file_width, $label)
+	{
+		$res = '';
+		$res .= '<div class="row">';
+		$res .= 	'<div class="'.ColAllTypes($labes_width).' vcenter" align="right">';
+		$res .= 		'<b>'.$label.'</b>';
+		$res .= 	'</div>';
+		$res .= 	'<div class="'.ColAllTypes($file_width).' vcenter" align="center">';
+		$res .= 		'<div id="files_area" class="files_area">';
+        $res .= 			'<ul id="progress_bars" style="list-style-type: none;">';
+        $res .= 			'</ul>';
+    	$res .= 		'</div>';
+    	$res .= 	'</div>';
+    	$res .= '</div>';
+    	return $res;
 	}
 
 	function PairLabelAndSelect($labes_width, $select_width, $label, $select_name, $select_fields, $selected_field = array())

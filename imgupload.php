@@ -68,7 +68,7 @@
   file_put_contents('files/[debug].txt', $upload_dir."\xA", FILE_APPEND);
   file_put_contents('files/[debug].txt', $request_buf, FILE_APPEND);
   file_put_contents('files/[debug].txt', 'Root: '.$_SERVER['DOCUMENT_ROOT'].$link_prefix.$upload_dir, FILE_APPEND);
-  $img_id = count(array_diff(scandir($_SERVER['DOCUMENT_ROOT'].$link_prefix.$upload_dir), array('.', '..'))) + 1;
+  $img_id = countOfFilesInDir($link_prefix.$upload_dir) + 1;
   file_put_contents('files/[debug].txt', 'IMG_ID: '.$img_id."\xA", FILE_APPEND);
   file_put_contents('files/[debug].txt', $upload_dir."\xA", FILE_APPEND);
 
@@ -93,8 +93,7 @@
     $site = $protocol. $_SERVER['SERVER_NAME'] .'/';
 
     $uploadpath = $_SERVER['DOCUMENT_ROOT'] .$link_prefix. $upload_dir . $img_id;       // full file path
-    $sepext = explode('.', strtolower($_FILES['upload']['name']));
-    $type = end($sepext);       // gets extension
+    $type = fileExtension($_FILES['upload']['name'])      // gets extension
     $uploadpath .= '.'.$type;
     list($width, $height) = getimagesize($_FILES['upload']['tmp_name']);     // gets image width and height
     $err = '';         // to store the errors
