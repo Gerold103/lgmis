@@ -363,12 +363,15 @@
 		$res .= 	'<div class="'.ColAllTypes($labes_width).' vcenter" align="right">';
 		$res .= 		'<b>'.$label.'</b>';
 		$res .= 	'</div>';
-		$res .= 	'<div class="'.ColAllTypes($file_width).' vcenter" align="center">';
+		$res .= 	'<div class="'.ColAllTypes($file_width).' vcenter" align="center" style="padding: 0px;">';
 		$res .= 		'<div id="files_area" class="files_area">';
+		$res .= 			'<input type="file" onchange="send_files(this.files);" id="one_file_upload" style="display: none;">';
+		$res .= 			'<button onclick="elem(\'one_file_upload\').click(); return false;" type="button" class="btn btn-default" style="padding: 0px; position: absolute; top: 0px; left: 0px; width: 100%;">'.Language::Word('add file').'</button>';
         $res .= 			'<ul id="progress_bars" style="list-style-type: none;">';
         $res .= 			'</ul>';
     	$res .= 		'</div>';
     	$res .= 	'</div>';
+    	$res .= 	'<input id="files_count" type="hidden" name="files_count" value="0">';
     	$res .= '</div>';
     	return $res;
 	}

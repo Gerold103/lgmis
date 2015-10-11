@@ -12,7 +12,8 @@
         	?>
         </title>
         <link rel="stylesheet" type="text/css" href="ckeditor/contents.css">
-        <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/utility_links.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>

@@ -67,32 +67,44 @@
 		}
 	} else if (isset($_REQUEST['upload'])) {
 		if (isset($_FILES['file'])) {
+			$dir = '';
+			$author_id = GetUserID();
 			switch ($_REQUEST['type']) {
 				case Report::$type: {
-					$author_id = GetUserID();
 					global $link_to_report_files;
 					global $link_prefix;
-					$dir = $link_to_report_files.'tmp_'.$author_id.'/';
-					$file_name = 'file';
 					$type = fileExtension($_FILES['file']['name']);
-					$file_name .= '.'.$type;
-					move_uploaded_file($_FILES['file']['tmp_name'], $_SERVER['DOCUMENT_ROOT'].$link_prefix.$dir.$file_name);
+					switch ($_REQUEST['files_action']) {
+						case 'add': case 'edit': {
+							$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_report_files.'tmp_'.$author_id.'/file.'.$type;
+							break;
+						}
+						default: break;
+					}
 					break;
 				}
-				default:
-					break;
+				default: break;
 			}
+			file_put_contents('files/[debug].txt', $dir."\xA".$author_id."\xA");
+			move_uploaded_file($_FILES['file']['tmp_name'], $dir);
 		}
 	} else if (isset($_REQUEST['remove'])) {
 		if (isset($_REQUEST['file'])) {
+			$dir = '';
+			$author_id = GetUserID();
 			switch ($_REQUEST['type']) {
 				case Report::$type: {
-					
+					global $link_to_report_files;
+					global $link_prefix;
+					switch ($_REQUEST['files_action']) {
+						case 'add': case 'edit': $dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_report_files.'tmp_'.$author_id.'/file'; break;
+						default: break;
+					}
 					break;
 				}
-				default:
-					break;
+				default: break;
 			}
+			delete_file($dir);
 		}
 	}
 	include_once($link_to_utility_authorization);

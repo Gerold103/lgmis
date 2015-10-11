@@ -116,6 +116,12 @@
 						case 'eng': return 'Add direction';
 					}
 				}
+				case 'add file': {
+					switch ($lang) {
+						case 'rus': return 'Добавить файл';
+						case 'eng': return 'Add file';
+					}
+				}
 				case 'add project': {
 					switch ($lang) {
 						case 'rus': return 'Добавить проект';

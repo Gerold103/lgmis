@@ -223,6 +223,15 @@
 			if (ArrayElemIsValidStr($assoc, 'name')) $this->name = $assoc['name'];
 			if (ArrayElemIsValidStr($assoc, 'recipient_id')) $this->recipient_id = $assoc['recipient_id'];
 			if (ArrayElemIsValidStr($assoc, 'text_block')) $this->text_block = $assoc['text_block'];
+			if (ArrayElemIsValidStr($assoc, 'files_count')) {
+				$cnt = $assoc['files_count'];
+				if ($cnt > 0) {
+					global $link_to_report_files;
+					global $link_prefix;
+					delete_file($link_prefix.$link_to_report_files.$this->id.'/file');
+					recurse_copy($link_prefix.$link_to_report_files.'tmp_'.GetUserID(), $link_prefix.$link_to_report_files.$this->id);
+				}
+			}
 		}
 
 		public function FetchFileFromAssocEditing($assoc)
@@ -316,18 +325,8 @@
 
 			$request->id = $id;
 			$upload_path = '';
-			recurse_copy($link_to_report_images.'tmp_'.User::GetIDByLogin(GetUserLogin()), $link_to_report_images.$id);
-			if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-				create_dir($link_to_report_files.$id);
-				$file_name = 'file';
-				$sepext = explode('.', strtolower($_FILES['file']['name']));
-			    $type = end($sepext);
-			    $file_name .= '.'.$type;
-			    $upload_path = $link_to_report_files.$id.'/'.$file_name;
-			    if (move_uploaded_file($_FILES['file']['tmp_name'], $upload_path)) {
-			    	$request->path_to_file = $upload_path;
-			    }
-			}
+			recurse_copy($link_to_report_images.'tmp_'.GetUserID(), $link_to_report_images.$id);
+			recurse_copy($link_to_report_files.'tmp_'.GetUserID(), $link_to_report_files.$id);
 			return true;
 		}
 

@@ -8,6 +8,7 @@
   $author_id = User::GetIDByLogin($_SESSION['user_login']);
   $img_id = -1;
   $upload_dir = '123';
+  file_put_contents('files/[debug].txt', $upload_dir."\xA", FILE_APPEND);
   if (isset($_GET['add'])) {
     switch ($_GET['type']) {
       case UserBlock::$type:
@@ -93,7 +94,7 @@
     $site = $protocol. $_SERVER['SERVER_NAME'] .'/';
 
     $uploadpath = $_SERVER['DOCUMENT_ROOT'] .$link_prefix. $upload_dir . $img_id;       // full file path
-    $type = fileExtension($_FILES['upload']['name'])      // gets extension
+    $type = fileExtension($_FILES['upload']['name']);      // gets extension
     $uploadpath .= '.'.$type;
     list($width, $height) = getimagesize($_FILES['upload']['tmp_name']);     // gets image width and height
     $err = '';         // to store the errors

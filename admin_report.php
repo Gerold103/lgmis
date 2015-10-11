@@ -11,7 +11,7 @@
 	if (isset($_REQUEST['add'])) {
 		$id = User::GetIDByLogin($_SESSION['user_login']);
 		$head_addition = '<script type="text/javascript" src="js/files_upload.js"></script>';
-		$head_addition .= MakeScript('files_type = "'.Report::$type.'"; author_id = '.$id.'; max_files = 1;');
+		$head_addition .= MakeScript('files_type = "'.Report::$type.'"; files_action = "add"; author_id = '.$id.'; max_files = 1;');
 		clear_tmp_images_dir(Report::$type, $id);
 		clear_tmp_files_dir(Report::$type, $id);
 
@@ -61,9 +61,14 @@
 		global $link_to_utility_sql_worker;
 		global $link_to_img_upload;
 		global $link_to_img_browse;
+		clear_tmp_images_dir(Report::$type, $id);
+		clear_tmp_files_dir(Report::$type, $id);
+		$head_addition = '<script type="text/javascript" src="js/files_upload.js"></script>';
 		$ob_id = $_POST['id'];
 		$ob = Report::FetchByID($ob_id);
 		$path_to_file = $ob->GetPathToFile();
+		$author_id = GetUserID();
+		$head_addition .= MakeScript('files_type = "'.Report::$type.'"; files_action = "edit"; owner_id = '.$ob->GetID().'; max_files = 1; author_id = '.$author_id.';');
 
 		$content .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
 		$content .= 	PairLabelAndPanel(4, 5, Language::Word('current receiver'), User::FetchByID($ob->GetRecipientID())->LinkToThis());
@@ -82,7 +87,8 @@
 		$content .= 	'</div>';
 		$content .= 	PairLabelAndInput(4, 5, Language::Word('header'), 'name', Language::Word('insert header'), htmlspecialchars($ob->GetName())).'<br>';
 		$content .= 	PairLabelAndPanel(4, 5, Language::Word('current file'), $ob->GetLinkToFile());
-		$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change file'), 'file');
+		$content .= 	PairLabelAndInputFileArea(4, 5, Language::Word('change file'));
+		//$content .= 	PairLabelAndInputFile(4, 5, Language::Word('change file'), 'file');
 		$content .= 	WrapToHiddenInputs(array('type' => Report::$type, 'yes' => '', 'id' => $ob_id));
 		$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
 		$content .=		'<div class="row">';
