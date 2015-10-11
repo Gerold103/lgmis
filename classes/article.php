@@ -392,23 +392,23 @@
 		{
 			extract($kwargs, EXTR_PREFIX_ALL, 't');
 
-			$select_list = '*';
-			$eq_conds = array();
-			$order_by = '';
-			$limit = '';
-			$offset = '';
-			$lang = '';
+			$select_list 	= '*';
+			$eq_conds 		= array();
+			$order_by 		= '';
+			$limit 			= '';
+			$offset 		= '';
+			$lang 			= '';
 			$where_addition = '';
-			$is_assoc = false;
+			$is_assoc 		= false;
 
-			if (isset($t_select_list)) $select_list = $t_select_list;
-			if (isset($t_eq_conds)) $eq_conds = $t_eq_conds;
-			if (isset($t_order_by)) $order_by = $t_order_by;
-			if (isset($t_limit)) $limit = $t_limit;
-			if (isset($t_offset)) $offset = $t_offset;
-			if (isset($t_lang)) $lang = $t_lang;
-			if (isset($t_where_addition)) $where_addition = $t_where_addition;
-			if (isset($t_is_assoc)) $is_assoc = $t_is_assoc;
+			if (isset($t_select_list)) 		$select_list = $t_select_list;
+			if (isset($t_eq_conds)) 		$eq_conds = $t_eq_conds;
+			if (isset($t_order_by)) 		$order_by = $t_order_by;
+			if (isset($t_limit)) 			$limit = $t_limit;
+			if (isset($t_offset)) 			$offset = $t_offset;
+			if (isset($t_lang)) 			$lang = $t_lang;
+			if (isset($t_where_addition)) 	$where_addition = $t_where_addition;
+			if (isset($t_is_assoc)) 		$is_assoc = $t_is_assoc;
 
 			global $db_connection;
 

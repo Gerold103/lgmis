@@ -180,9 +180,9 @@
 								$content .= AlertMessage('alert-danger', Language::Word('it was not succeeded to save'));
 							} else {
 								$content .= AlertMessage('alert-success', Language::Word('changes are saved'));
-								if ($ob->FetchFileFromAssocEditing($_FILES) < 0) {
-									$content .= AlertMessage('alert-warning', Language::Word('file was not uploaded'));
-								}
+								// if ($ob->FetchFileFromAssocEditing($_FILES) < 0) {
+								// 	$content .= AlertMessage('alert-warning', Language::Word('file was not uploaded'));
+								// }
 							}
 							break;
 						}

@@ -228,31 +228,10 @@
 				if ($cnt > 0) {
 					global $link_to_report_files;
 					global $link_prefix;
-					delete_file($link_prefix.$link_to_report_files.$this->id.'/file');
-					recurse_copy($link_prefix.$link_to_report_files.'tmp_'.GetUserID(), $link_prefix.$link_to_report_files.$this->id);
+					delete_file($link_to_report_files.$this->id.'/file');
+					recurse_copy($link_to_report_files.'tmp_'.GetUserID(), $link_to_report_files.$this->id);
 				}
 			}
-		}
-
-		public function FetchFileFromAssocEditing($assoc)
-		{
-			if (isset($assoc['file']['name']) && (is_uploaded_file($assoc['file']['tmp_name']))) {
-				global $link_to_report_files;
-				$file_name = 'file';
-				$old_im = $file_name;
-				$sepext = explode('.', strtolower($assoc['file']['name']));
-			    $type = end($sepext);
-			    $file_name .= '.'.$type;
-			    $upload_path = $link_to_report_files.$this->id.'/'.$file_name;
-			    if (!delete_image($link_to_report_files.$this->id.'/'.$old_im)) {
-			    	return -1;
-			    } else if (!move_uploaded_file($assoc['file']['tmp_name'], $upload_path)) {
-			    	return -1;
-			    } else {
-			    	return 1;
-			    }
-			}
-			return 0;
 		}
 
 		public static function FetchAll()
