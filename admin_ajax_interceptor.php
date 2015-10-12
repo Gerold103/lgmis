@@ -46,17 +46,17 @@
 					case Article::$type: {
 						$need_authorization = false;
 						$offset = $_REQUEST['offset'];
-						$res = Article::FetchBy(array(), array('order_by' => 'id DESC', 'limit' => $records_on_page, 'offset' => $offset));
+						//$res = Article::FetchBy(array(), array('order_by' => 'id DESC', 'limit' => $records_on_page, 'offset' => $offset));
+						$res = Article::FetchBy(['order_by' => 'id DESC', 'limit' => $records_on_page, 'offset' => $offset,
+												'select_list' => 'id, name, annotation, creating_date, author_id', 'is_assoc' => true,
+												'special' => array('author_link', 'full_vers_link', 'path_to_image')]);
+						//var_dump($res);
 						if (Error::IsError($res)) {
 							$ret = array('error_msg' => '');
 							$content = json_encode($ret);
 							break;
 						}
-						$objs = array();
-						for ($i = 0, $size = count($res); $i < $size; ++$i) {
-							array_push($objs, $res[$i]->ToJSON(array('id', 'author_link', 'full_vers_link', 'name', 'annotation', 'creating_date', 'path_to_image')));
-						}
-						$content = json_encode($objs);
+						$content = json_encode($res);
 						break;
 					}
 					default: break;

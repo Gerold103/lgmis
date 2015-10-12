@@ -47,11 +47,10 @@
 		global $link_to_img_upload;
 		global $link_to_img_browse;
 		$ob_id = $_POST['id'];
-		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id)]);
+		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id), 'is_unique' => true]);
 		if (Error::IsError($ob)) {
 			$content = AlertMessage('alert-danger', 'Error during fetching article: '.Error::ToString($ob));
 		} else {
-			$ob = $ob[0];
 			$cover_src = $ob->path_to_image;
 
 			$content .= '<form method="post" action="'.$link_to_utility_sql_worker.'" enctype="multipart/form-data">';
@@ -78,13 +77,14 @@
 			$header = $title;
 		}
 	} else if (isset($_REQUEST['add_lang'])) {
-		$article = Article::FetchByID($_REQUEST['id']);
-		$art_langs = $article->FetchLanguages();
-		$free_languages = array_diff($languages, $art_langs);
+		$ob_id = $_REQUEST['id'];
+		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id), 'is_unique' => true]);
+		$ob_langs = $ob->FetchLanguages();
+		$free_languages = array_diff($languages, $ob_langs);
 		if (count($free_languages) === 0) {
 			$content = AlertMessage('alert-danger', Language::Word('all languages of this article is implemented'));
 		} else {
-			$author_id = User::GetIDByLogin($_SESSION['user_login']);
+			$author_id = GetUserID();
 			clear_tmp_images_dir(Article::$type, $author_id);
 
 			global $link_to_utility_sql_worker;
@@ -97,7 +97,7 @@
 			$content .=		PairLabelAndTextarea(4, 5, Language::Word('annotation'), 'annotation', Language::Word('insert annotation text'));
 			$content .= 	PairLabelAndInputFile(4, 5, Language::Word('cover'), 'cover');
 			$content .= 	PairLabelAndSelect(4, 5, Language::Word('cover'), 'language', $free_languages, array(key($free_languages), current($free_languages)));
-			$content .= 	WrapToHiddenInputs(array('type' => Article::$type, 'yes' => '', 'id' => $author_id, 'glob_id' => $article->GetID()));
+			$content .= 	WrapToHiddenInputs(array('type' => Article::$type, 'yes' => '', 'id' => $author_id, 'glob_id' => $ob->GetID()));
 			$content .= 	'<div class="row"><h3>'.Language::Word('text').'</h3></div>';
 			$content .=		'<div class="row">';
 			$content .=			'<div class="'.ColAllTypes(8).' '.ColOffsetAllTypes(2).'" align="center">';
@@ -106,7 +106,7 @@
 			$content .= 	'</div>';
 			$content .=		'<script>';
 			$content .=			'CKEDITOR.replace("text_block",';
-			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Article::$type.'&id='.$author_id.'&add=add&glob_id='.$article->GetID().'",';
+			$content .= 			'{ filebrowserImageUploadUrl: "'.$link_to_img_upload.'?type='.Article::$type.'&id='.$author_id.'&add=add&glob_id='.$ob->GetID().'",';
 			$content .= 			'filebrowserImageBrowseUrl : "'.$link_to_img_browse.'?type='.Article::$type.'&id='.$_REQUEST['id'].'&edit=edit",';
 			$content .= 			'contentsCss: [CKEDITOR.basePath + "contents.css", "css/styles.css", "css/bootstrap.min.css"],';
 			$content .= 			'allowedContent: true, });';
@@ -126,17 +126,21 @@
 			exit();
 		}
 
-		$article = Article::FetchByID($_REQUEST['id']);
+		$ob_id = $_REQUEST['id'];
+		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id), 'is_unique' => true]);
+		if (Error::IsError($ob)) {
+			$content = AlertMessage('alert-danger', Error::ToString($ob));
+		} else {
+			$title = '';
+			$header = '';
+			$content = '';
 
-		$title = '';
-		$header = '';
-		$content = '';
+			$title = Language::Word('acrticle');
 
-		$title = Language::Word('acrticle');
+			$header = htmlspecialchars($ob->GetName());
 
-		$header = htmlspecialchars($article->name);
-
-		$content = $article->ToHTMLAutoFull(GetUserPrivileges());
+			$content = $ob->ToHTMLAutoFull(GetUserPrivileges());
+		}
 	}
 
 	include_once($link_to_admin_template);

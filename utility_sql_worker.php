@@ -159,14 +159,14 @@
 							break;
 						}
 						case Article::$type: {
-							$article = Article::FetchByID($_POST['id']);
-							if ($article === NULL) break;
-							$article->FetchFromAssocEditing($_POST);
-							if ($article->Save() === false) {
+							$ob = Article::FetchBy(['eq_conds' => array('id' => $_POST['id']), 'is_unique' => true]);
+							if ($ob === NULL) break;
+							$ob->FetchFromAssocEditing($_POST);
+							if ($ob->Save() === false) {
 								$content .= AlertMessage('alert-danger', Language::Word('it was not succeeded to save'));
 							} else {
 								$content .= AlertMessage('alert-success', Language::Word('changes are saved'));
-								if ($article->FetchCoverFromAssocEditing($_FILES) < 0) {
+								if ($ob->FetchCoverFromAssocEditing($_FILES) < 0) {
 									$content .= AlertMessage('alert-warning', Language::Word('cover was not uploaded'));
 								}
 							}

@@ -1,7 +1,7 @@
 <?php
 	//------------------------------------------------A R T I C L E------------------------------------------------
 	
-	class Article implements IMultiLanguage {
+	class Article {
 		
 		//--------Attributes--------
 		
@@ -269,8 +269,7 @@
 			return ActionButton($args);
 		}
 
-		public function ToHTMLFullVers($to_public = NULL)
-		{
+		public function ToHTMLFullVersUnsafe($id, $to_public = NULL) {
 			global $link_to_admin_article;
 			global $link_to_public_article;
 
@@ -288,7 +287,7 @@
 					'action_link' => $link_to_public_article,
 					'action_type' => 'full',
 					'obj_type' => Article::$type,
-					'id' => $this->id,
+					'id' => $id,
 					'method' => 'get',
 					'mod_rewrite' => $mod_rewrite,
 				);
@@ -297,12 +296,17 @@
 					'action_link' => $link_to_admin_article,
 					'action_type' => 'full',
 					'obj_type' => Article::$type,
-					'id' => $this->id,
+					'id' => $id,
 					'prev_page' => $link_to_admin_manage_content.'?content_type='.$content_types_short['articles'],
 					'method' => 'get',
 				);
 			}
 			return ActionButton($args);
+		}
+
+		public function ToHTMLFullVers($to_public = NULL)
+		{
+			return self::ToHTMLFullVersUnsafe($this->id, $to_public);
 		}
 
 		//---------------- ILinkable implementation ----------------
@@ -373,7 +377,10 @@
 				$ob->language = $assoc['language'];
 				global $image_extensions;
 				$ob->path_to_image = PathToImage($link_to_article_images.$ob->id, 'cover', $link_to_service_images.'Logo.png', $image_extensions, $ob->language);
-			} else $ob->path_to_image = PathToImage($link_to_article_images.$ob->id, 'cover', $link_to_service_images.'Logo.png');
+			} else {
+				$ob->language = GetLanguage();
+				$ob->path_to_image = PathToImage($link_to_article_images.$ob->id, 'cover', $link_to_service_images.'Logo.png');
+			}
 
 			return $ob;
 		}
@@ -382,7 +389,10 @@
 		{
 			$res = array();
 			while ($row = $result->fetch_assoc()) {
-				if ($is_assoc) array_push($res, $row);
+				if ($is_assoc) {
+					$row['creating_date'] = strtotime($row['creating_date']);
+					array_push($res, $row);
+				}
 				else array_push($res, self::FetchFromAssoc($row));
 			}
 			return $res;
@@ -400,6 +410,8 @@
 			$lang 			= '';
 			$where_addition = '';
 			$is_assoc 		= false;
+			$is_unique		= false;
+			$special 		= array();
 
 			if (isset($t_select_list)) 		$select_list = $t_select_list;
 			if (isset($t_eq_conds)) 		$eq_conds = $t_eq_conds;
@@ -409,6 +421,8 @@
 			if (isset($t_lang)) 			$lang = $t_lang;
 			if (isset($t_where_addition)) 	$where_addition = $t_where_addition;
 			if (isset($t_is_assoc)) 		$is_assoc = $t_is_assoc;
+			if (isset($t_is_unique))		$is_unique = $t_is_unique;
+			if (isset($t_special))			$special = $t_special;
 
 			global $db_connection;
 
@@ -442,7 +456,69 @@
 			if (!$res) {
 				return new Error($db_connection->error, Error::db_error);
 			}
-			return self::ArrayFromDBResult($res, $is_assoc);
+			$res = self::ArrayFromDBResult($res, $is_assoc);
+			$res_count = count($res);
+
+			if ($is_unique) {
+				if ($res_count > 1) return Error::ambiguously;
+				if ($res_count === 0) {
+					if (isset($eq_conds['id'])) {
+						if (count(self::FetchLanguagesByID($eq_conds['id'])) > 0) return Error::no_translation;
+					}
+					return Error::not_found;
+				}
+			}
+
+			for ($i = 0, $count = count($special); $i < $count; ++$i) {
+				switch ($special[$i]) {
+					case 'author_link': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['author_id']))
+								$res[$j]['author_link'] = User::FetchByID($res[$j]['author_id'])->LinkToThis('btn-sm');
+						}
+						break;
+					}
+					case 'link_to_full': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['id']) && isset($res[$j]['name']))
+								$res[$j]['link_to_full'] = self::LinkToThisUnsafe($res[$j]['id'], $res[$j]['name'], 'btn-sm', array('style' => 'color: black;'));
+						}
+						break;
+					}
+					case 'full_vers_link': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['id']))
+								$res[$j]['full_vers_link'] = self::ToHTMLFullVersUnsafe($res[$j]['id'], true);
+						}
+						break;
+					}
+					case 'path_to_image': {
+						global $image_extensions;
+						global $link_to_article_images;
+						global $link_to_service_images;
+						if ($is_assoc) {
+							for ($j = 0; $j < $res_count; ++$j) {
+								if (!isset($res[$j]['id'])) continue;
+								$path = PathToImage($link_to_article_images.$res[$j]['id'], 'cover', $link_to_service_images.'Logo.png', $image_extensions, GetLanguage());
+								$res[$j]['path_to_image'] = $path;
+							}
+						} else {
+							for ($j = 0; $j < $res_count; ++$j) {
+								$path = PathToImage($link_to_article_images.$res[$j]->GetID(), 'cover', $link_to_service_images.'Logo.png', $image_extensions, GetLanguage());
+								$res[$j]['path_to_image'] = $path;
+							}
+						}
+						break;
+					}
+					default: break;
+				}
+			}
+
+			if (!$is_unique) return $res;
+			else return $res[0];
 		}
 
 		public static function FetchLike($what, $kwargs) {
@@ -463,46 +539,9 @@
 			if (isset($t_select_list)) $select_list = $t_select_list;
 			if (isset($t_is_assoc)) $is_assoc = $t_is_assoc;
 
-			$obs = self::FetchBy(['select_list' => $select_list, 'where_addition' => $where_addition, 'order_by' => 'id DESC', 'limit' => $limit, 'is_assoc' => $is_assoc]);
+			$obs = self::FetchBy(['select_list' => $select_list, 'where_addition' => $where_addition, 'order_by' => 'id DESC', 'limit' => $limit, 'is_assoc' => $is_assoc, 'special' => array('link_to_full')]);
 			if (Error::IsError($obs)) return $obs;
-			foreach ($special as $key) {
-				switch ($key) {
-					case 'link_to_full': {
-						if (!$is_assoc) break;
-						for ($i = 0, $size = count($obs); $i < $size; ++$i) {
-							if (!isset($obs[$i]['id']) || !isset($obs[$i]['name'])) break;
-							$obs[$i]['link_to_full'] = self::LinkToThisUnsafe($obs[$i]['id'], $obs[$i]['name'], 'btn-sm', array('style' => 'color: black;'));
-						}
-						break;
-					}
-					default: break;
-				}
-			}
 			return $obs;
-		}
-		
-		public static function FetchByID($id)
-		{
-			global $db_connection;
-			$res = NULL;
-			$lang = GetLanguage();
-			$fetch_table = Article::$table;
-			if ($lang != 'rus') $fetch_table .= '_'.$lang;
-			$result = $db_connection->query("SELECT * FROM `".$fetch_table."` WHERE `id`=".$id);
-			if ((!$result) || ($result->num_rows != 1)) {
-				if (!$result) {
-					echo $db_connection->error;
-					return NULL;
-				}
-				$langs = Article::FetchLanguagesByID($id);
-				if (count($langs) > 0) {
-					return Error::no_translation;
-				}
-				return NULL;
-			}
-			$tmp = $result->fetch_assoc();
-			$tmp['language'] = $lang;
-			return Article::FetchFromAssoc($tmp);
 		}
 
 		public static function FetchByAuthorID($id)
@@ -551,7 +590,7 @@
 			$from_table = Article::$table;
 			$lang = GetLanguage();
 			if ($lang !== 'rus') $from_table .= '_'.$lang;
-			$result = $db_connection->query("SELECT * FROM `".$from_table."` ORDER BY creating_date DESC");
+			$result = $db_connection->query("SELECT * FROM `".$from_table."` ORDER BY id DESC");
 			if (!$result) {
 				return NULL;
 			}
@@ -564,7 +603,7 @@
 
 		public function FetchLanguages()
 		{
-			return Article::FetchLanguagesByID($this->id);
+			return self::FetchLanguagesByID($this->id);
 		}
 
 		public static function FetchLanguagesByID($id)
@@ -573,7 +612,7 @@
 			global $db_connection;
 			$res = array();
 			foreach ($languages as $key => $value) {
-				$from_table = Article::$table;
+				$from_table = self::$table;
 				if ($key !== 'rus') $from_table .= '_'.$key;
 				$q = $db_connection->query("SELECT COUNT(*) FROM ".$from_table." WHERE id = ".$id);
 				if ($q) {
@@ -666,7 +705,7 @@
 		public function Save()
 		{
 			global $db_connection;
-			$from_table = Article::$table;
+			$from_table = self::$table;
 			if ($this->language !== 'rus') $from_table .= '_'.$this->language;
 			$res = $db_connection->query("SELECT `id` FROM `".$from_table."` WHERE (`id`=".$this->id.")");
 			if (!$res) {
@@ -695,7 +734,7 @@
 			global $link_to_article_images;
 			global $link_to_logo;
 
-			$article = Article::FetchByID($id);
+			$article = Article::FetchBy(['eq_conds' => array('id' => $id), 'is_unique' => true]);
 			$langs = $article->FetchLanguages();
 
 			$from_table = Article::$table;

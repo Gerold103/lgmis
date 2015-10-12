@@ -7,31 +7,35 @@
 	if (isset($_GET['id']) && (isset($_POST['id'])) && ($_GET['id'] !== $_POST['id'])) {
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
-		$ob = Article::FetchByID($_REQUEST['id']);
-
-		$header = '';
-		$content = '';
-		$footer = '';
-		$title = '';
-
-		$header_type = 'h4';
-
-		if ($ob === NULL) {
-			$title = Language::Word('error');
-			$header = $title;
-			$content = Language::Word('internal server error');
-		} else if ($ob === Error::no_translation) {
-			$title = Language::Word('error');
-			$header = Language::Word('sorry');
-			$content = Language::Word('no translation for this article');
+		$ob_id = $_REQUEST['id'];
+		$ob = Article::FetchBy(['eq_conds' => array('id' => $ob_id), 'is_unique' => true]);
+		if (Error::IsError($ob)) {
+			$content = AlertMessage('alert-danger', Error::ToString($ob));
 		} else {
-			$title = $ob->name;
+			$header = '';
+			$content = '';
+			$footer = '';
+			$title = '';
 
-			$header = htmlspecialchars($ob->name);
+			$header_type = 'h4';
 
-			$content = $ob->ToHTMLUserPublicFull();
+			if ($ob === NULL) {
+				$title = Language::Word('error');
+				$header = $title;
+				$content = Language::Word('internal server error');
+			} else if ($ob === Error::no_translation) {
+				$title = Language::Word('error');
+				$header = Language::Word('sorry');
+				$content = Language::Word('no translation for this article');
+			} else {
+				$title = $ob->name;
 
-			$no_content_center = true;
+				$header = htmlspecialchars($ob->name);
+
+				$content = $ob->ToHTMLUserPublicFull();
+
+				$no_content_center = true;
+			}
 		}
 	}
 

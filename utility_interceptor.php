@@ -23,7 +23,8 @@
 					if ($_REQUEST['type'] === RequestOnRegister::$type) {
 						$_REQUEST['info'] = 'Вы уверены, что хотите отклонить запрос пользователя '.RequestOnRegister::FetchByID($_REQUEST['id'])->name.'?';
 					} else if ($_REQUEST['type'] === Article::$type) {
-						$_REQUEST['info'] = 'Вы уверены, что хотите удалить новость с заголовком '.Article::FetchByID($_REQUEST['id'])->name.'?';
+						$ob = Article::FetchBy(['eq_conds' => array('id' => $_REQUEST['id']), 'is_unique' => true]);
+						$_REQUEST['info'] = 'Вы уверены, что хотите удалить новость с заголовком '.$ob->GetName().'?';
 					}
 				}
 				if (!isset($_REQUEST['info'])) {
