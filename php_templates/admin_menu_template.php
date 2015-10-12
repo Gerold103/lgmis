@@ -11,7 +11,7 @@
             <ul class="nav navbar-nav">
                 <li><p class="navbar-text"><?php echo Language::Word('welcome').', <b>'.$_SESSION['user_login']; ?></b></p></li>
                 <li>
-                    <form class="navbar-form navbar-left" method="post" action="'.$link_to_utility_authorization.'">
+                    <form class="navbar-form navbar-left" method="post" action=<?php echo '"'.$link_to_utility_authorization.'"'; ?> >
                         <button type="submit" class="btn btn-default" name="exit"><?php echo Language::Word('logout'); ?></button>
                     </form>
                 </li>

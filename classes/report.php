@@ -147,6 +147,8 @@
 			$where_clause = '';
 			$i = 0;
 			$size = count($args);
+			$need_where = false;
+			if (count($args) > 0) $need_where = true;
 			foreach ($args as $key => $value) {
 				$where_clause .= ' ('.$key.' = '.$value.') ';
 				if ($i < $size - 1) $where_clause .= 'OR';
@@ -155,7 +157,7 @@
 			if (ArrayElemIsValidStr($args2, 'order_by')) {
 				$where_clause .= ' ORDER BY '.$args2['order_by'];
 			}
-			if ($where_clause !== '') $where_clause = "WHERE ".$where_clause;
+			if ($need_where) $where_clause = "WHERE ".$where_clause;
 			$res = $db_connection->query("SELECT * FROM ".self::$table." ".$where_clause);
 			if (!$res) {
 				echo $db_connection->error;
