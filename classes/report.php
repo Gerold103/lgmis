@@ -236,7 +236,7 @@
 
 		public static function FetchAll()
 		{
-			return Report::FetchBy();
+			return Report::FetchBy(array(), array("order_by" => "id DESC"));
 		}
 
 		public function ToHTMLDel()
