@@ -3,6 +3,7 @@
 	$is_public = false;
 	include_once('utility_lgmis_lib.php');
 	include_once($link_to_utility_authorization);
+	clear_tmp_files_dir(MyFile::$type, 0);
 
 	$header = '';
 	$content = '';

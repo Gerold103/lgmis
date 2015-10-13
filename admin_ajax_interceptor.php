@@ -85,15 +85,9 @@
 				}
 				case MyFile::$type: {
 					global $link_to_files_manager_dir;
-					$file = urldecode($_FILES['file']['name']);
-					$dir_array = json_decode($_REQUEST['optional_data']);
-					$dir = '';
-					for ($i = 0, $size = count($dir_array); $i < $size; ++$i) {
-						$dir .= $dir_array[$i].'/';
-					}
+					$file = urlencode($_FILES['file']['name']);
 					switch ($_REQUEST['files_action']) {
 						case 'add': {
-							
 							$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'tmp_'.$author_id.'/'.$file;
 							break;
 						}
@@ -110,12 +104,24 @@
 		if (isset($_REQUEST['file'])) {
 			$dir = '';
 			$author_id = GetUserID();
+			global $link_prefix;
 			switch ($_REQUEST['type']) {
 				case Report::$type: {
 					global $link_to_report_files;
-					global $link_prefix;
 					switch ($_REQUEST['files_action']) {
 						case 'add': case 'edit': $dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_report_files.'tmp_'.$author_id.'/file'; break;
+						default: break;
+					}
+					break;
+				}
+				case MyFile::$type: {
+					global $link_to_files_manager_dir;
+					switch ($_REQUEST['files_action']) {
+						case 'add': {
+							$filename = $_REQUEST['filename'];
+							$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'tmp_'.$author_id.'/'.$filename;
+							break;
+						}
 						default: break;
 					}
 					break;

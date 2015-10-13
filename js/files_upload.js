@@ -11,7 +11,8 @@ function removeUploadedFile(btn) {
 	var id = btn.id.split('-')[1];
 	var row = elem("filerow" + id);
 	row.parentElement.removeChild(row);
-	var data = "remove=true&file=true&type=" + files_type + "&fileid=" + id + "&files_action=" + files_action + "&owner_id=" + owner_id + "&author_id=" + author_id;
+    var name = elem("btnfilename-" + id).value;
+	var data = "remove=true&file=true&type=" + files_type + "&fileid=" + id + "&files_action=" + files_action + "&owner_id=" + owner_id + "&author_id=" + author_id + "&filename=" + name;
 	var local_server = getXmlHttp();
 	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
 	local_server.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -113,7 +114,8 @@ $(document).ready(function() {
 	            '</div>' +
 	            '<div class="' + ColAllTypes(3) + ' vcenter">' +
 	                '<button type="button" id="btnfile-' + files_id_iterator + '" onclick="removeUploadedFile(this);" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true">' + files[i].name.substring(0, 15) + '</span></button>' +
-	            '</div>' +
+                    '<input type="hidden" id="btnfilename-' + files_id_iterator + '" value="' + encodeURIComponent(files[i].name) + '">' +
+                '</div>' +
 	        '</div>';
             progress.style.margin = "15px";
 	        elem('progress_bars').appendChild(progress);
