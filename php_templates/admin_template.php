@@ -44,11 +44,11 @@
             echo    '</div>';
             echo '</div>';
 			
-            echo '<div class="row">';
+            echo '<div class="row" style="height: 100%;">';
             if ($no_content_center) {
-                echo '<div class="'.ColAllTypes(12).'">';   
+                echo '<div class="'.ColAllTypes(12).' style="height: 100%;>';   
             } else { 
-                echo '<div class="'.ColAllTypes(12).'" align="center">';
+                echo '<div class="'.ColAllTypes(12).'" align="center" style="height: 100%;">';
             }
 			echo $content;
             echo    '</div>';

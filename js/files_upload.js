@@ -5,6 +5,7 @@ var author_id = -1;
 var max_files = 15;
 var files_action = '';
 var owner_id = -1;
+var optional_data = null;
 
 function removeUploadedFile(btn) {
 	var id = btn.id.split('-')[1];
@@ -18,6 +19,9 @@ function removeUploadedFile(btn) {
 	--files_uploaded;
 	if (files_uploaded == 0) {
 		$("#files_area").removeClass('files_area_drop');
+        if (elem("files_area_background_text") != null) {
+            elem("files_area_background_text").style.display = "block";
+        }
 	}
     elem("files_count").setAttribute('value', files_uploaded);
 }
@@ -49,10 +53,13 @@ $(document).ready(function() {
         event.preventDefault();
         files_area.removeClass('files_area_hover');
         files_area.addClass('files_area_drop');
+        if (elem("files_area_background_text") != null) {
+            elem("files_area_background_text").style.display = "none";
+        }
 
         var files = event.dataTransfer.files;
         for (var i = files.length - 1; i >= 0; --i) {
-        	if (files_uploaded > 0) {
+        	if (files_uploaded >= max_files) {
         		alert('Already maximal count of files');
         		return;
         	}
@@ -77,16 +84,17 @@ $(document).ready(function() {
 
             	}
             })(files_id_iterator), false);
-            local_server.onreadystatechange = (function(id, file) {
+            local_server.onreadystatechange = (function(id, file, serv) {
                 return function(event) {
                     if (event.target.readyState == 4) {
                         if (event.target.status == 200) {
+                            console.log(serv.responseText);
                         } else {
                             console.log('Произошла ' + file.name + ' ошибка!');
                         }
                     }
                 };
-            })(files_id_iterator, files[i]);
+            })(files_id_iterator, files[i], local_server);
             local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
             local_server.setRequestHeader('x-filename', encodeURIComponent(files[i].name));
             var fd = new FormData();
@@ -95,17 +103,19 @@ $(document).ready(function() {
             fd.append("upload", true);
             fd.append("files_action", files_action);
             fd.append("owner_id", owner_id);
+            if (optional_data != null) fd.append("optional_data", JSON.stringify(optional_data));
             var progress = document.createElement('li');
 	        progress.innerHTML = '<div id="filerow' + files_id_iterator + '" class="row">' +
-	            '<div class="' + ColAllTypes(8) + ' vcenter">' +
+	            '<div class="' + ColAllTypes(9) + ' vcenter" style="padding: 0px;">' +
 	                '<div class="progress" style="margin: 0;">' +
 	                    '<div id="file' + files_id_iterator + '" class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>' +
 	                '</div>' +
 	            '</div>' +
-	            '<div class="' + ColAllTypes(4) + ' vcenter">' +
-	                '<button type="button" id="btnfile-' + files_id_iterator + '" onclick="removeUploadedFile(this);" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>' +
+	            '<div class="' + ColAllTypes(3) + ' vcenter">' +
+	                '<button type="button" id="btnfile-' + files_id_iterator + '" onclick="removeUploadedFile(this);" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true">' + files[i].name.substring(0, 15) + '</span></button>' +
 	            '</div>' +
 	        '</div>';
+            progress.style.margin = "15px";
 	        elem('progress_bars').appendChild(progress);
             local_server.send(fd);
             files_uploaded++;

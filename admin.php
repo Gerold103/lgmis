@@ -28,6 +28,8 @@
 		$content .= MenuButton(Language::Word('our content'), $link_to_admin_manage_content, 'btn-default', '', 'get');
 	}
 
+	$content .= MenuButton(Language::Word('file manager'), $link_to_admin_file_manager, 'btn-default', '', 'get');
+
 	$content .= MenuButton(Language::Word('bookkeeping'), $link_to_admin_bookkeeping, 'btn-default', '', 'get');
 
 	include($link_to_admin_template);

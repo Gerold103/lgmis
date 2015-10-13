@@ -464,6 +464,12 @@
 						case 'eng': return 'Download file';
 					}
 				}
+				case 'drag file': {
+					switch ($lang) {
+						case 'rus': return 'Перетащите файл';
+						case 'eng': return 'Drag file';
+					}
+				}
 
 				//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ E ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -636,6 +642,12 @@
 					switch ($lang) {
 						case 'rus': return 'Файл';
 						case 'eng': return 'File';
+					}
+				}
+				case 'file manager': {
+					switch ($lang) {
+						case 'rus': return 'Менеджер файлов';
+						case 'eng': return "File manager";
 					}
 				}
 				case 'file was not uploaded': {
@@ -1193,6 +1205,12 @@
 					switch ($lang) {
 						case 'rus': return 'Сохранить';
 						case 'eng': return 'Save';
+					}
+				}
+				case 'send': {
+					switch ($lang) {
+						case 'rus': return 'Отправить';
+						case 'eng': return 'Send';
 					}
 				}
 				case 'send report': {
