@@ -10,8 +10,8 @@ var optional_data = null;
 function removeUploadedFile(btn) {
 	var id = btn.id.split('-')[1];
 	var row = elem("filerow" + id);
-	row.parentElement.removeChild(row);
     var name = elem("btnfilename-" + id).value;
+    row.parentElement.removeChild(row);
 	var data = "remove=true&file=true&type=" + files_type + "&fileid=" + id + "&files_action=" + files_action + "&owner_id=" + owner_id + "&author_id=" + author_id + "&filename=" + name;
 	var local_server = getXmlHttp();
 	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
@@ -104,7 +104,9 @@ $(document).ready(function() {
             fd.append("upload", true);
             fd.append("files_action", files_action);
             fd.append("owner_id", owner_id);
-            if (optional_data != null) fd.append("optional_data", JSON.stringify(optional_data));
+            if (optional_data != null) {
+                fd.append("optional_data", JSON.stringify(optional_data));
+            }
             var progress = document.createElement('li');
 	        progress.innerHTML = '<div id="filerow' + files_id_iterator + '" class="row">' +
 	            '<div class="' + ColAllTypes(9) + ' vcenter" style="padding: 0px;">' +
@@ -114,7 +116,7 @@ $(document).ready(function() {
 	            '</div>' +
 	            '<div class="' + ColAllTypes(3) + ' vcenter">' +
 	                '<button type="button" id="btnfile-' + files_id_iterator + '" onclick="removeUploadedFile(this);" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-remove" aria-hidden="true">' + files[i].name.substring(0, 15) + '</span></button>' +
-                    '<input type="hidden" id="btnfilename-' + files_id_iterator + '" value="' + encodeURIComponent(files[i].name) + '">' +
+                    '<input type="hidden" id="btnfilename-' + files_id_iterator + '" value="' + encodeURIComponent(files[i].name) + '" />' +
                 '</div>' +
 	        '</div>';
             progress.style.margin = "15px";

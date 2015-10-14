@@ -1016,6 +1016,12 @@
 						case 'eng': return 'Open profile';
 					}
 				}
+				case 'options': {
+					switch ($lang) {
+						case 'rus': return 'Опции';
+						case 'eng': return 'Options';
+					}
+				}
 				case 'our collective': {
 					switch ($lang) {
 						case 'rus': return 'Наш коллектив';
@@ -1035,6 +1041,12 @@
 					switch ($lang) {
 						case 'rus': return 'Пароль';
 						case 'eng': return 'Password';
+					}
+				}
+				case 'permissions': {
+					switch ($lang) {
+						case 'rus': return 'Разрешения';
+						case 'eng': return 'Permissions';
 					}
 				}
 				case 'photo was not uploaded': {
@@ -1304,6 +1316,18 @@
 					switch ($lang) {
 						case 'rus': return 'Текстовый блок успешно добавлен';
 						case 'eng': return 'Text block is successfully added';
+					}
+				}
+				case 'for employees': {
+					switch ($lang) {
+						case 'rus': return 'Для сотрудников';
+						case 'eng': return 'For employees';
+					}
+				}
+				case 'for registered': {
+					switch ($lang) {
+						case 'rus': return 'Для зарегистрированных';
+						case 'eng': return 'For registered';
 					}
 				}
 

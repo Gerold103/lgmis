@@ -46,11 +46,9 @@
 					case Article::$type: {
 						$need_authorization = false;
 						$offset = $_REQUEST['offset'];
-						//$res = Article::FetchBy(array(), array('order_by' => 'id DESC', 'limit' => $records_on_page, 'offset' => $offset));
 						$res = Article::FetchBy(['order_by' => 'id DESC', 'limit' => $records_on_page, 'offset' => $offset,
 												'select_list' => 'id, name, annotation, creating_date, author_id', 'is_assoc' => true,
 												'special' => array('author_link', 'full_vers_link', 'path_to_image')]);
-						//var_dump($res);
 						if (Error::IsError($res)) {
 							$ret = array('error_msg' => '');
 							$content = json_encode($ret);
@@ -62,6 +60,17 @@
 					default: break;
 				}
 				break;
+			}
+			case 'info': {
+				switch ($_REQUEST['type']) {
+					case MyFile::$type: {
+						$optional_data = json_decode($_REQUEST['optional_data']);
+						$dir = $optional_data->cur_directory;
+						//
+						break;
+					}
+					default: break;
+				}
 			}
 			default: break;
 		}
@@ -129,6 +138,57 @@
 				default: break;
 			}
 			delete_file($dir);
+		}
+	} else if (isset($_REQUEST['save'])) {
+		global $link_prefix;
+		$dir = '';
+		$author_id = GetUserID();
+		switch ($_REQUEST['type']) {
+			case MyFile::$type: {
+				global $link_to_files_manager_dir;
+				$optional_data = json_decode($_REQUEST['optional_data']);
+				$perms = MyFile::PermissionsFromString($optional_data->permissions);
+				$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'tmp_'.$author_id.'/';
+				$dir_it = new DirectoryIterator($dir);
+				$myfiles = array();
+				while ($dir_it->valid()) {
+					if (!$dir_it->isDot()) {
+						$myfile = MyFile::FetchFromAssoc(['owner_id' => $author_id, 'name' => $dir_it->getFilename(),
+							'path_to_file' => $optional_data->cur_directory, 'permissions' => $perms]);
+						array_push($myfiles, $myfile);
+					}
+					$dir_it->next();
+				}
+				$new_dir = '';
+				for ($i = 1, $size = count($optional_data->cur_directory); $i < $size; ++$i) {
+					$new_dir .= $optional_data->cur_directory[$i];
+				}
+				$new_dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'files/'.$new_dir;
+				//check existing names
+				$new_dir_it = new DirectoryIterator($new_dir);
+				$size = count($myfiles);
+				$is_error = false;
+				while ($new_dir_it->valid()) {
+					$name = $new_dir_it->getFilename();
+					for ($i = 0; $i < $size; ++$i) {
+						if ($name === $myfiles[$i]->GetName()) {
+							$is_error = true;
+							$content = ['error' => 'File with name '.$name.' already exists'];
+							break;
+						}
+					}
+					if ($is_error) break;
+					$new_dir_it->next();
+				}
+				if ($is_error) break;
+				simple_copy($dir, $new_dir);
+				clear_tmp_files_dir(MyFile::$type, 0);
+				var_dump($myfiles);
+				var_dump($new_dir);
+				exit();
+				break;
+			}
+			default: break;
 		}
 	}
 	include_once($link_to_utility_authorization);
