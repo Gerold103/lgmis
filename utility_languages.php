@@ -352,6 +352,12 @@
 						case 'eng': return 'Choose role';
 					}
 				}
+				case 'close': {
+					switch ($lang) {
+						case 'rus': return 'Закрыть';
+						case 'eng': return 'Close';
+					}
+				}
 				case 'comment': {
 					switch ($lang) {
 						case 'rus': return 'Комментарий';
@@ -380,6 +386,12 @@
 					switch ($lang) {
 						case 'rus': return 'Обожка не была загружена';
 						case 'eng': return 'Cover was not uploaded';
+					}
+				}
+				case 'create folder': {
+					switch ($lang) {
+						case 'rus': return 'Создать папку';
+						case 'eng': return 'Create directory';
 					}
 				}
 				case 'creating date': {
@@ -456,6 +468,12 @@
 					switch ($lang) {
 						case 'rus': return 'Направление проекта';
 						case 'eng': return 'Direction of project';
+					}
+				}
+				case 'download': {
+					switch ($lang) {
+						case 'rus': return 'Скачать';
+						case 'eng': return 'Download';
 					}
 				}
 				case 'download file': {

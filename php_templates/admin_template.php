@@ -20,6 +20,8 @@
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_styles.'"'; ?>>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_files_styles.'"'; ?> >
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
         <?php if (isset($head_addition)) echo $head_addition;  ?>
         <script type="text/javascript">
             $(function () {

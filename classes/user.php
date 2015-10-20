@@ -2,9 +2,7 @@
 
 	//------------------------------------------------U S E R------------------------------------------------
 	
-	class User implements IAdminHTML, IUserHTML, IAutoHTML, IDelEdit, ISQLOps {
-		//Describes logic of registered user. Implements methods for fetching users from DB, creating new users, 
-		//deleting old ones, containing information about every concrete user.
+	class User {
 		
 		//--------Attributes--------
 		
@@ -30,6 +28,16 @@
 
 		public function GetID() { return $this->id; }
 
+		public function GetName() { return $this->name; }
+
+		public function GetSurname() { return $this->surname; }
+
+		public function GetFathername() { return $this->fathername; }
+
+		public function GetLogin() { return $this->login; }
+
+		public function GetPassword() { return $this->password; }
+
 		public function GetCount()
 		{
 			global $db_connection;
@@ -44,6 +52,8 @@
 			User::$last_error = $db_connection->error;
 			return 0;
 		}
+
+		public function GetPositionNum() { return $this->position; }
 
 		public function GetPosition()
 		{
@@ -90,20 +100,6 @@
 			}
 		}
 
-		public function ToHTMLAutoShort($user_privileges)
-		{
-			switch ($user_privileges) {
-				case admin_user_id:
-					return $this->ToHTMLAdminShort();
-				case unauthorized_user_id:
-					return $this->ToHTMLUserPublicShort();
-				case simple_user_id:
-					return $this->ToHTMLUserPrivateShort();
-				default:
-					return html_undef;
-			}
-		}
-
 		public function ToHTMLAutoShortForTable($user_privileges)
 		{
 			switch ($user_privileges) {
@@ -117,31 +113,6 @@
 		}
 
 		public function ToHTMLAdminFull() { return html_undef; }
-		//html code of short representation of object in string
-		public function ToHTMLAdminShort()
-		{
-			global $positions;
-
-			$res = '';
-			$res .= '<div class="row">';
-			$res .=		'<div class="'.ColAllTypes(12).'">';
-			$res .= 		'<b>name</b>: '.Language::Translit(htmlspecialchars($this->name).', <b>surname</b>: '.htmlspecialchars($this->surname).', <b>fathername</b>: '.htmlspecialchars($this->fathername)).';<br>';
-			$res .= 		'<b>position</b>: '.htmlspecialchars($positions[$this->position]).'<br>';
-			$res .=		'</div>';
-			$res .= '</div>';
-			$res .= '<div class="row">';
-			$res .=		'<div class="'.ColOffsetAllTypes(3).' '.ColAllTypes(2).'" align="right">';
-			$res .= 		$this->ToHTMLDel();
-			$res .= 	'</div>';
-			$res .=		'<div class="'.ColAllTypes(2).'" align="center">';
-			$res .= 		$this->ToHTMLEdit();
-			$res .= 	'</div>';
-			$res .=		'<div class="'.ColAllTypes(2).'" align="left">';
-			$res .= 		$this->ToHTMLFullVers();
-			$res .=		'</div>';
-			$res .= '</div>';
-			return $res;
-		}
 
 		public function ToHTMLPrivateFull()
 		{
@@ -188,18 +159,6 @@
 					);
 				$res .= 		'<span style="margin: 3px;">'.ActionButton($args).'</span>';
 				$res .= 	'</div>';
-				// $res .= 	'<div class="'.ColAllTypes(5).'">';
-				// 	$args = array(
-				// 		'action_link' => $link_to_admin_bookkeeping,
-				// 		'action_type' => 'full',
-				// 		'obj_type' => Report::$type,
-				// 		'id' => $this->id,
-				// 		'btn_text' => Language::Word('bookkeeping'),
-				// 		'btn_size' => 'btn-lg',
-				// 		'method' => 'get',
-				// 	);
-				// $res .= 		'<span style="margin: 3px;">'.ActionButton($args).'</span>';
-				// $res .= 	'</div>';
 				$res .= '</div>';
 			}
 
@@ -223,23 +182,6 @@
 			require($link_to_pagination_show_template);
 			$res .= $pagination;
 
-			return $res;
-		}
-		
-		//html code of full representation of object in string within internal pages of lgmis
-		public function ToHTMLUserPrivateFull() { return html_undef; }
-
-		//html code of short representation of object in string within internal pages of lgmis
-		public function ToHTMLUserPrivateShort()
-		{
-			$res = '';
-			$res .= '<b>name</b>: '.htmlspecialchars($this->name).', <b>surname</b>: '.htmlspecialchars($this->surname).', <b>fathername</b>: '.htmlspecialchars($this->fathername).';<br>';
-			$res .= '<b>position</b>: '.htmlspecialchars($this->position).'<br>';
-			if (GetUserLogin() == $this->login) {
-				$res .= $this->ToHTMLDel();
-				$res .= $this->ToHTMLEdit();
-			}
-			$res .= $this->ToHTMLFullVers();
 			return $res;
 		}
 
@@ -355,10 +297,7 @@
 			return $res;
 		}
 		
-		//html code of full representation of object in string within public pages of lgmis
 		public function ToHTMLUserPublicFull() { return html_undef; }
-		//html code of short representation of object in string within public pages of lgmis
-		public function ToHTMLUserPublicShort() { return html_undef; }
 		
 		public function ToHTMLDel()
 		{
@@ -428,34 +367,107 @@
 		public static function FetchFromAssoc($assoc)
 		{
 			global $link_to_users_images;
-			if ((!ArrayElemIsValidStr($assoc, 'name')) || (!ArrayElemIsValidStr($assoc, 'surname')) || (!ArrayElemIsValidStr($assoc, 'fathername'))
-				|| (!ArrayElemIsValidStr($assoc, 'login')) || (!ArrayElemIsValidStr($assoc, 'password')) || (!ArrayElemIsValidStr($assoc, 'position'))
-				|| (!ArrayElemIsValidStr($assoc, 'email')) || (!ArrayElemIsValidStr($assoc, 'register_time'))
-				|| (!ArrayElemIsValidStr($assoc, 'last_visit_time')) || (!ArrayElemIsValidStr($assoc, 'birthday'))) {
-				return NULL;
-			}
-			$usr = new self();
-			if (isset($assoc['id']) && (strlen($assoc['id']))) $usr->id = $assoc['id'];
-			else $usr->id = id_undef;
-			$usr->name = $assoc['name'];
-			$usr->surname = $assoc['surname'];
-			$usr->fathername = $assoc['fathername'];
-			$usr->login = $assoc['login'];
-			$usr->password = $assoc['password'];
-			$usr->position = $assoc['position'];
-			$usr->email = $assoc['email'];
-			$usr->telephone = $assoc['telephone'];
+			$ob = new self();
+			if (ArrayElemIsValidStr($assoc, 'id')) $ob->id = $assoc['id'];
+			if (ArrayElemIsValidStr($assoc, 'name')) $ob->name = $assoc['name'];
+			if (ArrayElemIsValidStr($assoc, 'surname')) $ob->surname = $assoc['surname'];
+			if (ArrayElemIsValidStr($assoc, 'fathername')) $ob->fathername = $assoc['fathername'];
+			if (ArrayElemIsValidStr($assoc, 'login')) $ob->login = $assoc['login'];
+			if (ArrayElemIsValidStr($assoc, 'password')) $ob->password = $assoc['password'];
+			if (ArrayElemIsValidStr($assoc, 'position')) $ob->position = $assoc['position'];
+			if (ArrayElemIsValidStr($assoc, 'email')) $ob->email = $assoc['email'];
+			if (ArrayElemIsValidStr($assoc, 'telephone')) $ob->telephone = $assoc['telephone'];
 			try {
-				$usr->last_visit_time = strtotime($assoc['last_visit_time']);
-				$usr->register_time = strtotime($assoc['register_time']);
-				$usr->birthday = strtotime($assoc['birthday']);
+				if (ArrayElemIsValidStr($assoc, 'last_visit_time')) $ob->last_visit_time = strtotime($assoc['last_visit_time']);
+				if (ArrayElemIsValidStr($assoc, 'register_time')) $ob->register_time = strtotime($assoc['register_time']);
+				if (ArrayElemIsValidStr($assoc, 'birthday')) $ob->birthday = strtotime($assoc['birthday']);
 			} catch(Exception $e) {
-				$usr->last_visit_time = time_undef;
-				$usr->register_time = time_undef;
-				$usr->birthday = time_undef;
+				$ob->last_visit_time = time_undef;
+				$ob->register_time = time_undef;
+				$ob->birthday = time_undef;
 			}
-			$usr->path_to_photo = PathToImage($link_to_users_images.$usr->id, 'avatar', $link_to_users_images.'common/default_avatar.png');
-			return $usr;
+			if (ArrayElemIsValidStr($assoc, 'id')) $ob->path_to_photo = PathToImage($link_to_users_images.$ob->id, 'avatar', $link_to_users_images.'common/default_avatar.png');
+			return $ob;
+		}
+
+		public static function FetchBy($kwargs)
+		{
+			extract($kwargs, EXTR_PREFIX_ALL, 't');
+
+			$select_list 	= '*';
+			$eq_conds 		= array();
+			$order_by 		= '';
+			$limit 			= '';
+			$offset 		= '';
+			$where_addition = '';
+			$is_assoc 		= false;
+			$is_unique		= false;
+			$special 		= array();
+
+			if (isset($t_select_list)) 		$select_list = $t_select_list;
+			if (isset($t_eq_conds)) 		$eq_conds = $t_eq_conds;
+			if (isset($t_order_by)) 		$order_by = $t_order_by;
+			if (isset($t_limit)) 			$limit = $t_limit;
+			if (isset($t_offset)) 			$offset = $t_offset;
+			if (isset($t_where_addition)) 	$where_addition = $t_where_addition;
+			if (isset($t_is_assoc)) 		$is_assoc = $t_is_assoc;
+			if (isset($t_is_unique))		$is_unique = $t_is_unique;
+			if (isset($t_special))			$special = $t_special;
+
+			global $db_connection;
+
+			$where_clause = '';
+			$i = 0;
+			$size = count($eq_conds);
+			$need_where_word = ($size !== 0) || StringNotEmpty($where_addition);
+			foreach ($eq_conds as $key => $value) {
+				$value_tmp = $db_connection->real_escape_string($value);
+				if (is_string($value_tmp)) $value_tmp = '"'.$value_tmp.'"';
+				$where_clause .= ' ('.$key.' = '.$value_tmp.') ';
+				if ($i < $size - 1) $where_clause .= 'OR';
+				++$i;
+			}
+			if ($need_where_word) {
+				if (StringNotEmpty($where_clause) && StringNotEmpty($where_addition)) {
+					$where_clause = '('.$where_clause.') AND ';
+					$where_addition = '('.$where_addition.')';
+				}
+				$where_clause = "WHERE ".$where_clause.' '.$where_addition;
+			}
+
+			if (StringNotEmpty($order_by)) {
+				$where_clause .= ' ORDER BY '.$order_by;
+			}
+
+			if (StringNotEmpty($limit))
+				$where_clause .= ' LIMIT '.$limit;
+			if (StringNotEmpty($offset)) {
+				$where_clause .= ' OFFSET '.$offset;
+			}
+
+			if (!StringNotEmpty($lang)) $lang = GetLanguage();
+
+			$from_table = self::$table;
+			$res = $db_connection->query("SELECT ".$select_list." FROM ".$from_table." ".$where_clause);
+			if (!$res) {
+				return new Error($db_connection->error, Error::db_error);
+			}
+			$res = self::ArrayFromDBResult($res, $is_assoc);
+			$res_count = count($res);
+
+			if ($is_unique) {
+				if ($res_count > 1) return Error::ambiguously;
+				if ($res_count === 0) return Error::not_found;
+			}
+
+			for ($i = 0, $count = count($special); $i < $count; ++$i) {
+				switch ($special[$i]) {
+					default: break;
+				}
+			}
+
+			if (!$is_unique) return $res;
+			else return $res[0];
 		}
 
 		public static function FetchFromPost()
@@ -463,11 +475,14 @@
 			return User::FetchFromAssoc($_POST);
 		}
 
-		private static function ArrayFromDBResult($result)
+		public static function ArrayFromDBResult($result, $is_assoc = false)
 		{
 			$res = array();
 			while ($row = $result->fetch_assoc()) {
-				array_push($res, self::FetchFromAssoc($row));
+				if ($is_assoc) {
+					array_push($res, $row);
+				}
+				else array_push($res, self::FetchFromAssoc($row));
 			}
 			return $res;
 		}

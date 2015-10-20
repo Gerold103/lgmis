@@ -14,10 +14,12 @@
 
 	$content .= '<div style="display: table; width: 100%; height: 80%;">';
 	$content .= 	'<div class="row" style="height: 100%; display: table-row;">';
-	$content .= 		'<div class="'.ColAllTypes(8).'" style="border: 3px solid #dadada; display: table-cell; float: none;">';
+	$content .= 		'<div class="'.ColAllTypes(8).' modal-open" style="border: 3px solid #dadada; display: table-cell; float: none;">';
 	$content .= 			'<ol class="breadcrumb" id="current_manager_path" align="left">';
-	$content .=					'<li><a href="#" onclick="goToDir(this);">Home</a></li>';
+	$content .=					'<li><a href="#" onclick="goUpDir(0);">Home</a></li>';
 	$content .=				'</ol>';
+	$content .= 			'<div class="row" id="files_place"></div>';
+	$content .= 			'<div id="file_backdrop_area" align="center"></div>';
 	$content .= 		'</div>';
 	$content .= 		'<div id="files_area" class="'.ColAllTypes(4).'" style="border: 3px dashed #dadada; display: table-cell; float: none;">';
 	$content .= 			'<input type="file" onchange="send_files(this.files);" id="one_file_upload" style="display: none;">';
@@ -33,10 +35,46 @@
 	$content .= '</div>';
 	$content .= '<div class="row">';
 	$content .= 	'<div class="'.ColAllTypes(9).'" align="center">';
-	$content .=			'<button class="btn btn-default btn-lg">test</button>';
+	$content .=			'<button class="btn btn-info btn-lg" onclick="create_folder();">+<span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>   '.Language::Word('create folder').'</button>';
 	$content .= 	'</div>';
 	$content .= 	'<div class="'.ColAllTypes(3).'" align="center">';
 	$content .= 		'<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">'.Language::Word("send").'</button>';
+	
+	$content .= 		'<div class="modal fade" id="folder_create" tabindex="-1" role="dialod">';
+	$content .= 			'<div class="modal-dialog" role="document">';
+	$content .=					'<div class="modal-content">';
+	$content .=						'<div class="modal-header">';
+	$content .= 						'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	$content .= 						'<h4 class="modal-title" id="myModalLabel">'.Language::Word('actions').'</h4>';
+	$content .= 					'</div>';
+	$content .=						'<div class="modal-body">';
+	$content .= 						PairLabelAndInput(3, 9, Language::Word('name'), 'folder_name');
+	$content .= 						PairLabelAndRadio(3, 9, Language::Word('permissions'), 'folder_permissions', [['name' => 'for_employees', 'val' => Language::Word('for employees')], ['name' => 'for_registered', 'val' => Language::Word('for registered')]]);
+	$content .= 					'</div>';
+	$content .= 					'<div class="modal-footer">';
+	$content .= 						'<button type="button" class="btn btn-default" data-dismiss="modal">'.Language::Word('close').'</button>';
+	$content .= 						'<button type="button" class="btn btn-primary" onclick="do_create_folder();">'.Language::Word('create folder').'</button>';
+	$content .= 					'</div>';
+	$content .=					'</div>';
+	$content .=				'</div>';
+	$content .= 		'</div>';
+
+	$content .= 		'<div class="modal fade" id="file_actions" tabindex="-1" role="dialod">';
+	$content .= 			'<div class="modal-dialog" role="document">';
+	$content .=					'<div class="modal-content">';
+	$content .=						'<div class="modal-header">';
+	$content .= 						'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	$content .= 						'<h4 class="modal-title" id="myModalLabel">'.Language::Word('actions').'</h4><h5 name="file_name"></h5>';
+	$content .= 					'</div>';
+	$content .=						'<div class="modal-body">';
+	$content .= 					'</div>';
+	$content .= 					'<div class="modal-footer">';
+	$content .= 						'<button type="button" class="btn btn-default" data-dismiss="modal">'.Language::Word('close').'</button>';
+	$content .= 					'</div>';
+	$content .=					'</div>';
+	$content .=				'</div>';
+	$content .= 		'</div>';
+
 	$content .= 		'<div class="modal fade" id="myModal" tabindex="-1" role="dialog">';
 	$content .= 			'<div class="modal-dialog" role="document">';
 	$content .= 				'<div class="modal-content">';

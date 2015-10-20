@@ -50,7 +50,7 @@
 												'select_list' => 'id, name, annotation, creating_date, author_id', 'is_assoc' => true,
 												'special' => array('author_link', 'full_vers_link', 'path_to_image')]);
 						if (Error::IsError($res)) {
-							$ret = array('error_msg' => '');
+							$ret = array('error_msg' => Error::ToString($res));
 							$content = json_encode($ret);
 							break;
 						}
@@ -66,7 +66,22 @@
 					case MyFile::$type: {
 						$optional_data = json_decode($_REQUEST['optional_data']);
 						$dir = $optional_data->cur_directory;
-						//
+						$dirstr = '';
+						for ($i = 0, $size = count($dir); $i < $size; ++$i) $dirstr .= $dir[$i].'/';
+						$my_rights = MyFile::perm_to_all_registered;
+						$author_id = GetUserID();
+						$iam = User::FetchBy(['select_list' => 'position', 'eq_conds' => array('id' => $author_id), 'is_unique' => true]);
+						if (Error::IsError($iam)) {
+							$content = json_encode(['error' => Error::ToString($obs)]);
+							break;
+						}
+						if ($iam->GetPositionNum() != NotEmployeeNum) $my_rights = MyFile::perm_to_only_empls;
+						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
+						if (Error::IsError($obs)) {
+							$content = json_encode(["error" => Error::ToString($obs)]);
+							break;
+						}
+						$content = json_encode($obs);
 						break;
 					}
 					default: break;
@@ -148,22 +163,46 @@
 				global $link_to_files_manager_dir;
 				$optional_data = json_decode($_REQUEST['optional_data']);
 				$perms = MyFile::PermissionsFromString($optional_data->permissions);
-				$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'tmp_'.$author_id.'/';
+				$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix;
+				if ($_REQUEST['save'] === 'folder') {
+					$cur_directory = '';
+					foreach ($optional_data->cur_directory as $key => $value) {
+						$cur_directory .= $value.'/';
+					}
+					$name = urlencode($optional_data->folder_name);
+					$dir .= $cur_directory.$name;
+					$rc = @mkdir($dir);
+					if ($rc === false) {
+						$content = json_encode(['error' => 'Directory can\'t be created']);
+						break;
+					}
+					$rc = MyFile::InsertToDB(MyFile::FetchFromAssoc(['owner_id' => $author_id, 'name' => $name,
+						'path_to_file' => $optional_data->cur_directory, 'permissions' => $perms, 'is_directory' => true]));
+					if (Error::IsError($rc)) {
+						$content = json_encode(['error' => Error::ToString($rc)]);
+						break;
+					}
+					$content = json_encode(['ok' => true]);
+					break;
+				}
+
+				$perms = MyFile::PermissionsFromString($optional_data->permissions);
+				$dir .= $link_to_files_manager_dir.'tmp_'.$author_id.'/';
 				$dir_it = new DirectoryIterator($dir);
 				$myfiles = array();
 				while ($dir_it->valid()) {
 					if (!$dir_it->isDot()) {
 						$myfile = MyFile::FetchFromAssoc(['owner_id' => $author_id, 'name' => $dir_it->getFilename(),
-							'path_to_file' => $optional_data->cur_directory, 'permissions' => $perms]);
+							'path_to_file' => $optional_data->cur_directory, 'permissions' => $perms, 'is_directory' => false]);
 						array_push($myfiles, $myfile);
 					}
 					$dir_it->next();
 				}
 				$new_dir = '';
-				for ($i = 1, $size = count($optional_data->cur_directory); $i < $size; ++$i) {
-					$new_dir .= $optional_data->cur_directory[$i];
+				for ($i = 0, $size = count($optional_data->cur_directory); $i < $size; ++$i) {
+					$new_dir .= $optional_data->cur_directory[$i].'/';
 				}
-				$new_dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'files/'.$new_dir;
+				$new_dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$new_dir;
 				//check existing names
 				$new_dir_it = new DirectoryIterator($new_dir);
 				$size = count($myfiles);
@@ -173,7 +212,7 @@
 					for ($i = 0; $i < $size; ++$i) {
 						if ($name === $myfiles[$i]->GetName()) {
 							$is_error = true;
-							$content = ['error' => 'File with name '.$name.' already exists'];
+							$content = json_encode(['error' => 'File with name '.$name.' already exists']);
 							break;
 						}
 					}
@@ -181,11 +220,17 @@
 					$new_dir_it->next();
 				}
 				if ($is_error) break;
+				for ($i = 0; $i < $size; ++$i) {
+					if ($rc = Error::IsError(MyFile::InsertToDB($myfiles[$i]))) {
+						$content = json_encode(['error' => Error::ToString($rc)]);
+						$is_error = true;
+						break;
+					}
+				}
+				if ($is_error) break;
 				simple_copy($dir, $new_dir);
 				clear_tmp_files_dir(MyFile::$type, 0);
-				var_dump($myfiles);
-				var_dump($new_dir);
-				exit();
+				$content = json_encode(['ok' => true]);
 				break;
 			}
 			default: break;

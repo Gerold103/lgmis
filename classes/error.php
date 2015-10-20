@@ -18,7 +18,9 @@
 		}
 
 		public static function ToString($err) {
-			if (is_a($err, 'Error')) $err = $err->id;
+			if (is_a($err, 'Error')) {
+				return $err->mesg;
+			}
 			switch ($err) {
 				case self::no_translation: return Language::Word('no translation');
 				case self::db_error: return Language::Word('internal database error');

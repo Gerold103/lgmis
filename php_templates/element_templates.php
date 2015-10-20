@@ -314,6 +314,28 @@
 		return $res;
 	}
 
+	function PairLabelAndRadio($labes_width, $radio_width, $label, $opts_name, $options) //options: [[name => '', val => ''], ...]
+	{
+		$res = '';
+		$res .= '<div class="row">';
+		$res .=		'<div class="'.ColAllTypes($labes_width).' vcenter" align="right">';
+		$res .= 		'<b>'.$label.'</b>';
+		$res .= 	'</div>';
+		$res .= 	'<div class="'.ColAllTypes($radio_width).' vcenter" align="center">';
+		$res .= 		'<div class="btn-group" data-toggle="buttons" name="'.$opts_name.'">';
+		for ($i = 0, $size = count($options); $i < $size; ++$i) {
+			$class = 'btn btn-primary';
+			if ($i === 0) $class .= ' active';
+			$res .= 		'<label class="'.$class.'">';
+			$res .= 			'<input type="radio" name="'.$options[$i]['name'].'" autocomplete="off" checked>'.$options[$i]['val'];
+			$res .= 		'</label>';
+		}
+		$res .= 		'</div>';
+		$res .= 	'</div>';
+		$res .= '</div>';
+		return $res;
+	}
+
 	function PairLabelAndPassword($labes_width, $input_width, $label, $input_name, $placeholder = '', $input_value = '')
 	{
 		$res = '';

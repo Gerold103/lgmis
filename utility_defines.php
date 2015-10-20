@@ -404,6 +404,9 @@
 
 	$image_extensions = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg');
 
+	$valid_extensions = ['zip', 'rar', 'doc', 'xls', 'ppt', 'xlsx', 'pptx', 'docx', 'pdf', 'txt', 'mp3', 'wma', 'm4a', 'flac',
+		'mp4', 'wmv', 'mov', 'avi', 'mkv', 'bmp', 'jpg', 'jpeg', 'gif', 'png'];
+
 	function CheckLanguage($lang) {
 		global $languages;
 		if (isset($languages[$lang])) return true;

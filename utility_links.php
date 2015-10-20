@@ -7,6 +7,7 @@ $link_to_admin = 'admin.php';
 $link_to_admin_requests_on_register = 'admin_requests_on_register.php';
 
 $link_to_styles = 'css/styles.css';
+$link_to_files_styles = 'css/files.css';
 $link_to_bootstrap_styles = 'css/bootstrap.min.css';
 $link_to_animations_styles = 'css/animations.css';
 $link_to_js = 'js/';
