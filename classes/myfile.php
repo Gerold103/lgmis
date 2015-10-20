@@ -25,6 +25,12 @@
 		public function GetCreatingDate() 	{ return $this->creating_date; }
 		public function GetPermissions() 	{ return $this->permissions; }
 		public function IsDir()				{ return $this->is_directory; }
+
+		public function GetLinkToDelete()	{ 
+			$res = '<a class="btn btn-danger" href="#" onclick="deleteFile('.$this->id.');">'.Language::ActionTypeToText('del').'</a>';
+			return $res;
+		}
+
 		public function GetLinkToFile()		{
 			global $link_to_utility_download;
 			global $link_to_logo;
@@ -231,6 +237,16 @@
 								$tmp = self::FetchFromAssoc(['path_to_file' => $res[$j]['path_to_file'], 'name' => $res[$j]['name'],
 									'is_directory' => $res[$j]['is_directory']]);
 								$res[$j]['link_to_download'] = $tmp->GetLinkToFile();
+							}
+						}
+						break;
+					}
+					case 'link_to_delete': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['id'])) {
+								$tmp = self::FetchFromAssoc(['id' => $res[$j]['id']]);
+								$res[$j]['link_to_delete'] = $tmp->GetLinkToDelete();
 							}
 						}
 						break;

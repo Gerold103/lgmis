@@ -76,7 +76,7 @@
 							break;
 						}
 						if ($iam->GetPositionNum() != NotEmployeeNum) $my_rights = MyFile::perm_to_only_empls;
-						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
+						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download', 'link_to_delete'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
 						if (Error::IsError($obs)) {
 							$content = json_encode(["error" => Error::ToString($obs)]);
 							break;

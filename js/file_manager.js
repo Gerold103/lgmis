@@ -101,6 +101,10 @@ function saveFiles() {
     local_server.send(fd);
 }
 
+function deleteFile(file_id) {
+	console.log(file_id);
+}
+
 var click_timer;
 var click_status = 1;
 
@@ -157,9 +161,13 @@ function show_actions_for(id) {
 			var actions = document.createElement('div');
 			actions.className = "row";
 			var col1 = document.createElement('div');
-			col1.className = ColAllTypes(12);
+			col1.className = ColAllTypes(6);
 			col1.innerHTML = file.link_to_download;
+			var col2 = document.createElement('div');
+			col2.className = ColAllTypes(6);
+			col2.innerHTML = file.link_to_delete;
 			actions.appendChild(col1);
+			actions.appendChild(col2);
 			body.appendChild(actions);
 			$('#file_actions').modal('show');
 		}
