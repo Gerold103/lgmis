@@ -21,6 +21,21 @@
 		-moz-animation: cssload-spin 575ms infinite linear;
 }
 
+.cssload-speeding-wheel-white {
+	width: 35px;
+	height: 35px;
+	margin: 0 auto;
+	border: 2px solid white;
+	border-radius: 50%;
+	border-left-color: transparent;
+	border-right-color: transparent;
+	animation: cssload-spin 575ms infinite linear;
+		-o-animation: cssload-spin 575ms infinite linear;
+		-ms-animation: cssload-spin 575ms infinite linear;
+		-webkit-animation: cssload-spin 575ms infinite linear;
+		-moz-animation: cssload-spin 575ms infinite linear;
+}
+
 
 
 @keyframes cssload-spin {

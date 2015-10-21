@@ -1,6 +1,7 @@
 var link_prefix = '/';
 var link_to_utility_language_change = 'utility_language_change.php';
 var link_to_admin_ajax_interceptor = 'admin_ajax_interceptor.php';
+var link_to_files_manager_dir = 'files/file_manager/files/';
 
 var window_bottom_called = false;
 

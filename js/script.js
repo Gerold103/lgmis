@@ -3,6 +3,37 @@ var server = null;
 var window_bottom_callbacks = [
 ]
 
+function findChildWithClass(parent, className) {
+	for (var i = 0; i < parent.childNodes.length; ++i) {
+		try {
+			if (parent.childNodes[i].className == className) return parent.childNodes[i];
+		} catch(err) { return null; }
+	}
+	for (var i = 0; i < parent.childNodes.length; ++i) {
+		var res = findChildWithClass(parent.childNodes[i], className);
+		if (res != null) return res;
+	}
+	return null;
+}
+
+function findChildWithName(parent, name) {
+	for (var i = 0; i < parent.childNodes.length; ++i) {
+		try {
+			if (parent.childNodes[i].getAttribute('name') == name) return parent.childNodes[i];
+		}
+		catch(err) { return null; }
+	}
+	for (var i = 0; i < parent.childNodes.length; ++i) {
+		var res = findChildWithName(parent.childNodes[i], name);
+		if (res != null) return res;
+	}
+	return null;
+}
+
+function customDecodeURIComponent(str) {
+	return decodeURIComponent((str+'').replace(/\+/g, '%20'))
+}
+
 function changeLanguage(lang) {
 	var data = 'lang=' + lang;
 	server = getXmlHttp();
@@ -126,12 +157,22 @@ function showGlobalSearch(glob_input) {
 }
 
 $(window).load(function(){
-    $(window).scroll(function() {   
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    $(window).scroll(function() {  
+    	console.log($(window).scrollTop(), ' ', $(window).height(), ' ', $(document).height());
+        if($(window).scrollTop() + $(window).height() >= $(document).height() - 20) {
             for (var i = 0; i < window_bottom_callbacks.length; ++i) {
             	window_bottom_callbacks[i]();
             }
             window_bottom_called = true;
         }
+    });
+    $(window).bind('touchmove', function(e) {
+    	e.preventDefault();
+		console.log($(window).scrollTop(), ' ', $(window).height(), ' ', $(document).height());
+		// if($(window).scrollTop() + $(window).height() == $(document).height()) {
+  //       for (var i = 0; i < window_bottom_callbacks.length; ++i) {
+  //       	window_bottom_callbacks[i]();
+  //       }
+  //       window_bottom_called = true;
     });
 });

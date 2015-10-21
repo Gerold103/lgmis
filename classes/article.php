@@ -431,11 +431,19 @@
 			$size = count($eq_conds);
 			$need_where_word = ($size !== 0) || StringNotEmpty($where_addition);
 			foreach ($eq_conds as $key => $value) {
-				$where_clause .= ' ('.$key.' = '.$value.') ';
+				$value_tmp = $db_connection->real_escape_string($value);
+				if (is_string($value_tmp)) $value_tmp = '"'.$value_tmp.'"';
+				$where_clause .= ' ('.$key.' = '.$value_tmp.') ';
 				if ($i < $size - 1) $where_clause .= 'OR';
 				++$i;
 			}
-			if ($need_where_word) $where_clause = "WHERE ".$where_clause.' '.$where_addition;
+			if ($need_where_word) {
+				if (StringNotEmpty($where_clause) && StringNotEmpty($where_addition)) {
+					$where_clause = '('.$where_clause.') AND ';
+					$where_addition = '('.$where_addition.')';
+				}
+				$where_clause = "WHERE ".$where_clause.' '.$where_addition;
+			}
 
 			if (StringNotEmpty($order_by)) {
 				$where_clause .= ' ORDER BY '.$order_by;

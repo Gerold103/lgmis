@@ -13,6 +13,7 @@
 	} else {
 		$header .= Language::Word('our content');
 	}
+	$user = User::FetchBy(['select_list' => 'position', 'eq_conds' => ['id' => GetUserID()], 'is_unique' => true]);
 	
 	$content = '';
 	$size = 0;
@@ -28,7 +29,8 @@
 		if ($_GET['content_type'] == $content_types_short['articles']) {
 			$articles = Article::FetchAll();
 			$size = count($articles);
-			$content .= MenuButton(Language::Word('add article'), $link_to_admin_article, 'btn-primary', 'add', 'get');
+			if ($user->GetPositionNum() != NotEmployeeNum)
+				$content .= MenuButton(Language::Word('add article'), $link_to_admin_article, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -63,7 +65,8 @@
 		else if ($_GET['content_type'] == $content_types_short['directions']) {
 			$directions = Direction::FetchAll();
 			$size = count($directions);
-			$content .= MenuButton(Language::Word('add direction'), $link_to_admin_direction, 'btn-primary', 'add', 'get');
+			if ($user->GetPositionNum() != NotEmployeeNum)
+				$content .= MenuButton(Language::Word('add direction'), $link_to_admin_direction, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -98,7 +101,8 @@
 		else if ($_GET['content_type'] == $content_types_short['projects']) {
 			$projects = Project::FetchAll();
 			$size = count($projects);
-			$content .= MenuButton(Language::Word('add project'), $link_to_admin_project, 'btn-primary', 'add', 'get');
+			if ($user->GetPositionNum() != NotEmployeeNum)
+				$content .= MenuButton(Language::Word('add project'), $link_to_admin_project, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 
@@ -132,7 +136,8 @@
 		} else if ($_GET['content_type'] === $content_types_short['about_us']) {
 			$parts = TextPart::FetchByRole('about_us');
 			$size = count($parts);
-			$content .= MenuButton(Language::Word('add text block'), $link_to_admin_text_part, 'btn-primary', 'add', 'get');
+			if ($user->GetPositionNum() != NotEmployeeNum)
+				$content .= MenuButton(Language::Word('add text block'), $link_to_admin_text_part, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
 

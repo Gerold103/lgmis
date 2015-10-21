@@ -20,12 +20,19 @@
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_styles.'"'; ?>>
-        <?php if (isset($head_addition)) echo $head_addition;  ?>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_files_styles.'"'; ?> >
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
         <script type="text/javascript">
-            $(function () {
-              $('[data-toggle="popover"]').popover()
-            })
+            $(document).ready(function() {
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                });
+                $(function () {
+                    $('[data-toggle="popover"]').popover()
+                });
+            });
         </script>
+        <?php if (isset($head_addition)) echo $head_addition;  ?>
     </head>
 
     <body>
@@ -44,11 +51,11 @@
             echo    '</div>';
             echo '</div>';
 			
-            echo '<div class="row">';
+            echo '<div class="row" style="height: 100%;">';
             if ($no_content_center) {
-                echo '<div class="'.ColAllTypes(12).'">';   
+                echo '<div class="'.ColAllTypes(12).' style="height: 100%;>';   
             } else { 
-                echo '<div class="'.ColAllTypes(12).'" align="center">';
+                echo '<div class="'.ColAllTypes(12).'" align="center" style="height: 100%;">';
             }
 			echo $content;
             echo    '</div>';

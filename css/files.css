@@ -1,0 +1,247 @@
+@charset "utf-8";
+/*! fileicon.css v1.0.0 | MIT License | github.com/picturepan2/fileicon.css */
+/* fileicon.basic */
+.file-icon {
+    font-family: Arial, Tahoma, sans-serif;
+    font-weight: 300;
+    display: block;
+    width: 24px;
+    height: 32px;
+    background: #018FEF;
+    position: relative;
+    border-radius: 2px;
+    text-align: left;
+    -webkit-font-smoothing: antialiased;
+}
+.file-icon::before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-bottom-left-radius: 2px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #FFF #FFF rgba(255,255,255,.35) rgba(255,255,255,.35);
+}
+.file-icon::after {
+    display: block;
+    content: attr(file-type);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    font-size: 10px;
+    color: #fff;
+    text-transform: lowercase;
+    width: 100%;
+    padding: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+/* fileicons */
+.file-icon-xs {
+    width: 12px;
+    height: 16px;
+    border-radius: 2px;
+}
+.file-icon-xs::before {
+    border-bottom-left-radius: 1px;
+    border-width: 3px;
+}
+.file-icon-xs::after {
+    content: "";
+    border-bottom: 2px solid rgba(255,255,255,.45);
+    width: auto;
+    left: 2px;
+    right: 2px;
+    bottom: 3px;
+}
+.file-icon-sm {
+    width: 18px;
+    height: 24px;
+    border-radius: 2px;
+}
+.file-icon-sm::before {
+    border-bottom-left-radius: 2px;
+    border-width: 4px;
+}
+.file-icon-sm::after {
+    font-size: 7px;
+    padding: 2px;
+}
+
+.file-icon-lg {
+    width: 72px;
+    height: 96px;
+    border-radius: 4px;
+}
+.file-icon-lg::before {
+    border-bottom-left-radius: 3px;
+    border-width: 12px;
+}
+.file-icon-lg::after {
+    font-size: 24px;
+    padding: 4px 8px;
+}
+
+.file-icon-xl {
+    width: 96px;
+    height: 128px;
+    border-radius: 4px;
+}
+.file-icon-xl::before {
+    border-bottom-left-radius: 4px;
+    border-width: 16px;
+}
+.file-icon-xl::after {
+    font-size: 24px;
+    padding: 4px 10px;
+}
+/* fileicon.types */
+.file-icon[file-type=zip],
+.file-icon[file-type=rar] {
+    background: #ACACAC;
+}
+.file-icon[file-type=zip]:hover,
+.file-icon[file-type=rar]:hover {
+    background: #949494;
+}
+
+.file-icon[file-type=doc],
+.file-icon[file-type=docx] {
+    background: #307CF1;
+}
+.file-icon[file-type=doc]:hover,
+.file-icon[file-type=docx]:hover {
+    background: #2563c2;
+}
+
+.file-icon[file-type=xls],
+.file-icon[file-type=xlsx] {
+    background: #0F9D58;
+}
+.file-icon[file-type=xls]:hover,
+.file-icon[file-type=xlsx]:hover {
+    background: #0c7743;
+}
+
+.file-icon[file-type=ppt],
+.file-icon[file-type=pptx] {
+    background: #D24726;
+}
+.file-icon[file-type=ppt]:hover,
+.file-icon[file-type=pptx]:hover {
+    background: #a2371d;
+}
+
+.file-icon[file-type=pdf] {
+    background: #E13D34;
+}
+.file-icon[file-type=pdf]:hover {
+    background: #b9322b;
+}
+
+.file-icon[file-type=txt] {
+    background: #5EB533;
+}
+.file-icon[file-type=txt]:hover {
+    background: #468726;
+}
+
+.file-icon[file-type=mp3],
+.file-icon[file-type=wma],
+.file-icon[file-type=m4a],
+.file-icon[file-type=flac] {
+    background: #8E44AD;
+}
+.file-icon[file-type=mp3]:hover,
+.file-icon[file-type=wma]:hover,
+.file-icon[file-type=m4a]:hover,
+.file-icon[file-type=flac]:hover {
+    background: #6b3382;
+}
+
+.file-icon[file-type=mp4],
+.file-icon[file-type=wmv],
+.file-icon[file-type=mov],
+.file-icon[file-type=avi],
+.file-icon[file-type=mkv] {
+    background: #7A3CE7;
+}
+.file-icon[file-type=mp4]:hover,
+.file-icon[file-type=wmv]:hover,
+.file-icon[file-type=mov]:hover,
+.file-icon[file-type=avi]:hover,
+.file-icon[file-type=mkv]:hover {
+    background: #6430be;
+}
+
+.file-icon[file-type=bmp],
+.file-icon[file-type=jpg],
+.file-icon[file-type=jpeg],
+.file-icon[file-type=gif],
+.file-icon[file-type=png] {
+    background: #F4B400;
+}
+.file-icon[file-type=bmp]:hover,
+.file-icon[file-type=jpg]:hover,
+.file-icon[file-type=jpeg]:hover,
+.file-icon[file-type=gif]:hover,
+.file-icon[file-type=png]:hover {
+    background: #c39000;
+}
+
+.file-icon[file-type=file] {
+    background: #67ccf6;
+}
+
+.file-icon[file-type=file]:hover {
+    background: #59aed1;
+}
+
+.file-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  background-color: #000;
+}
+.file-backdrop.in {
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
+
+.folder {
+    width: 100px;
+    height: 70px;
+    margin: 0 auto;
+    margin-top: 33px;
+    position: relative;
+    background-color: #708090;
+    border-radius: 0 4px 4px 4px;
+    padding: 7px;
+    color: white;
+    font-size: 24px;
+}
+
+.folder:before {
+    content: '';
+    width: 50%;
+    height: 12px;
+    border-radius: 0 20px 0 0;
+    background-color: #708090;
+    position: absolute;
+    top: -12px;
+    left: 0px;
+}
+
+.folder_container:hover .folder {
+    background-color: #596572;
+}
+.folder_container:hover .folder:before {
+    background-color: #596572;
+}
