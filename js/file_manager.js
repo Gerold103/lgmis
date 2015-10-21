@@ -34,6 +34,22 @@ function refresh_manager(local_server) {
 	} else {
 		if (local_server.readyState == 4) {
 			console.log(local_server.responseText);
+			var answer;
+			try {
+				answer = JSON.parse(local_server.responseText);
+				console.log(answer);
+			} catch(err) {
+				alert("Error while parsnig answer from server");
+				turnOffLoader();
+				return;
+			}
+			if (answer.hasOwnProperty('error')) {
+				alert("Error occured: " + answer.error);
+				turnOffLoader();
+				return;
+			}
+			deleteChilds(elem("progress_bars"));
+			getListOfFiles();
 		}
 	}
 }
@@ -43,6 +59,7 @@ function create_folder() {
 }
 
 function do_create_folder() {
+	$("#folder_create").modal('hide');
 	var folder = elem("folder_create");
 	var tmp = findChildWithClass(folder, "modal-body");
 	if (tmp == null) {
@@ -79,6 +96,7 @@ function do_create_folder() {
 }
 
 function saveFiles() {
+	$("#myModal").modal('hide');
 	if (files_uploaded < 1) { alert("No files to uploading"); return; }
 	var perms = elem("options_permissions");
 	var opt_perm = null;
@@ -102,6 +120,7 @@ function saveFiles() {
 }
 
 function deleteFile(file_id) {
+	$("#file_actions").modal('hide');
 	console.log(file_id);
 	var local_server = getXmlHttp();
 	var fd = new FormData();
@@ -195,6 +214,10 @@ function createFileElement(id) {
 	second.style.display = "table-row";
 	second.style.textAlign = "center";
 	second.innerHTML = customDecodeURIComponent(file.name).substring(0, 20);
+	if (customDecodeURIComponent(file.name).length != second.innerHTML.length) second.innerHTML += '...';
+	second.setAttribute('data-toggle', 'tooltip');
+	second.setAttribute('data-placement', 'bottom');
+	second.setAttribute('title', customDecodeURIComponent(file.name));
 	var icon_container = document.createElement('div');
 	var icon = document.createElement('div');
 	if (file.is_directory != 0) {
@@ -205,7 +228,7 @@ function createFileElement(id) {
 		icon_container.setAttribute('ondblclick', 'goDownDir(\'' + file.name + '\');');
 	} else {
 		icon.className = "file-icon file-icon-lg";
-		icon.setAttribute('data-type', file.file_type);
+		icon.setAttribute('file-type', file.file_type);
 	}
 	icon_container.appendChild(icon);
 	icon_container.setAttribute('onclick', "show_actions_for(" + id + ");");
@@ -254,6 +277,9 @@ function showListOfFiles(local_server) {
 			li.appendChild(a);
 			current_manager_path.appendChild(li);
 		}
+		$(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
 	}
 }
 

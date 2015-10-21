@@ -26,8 +26,15 @@
 		public function GetPermissions() 	{ return $this->permissions; }
 		public function IsDir()				{ return $this->is_directory; }
 
-		public function GetLinkToDelete()	{ 
-			$res = '<a class="btn btn-danger" href="#" onclick="deleteFile('.$this->id.');">'.Language::ActionTypeToText('del').'</a>';
+		public function GetLinkToDelete()	{
+			$user_id = GetUserID();
+			$class = 'btn btn-danger';
+			$click = 'deleteFile('.$this->id.');';
+			if (($user_id != $this->owner_id) && (GetUserPrivileges() != admin_user_id)) {
+				$class .= ' disabled';
+				$click = '';
+			}
+			$res = '<a class="'.$class.'" href="#" onclick="'.$click.'">'.Language::ActionTypeToText('del').'</a>';
 			return $res;
 		}
 
@@ -244,8 +251,8 @@
 					case 'link_to_delete': {
 						if ($is_assoc === false) break;
 						for ($j = 0; $j < $res_count; ++$j) {
-							if (isset($res[$j]['id'])) {
-								$tmp = self::FetchFromAssoc(['id' => $res[$j]['id']]);
+							if (isset($res[$j]['id']) && isset($res[$j]['owner_id'])) {
+								$tmp = self::FetchFromAssoc(['id' => $res[$j]['id'], 'owner_id' => $res[$j]['owner_id']]);
 								$res[$j]['link_to_delete'] = $tmp->GetLinkToDelete();
 							}
 						}
@@ -279,15 +286,15 @@
 				unlink($file_path);
 				$res = $db_connection->query("DELETE FROM ".self::$table." WHERE id = ".$this->id);
 			} else {
-				var_dump($file_path);
-				//removeDirectory($file_path);
+				removeDirectory($file_path);
 				$tmp = $this->path_to_file;
 				array_push($tmp, $this->name);
 				$tmp = json_encode($tmp);
-				$tmp = $db_connection->real_escape_string(str_replace(']', ',', $tmp));
-				var_dump($tmp);
-				var_dump("DELETE FROM ".self::$table." WHERE path_to_file LIKE(\"".$tmp."%\")");
-				//$res = $db_connection->query("DELETE FROM ".self::$table." WHERE path_to_file LIKE(\"".$tmp."%\")");
+				$tmp = $db_connection->real_escape_string(str_replace(']', '', $tmp));
+				$res = $db_connection->query("DELETE FROM ".self::$table." WHERE path_to_file LIKE(\"".$tmp."%\") ESCAPE '|'");
+				if ($res) {
+					$res = $db_connection->query("DELETE FROM ".self::$table." WHERE id = ".$this->id);
+				}
 			}
 			if (!$res) return new Error($db_connection->error, Error::db_error);
 			return true;

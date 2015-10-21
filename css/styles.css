@@ -19,6 +19,10 @@ hr {
 
 a img {border:0; outline:0;}
  
+.tooltip-inner {
+    white-space:pre-wrap;
+    max-width: 700px !important;
+}
 
 .company_name {
 	text-shadow: 1px 0 0 #000, -1px 0 0 #000, 0 1px 0 #000, 0 -1px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;

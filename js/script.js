@@ -157,12 +157,22 @@ function showGlobalSearch(glob_input) {
 }
 
 $(window).load(function(){
-    $(window).scroll(function() {   
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    $(window).scroll(function() {  
+    	console.log($(window).scrollTop(), ' ', $(window).height(), ' ', $(document).height());
+        if($(window).scrollTop() + $(window).height() >= $(document).height() - 20) {
             for (var i = 0; i < window_bottom_callbacks.length; ++i) {
             	window_bottom_callbacks[i]();
             }
             window_bottom_called = true;
         }
+    });
+    $(window).bind('touchmove', function(e) {
+    	e.preventDefault();
+		console.log($(window).scrollTop(), ' ', $(window).height(), ' ', $(document).height());
+		// if($(window).scrollTop() + $(window).height() == $(document).height()) {
+  //       for (var i = 0; i < window_bottom_callbacks.length; ++i) {
+  //       	window_bottom_callbacks[i]();
+  //       }
+  //       window_bottom_called = true;
     });
 });

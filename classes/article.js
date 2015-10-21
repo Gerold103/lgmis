@@ -16,7 +16,6 @@ Article.WindowBottomCallback = function() {
 	var childs = $("#articles_list").children(".pbl_article").length;
 	var local_server = getXmlHttp();
 	var data = "download=more&type=" + Article.type + "&offset=" + childs;
-	console.log('childs = ' + childs);
 
 	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor, true);
 	local_server.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -27,8 +26,6 @@ Article.WindowBottomCallback = function() {
 
 Article.AppendToBottom = function(local_server) {
 	if (local_server.readyState == 4) {
-		//alert(local_server.responseText);
-		console.log(local_server.responseText);
 		$('#loadingMain').remove();
 		var objs = JSON.parse(local_server.responseText);
 		var objs_list = elem("articles_list");

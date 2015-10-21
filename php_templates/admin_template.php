@@ -22,12 +22,17 @@
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_styles.'"'; ?>>
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_files_styles.'"'; ?> >
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
-        <?php if (isset($head_addition)) echo $head_addition;  ?>
         <script type="text/javascript">
-            $(function () {
-              $('[data-toggle="popover"]').popover()
-            })
+            $(document).ready(function() {
+                $(function () {
+                    $('[data-toggle="tooltip"]').tooltip()
+                });
+                $(function () {
+                    $('[data-toggle="popover"]').popover()
+                });
+            });
         </script>
+        <?php if (isset($head_addition)) echo $head_addition;  ?>
     </head>
 
     <body>

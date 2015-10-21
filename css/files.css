@@ -28,7 +28,7 @@
 }
 .file-icon::after {
     display: block;
-    content: attr(data-type);
+    content: attr(file-type);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -100,97 +100,105 @@
     padding: 4px 10px;
 }
 /* fileicon.types */
-.file-icon[data-type=zip],
-.file-icon[data-type=rar] {
+.file-icon[file-type=zip],
+.file-icon[file-type=rar] {
     background: #ACACAC;
 }
-.file-icon[data-type=zip]:hover,
-.file-icon[data-type=rar]:hover {
+.file-icon[file-type=zip]:hover,
+.file-icon[file-type=rar]:hover {
     background: #949494;
 }
 
-.file-icon[data-type=doc],
-.file-icon[data-type=docx] {
+.file-icon[file-type=doc],
+.file-icon[file-type=docx] {
     background: #307CF1;
 }
-.file-icon[data-type=doc]:hover,
-.file-icon[data-type=docx]:hover {
+.file-icon[file-type=doc]:hover,
+.file-icon[file-type=docx]:hover {
     background: #2563c2;
 }
 
-.file-icon[data-type=xls],
-.file-icon[data-type=xlsx] {
+.file-icon[file-type=xls],
+.file-icon[file-type=xlsx] {
     background: #0F9D58;
 }
-.file-icon[data-type=xls]:hover,
-.file-icon[data-type=xlsx]:hover {
+.file-icon[file-type=xls]:hover,
+.file-icon[file-type=xlsx]:hover {
     background: #0c7743;
 }
 
-.file-icon[data-type=ppt],
-.file-icon[data-type=pptx] {
+.file-icon[file-type=ppt],
+.file-icon[file-type=pptx] {
     background: #D24726;
 }
-.file-icon[data-type=ppt]:hover,
-.file-icon[data-type=pptx]:hover {
+.file-icon[file-type=ppt]:hover,
+.file-icon[file-type=pptx]:hover {
     background: #a2371d;
 }
 
-.file-icon[data-type=pdf] {
+.file-icon[file-type=pdf] {
     background: #E13D34;
 }
-.file-icon[data-type=pdf]:hover {
+.file-icon[file-type=pdf]:hover {
     background: #b9322b;
 }
 
-.file-icon[data-type=txt] {
+.file-icon[file-type=txt] {
     background: #5EB533;
 }
-.file-icon[data-type=txt]:hover {
+.file-icon[file-type=txt]:hover {
     background: #468726;
 }
 
-.file-icon[data-type=mp3],
-.file-icon[data-type=wma],
-.file-icon[data-type=m4a],
-.file-icon[data-type=flac] {
+.file-icon[file-type=mp3],
+.file-icon[file-type=wma],
+.file-icon[file-type=m4a],
+.file-icon[file-type=flac] {
     background: #8E44AD;
 }
-.file-icon[data-type=mp3]:hover,
-.file-icon[data-type=wma]:hover,
-.file-icon[data-type=m4a]:hover,
-.file-icon[data-type=flac]:hover {
+.file-icon[file-type=mp3]:hover,
+.file-icon[file-type=wma]:hover,
+.file-icon[file-type=m4a]:hover,
+.file-icon[file-type=flac]:hover {
     background: #6b3382;
 }
 
-.file-icon[data-type=mp4],
-.file-icon[data-type=wmv],
-.file-icon[data-type=mov],
-.file-icon[data-type=avi],
-.file-icon[data-type=mkv] {
+.file-icon[file-type=mp4],
+.file-icon[file-type=wmv],
+.file-icon[file-type=mov],
+.file-icon[file-type=avi],
+.file-icon[file-type=mkv] {
     background: #7A3CE7;
 }
-.file-icon[data-type=mp4]:hover,
-.file-icon[data-type=wmv]:hover,
-.file-icon[data-type=mov]:hover,
-.file-icon[data-type=avi]:hover,
-.file-icon[data-type=mkv]:hover {
+.file-icon[file-type=mp4]:hover,
+.file-icon[file-type=wmv]:hover,
+.file-icon[file-type=mov]:hover,
+.file-icon[file-type=avi]:hover,
+.file-icon[file-type=mkv]:hover {
     background: #6430be;
 }
 
-.file-icon[data-type=bmp],
-.file-icon[data-type=jpg],
-.file-icon[data-type=jpeg],
-.file-icon[data-type=gif],
-.file-icon[data-type=png] {
+.file-icon[file-type=bmp],
+.file-icon[file-type=jpg],
+.file-icon[file-type=jpeg],
+.file-icon[file-type=gif],
+.file-icon[file-type=png] {
     background: #F4B400;
 }
-.file-icon[data-type=bmp]:hover,
-.file-icon[data-type=jpg]:hover,
-.file-icon[data-type=jpeg]:hover,
-.file-icon[data-type=gif]:hover,
-.file-icon[data-type=png]:hover {
+.file-icon[file-type=bmp]:hover,
+.file-icon[file-type=jpg]:hover,
+.file-icon[file-type=jpeg]:hover,
+.file-icon[file-type=gif]:hover,
+.file-icon[file-type=png]:hover {
     background: #c39000;
+}
+
+.file-icon[file-type=file] {
+    background: #67ccf6;
+}
+
+.file-icon[file-type=file]:hover {
+    background: #59aed1;
 }
 
 .file-backdrop {

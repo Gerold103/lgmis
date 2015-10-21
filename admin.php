@@ -9,6 +9,7 @@
 	$on_start_page = true;
 	
 	$header .= Language::Word('main admin page');
+	$user = User::FetchBy(['select_list' => 'position', 'eq_conds' => ['id' => GetUserID()], 'is_unique' => true]);
 
 	if (GetUserPrivileges() == admin_user_id) {
 		//Manage staff
@@ -30,7 +31,8 @@
 
 	$content .= MenuButton(Language::Word('file manager'), $link_to_admin_file_manager, 'btn-default', '', 'get');
 
-	$content .= MenuButton(Language::Word('bookkeeping'), $link_to_admin_bookkeeping, 'btn-default', '', 'get');
+	if ($user->GetPositionNum() != NotEmployeeNum)
+		$content .= MenuButton(Language::Word('bookkeeping'), $link_to_admin_bookkeeping, 'btn-default', '', 'get');
 
 	include($link_to_admin_template);
 ?>

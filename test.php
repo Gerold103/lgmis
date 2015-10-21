@@ -8,15 +8,21 @@
         <meta charset="utf-8">
         <title>Тест</title>
         <link rel="stylesheet" type="text/css" href="ckeditor/contents.css">
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
-        <script type="text/javascript" src="js/jquery-1.11.1.js"></script>
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.min.js"></script>
         <script type="text/javascript" src="js/utility_links.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
-        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
         <script type="text/javascript" src="js/bootstrap.min.js"></script>
         <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_bootstrap_styles.'"'; ?>>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_styles.'"'; ?>>
+        <link rel="stylesheet" type="text/css" href=<?php echo '"'.$link_to_files_styles.'"'; ?> >
         <link rel="stylesheet" type="text/css" href=<?php echo '"'.Link::Get($link_to_animations_styles).'"'; ?>>
         <script type="text/javascript">
+
+            $(function () {
+              $('[data-toggle="tooltip"]').tooltip()
+            })
 
             function lookForMessages() {
                 var data = 'look_for=true';
@@ -309,13 +315,22 @@
         </style>
     </head>
 
-    <body>
-
-<div class="folder">content</div>
-
-<div style="display: table; margin: 20px;" align="center">
-    <span style="display: table-row"><div class="file-icon file-icon-lg" data-type="bmp"></div></span>
-    <span style="display: table-row">filename.bmp</span>
-</div>
+    <body style="height: 100%">
+      <div style="display: table; width: 100%; height: 80%;">
+        <div class="row">
+          <div class=<?php echo '"'.ColAllTypes(12).'"'; ?>>
+            <div class="row">
+              <div class="row">
+                <div class=<?php echo '"'.ColAllTypes(12).'"'; ?>>
+                  <div align="center" style="display: table; margin: 20px;">
+                    <span style="display: table-row; text-align: center;">myfile</span>
+                    <span data-toggle="tooltip" data-placement="bottom" title="2.txt" style="display: table-row; text-align: center;">2.txt</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </body>
 </html>
