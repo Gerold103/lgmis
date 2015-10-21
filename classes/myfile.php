@@ -259,6 +259,40 @@
 			else return $res[0];
 		}
 
+		public function Delete()
+		{
+			global $db_connection;
+			global $link_prefix;
+
+			$file_path = '';
+			foreach ($this->path_to_file as $key => $value) {
+				$file_path .= $value.'/';
+			}
+			$file_path .= $this->name;
+			$file_path = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$file_path;
+
+			if (!file_exists($file_path)) {
+				return Error::not_found;
+			}
+			$res = NULL;
+			if (!$this->is_directory) {
+				unlink($file_path);
+				$res = $db_connection->query("DELETE FROM ".self::$table." WHERE id = ".$this->id);
+			} else {
+				var_dump($file_path);
+				//removeDirectory($file_path);
+				$tmp = $this->path_to_file;
+				array_push($tmp, $this->name);
+				$tmp = json_encode($tmp);
+				$tmp = $db_connection->real_escape_string(str_replace(']', ',', $tmp));
+				var_dump($tmp);
+				var_dump("DELETE FROM ".self::$table." WHERE path_to_file LIKE(\"".$tmp."%\")");
+				//$res = $db_connection->query("DELETE FROM ".self::$table." WHERE path_to_file LIKE(\"".$tmp."%\")");
+			}
+			if (!$res) return new Error($db_connection->error, Error::db_error);
+			return true;
+		}
+
 		public static function InsertToDB($request)
 		{
 			global $db_connection;

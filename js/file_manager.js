@@ -103,6 +103,15 @@ function saveFiles() {
 
 function deleteFile(file_id) {
 	console.log(file_id);
+	var local_server = getXmlHttp();
+	var fd = new FormData();
+	fd.append("type", files_type);
+	fd.append("remove", file_id);
+	fd.append("file", true);
+	fd.append("files_action", "del");
+	local_server.onreadystatechange = function() { refresh_manager(local_server); };
+	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
+	local_server.send(fd);
 }
 
 var click_timer;

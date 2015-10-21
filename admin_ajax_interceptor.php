@@ -146,6 +146,21 @@
 							$dir = $_SERVER['DOCUMENT_ROOT'].$link_prefix.$link_to_files_manager_dir.'tmp_'.$author_id.'/'.$filename;
 							break;
 						}
+						case 'del': {
+							$ob_id = $_REQUEST['remove'];
+							$ob = MyFile::FetchBy(['select_list' => 'path_to_file, is_directory, id, name', 'eq_conds' => ['id' => $ob_id], 'is_unique' => true]);
+							if (Error::IsError($ob)) {
+								$content = json_encode(['error' => Error::ToString($ob)]);
+								break;
+							}
+							$rc = $ob->Delete();
+							if (Error::IsError($rc)) {
+								$content = json_encode(['error' => Error::ToString($rc)]);
+								break;
+							}
+							$content = json_encode(['ok' => true]);
+							break;
+						}
 						default: break;
 					}
 					break;
