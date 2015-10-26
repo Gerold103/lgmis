@@ -261,7 +261,7 @@
 			$res .= 			PairLabelAndInput(2, 10, Language::Word('name'), 'name', Language::Word('insert name'), $this->name);
 			$res .= 			PairLabelAndInput(2, 10, Language::Word('surname'), 'surname', Language::Word('insert surname'), $this->surname);
 			$res .= 			PairLabelAndInput(2, 10, Language::Word('fathername'), 'fathername', Language::Word('insert fathername'), $this->fathername);
-			if ($this->login != 'admin') {
+			if (($this->login != 'admin') && (GetUserLogin() == 'admin')) {
 				$tmp = User::FetchAllByPosition(DirectorPositionNum);
 				if ((($tmp != NULL) || (GetUserLogin() != 'admin')) && ($this->position != DirectorPositionNum)) {
 					unset($positions[DirectorPositionNum]);
