@@ -316,21 +316,55 @@
     </head>
 
     <body style="height: 100%">
-      <div style="display: table; width: 100%; height: 80%;">
-        <div class="row">
-          <div class=<?php echo '"'.ColAllTypes(12).'"'; ?>>
-            <div class="row">
-              <div class="row">
-                <div class=<?php echo '"'.ColAllTypes(12).'"'; ?>>
-                  <div align="center" style="display: table; margin: 20px;">
-                    <span style="display: table-row; text-align: center;">myfile</span>
-                    <span data-toggle="tooltip" data-placement="bottom" title="2.txt" style="display: table-row; text-align: center;">2.txt</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <?php
+        // $start = 0;
+        // $limit = 3;
+        // while (true) {
+        //   $res = $db_connection->query('SELECT author_id, recipient_id, id FROM reports ORDER BY id ASC LIMIT '.$limit.' OFFSET '.$start);
+        //   if (!$res) {
+        //     echo 'Error occured during query';
+        //     echo '<br>'.$db_connection->error;
+        //     break;
+        //   }
+        //   $reps = Report::ArrayFromDBResult($res);
+        //   if (count($reps) == 0) break;
+
+        //   foreach ($reps as $key => $value) {
+        //     $receiver = User::FetchBy(['select_list' => 'id, received_reports', 'is_unique' => true, 'eq_conds' => ['id' => $value->GetRecipientID()]]);
+        //     $received = $receiver->GetReceivedReports();
+        //     array_push($received, $value->GetID());
+        //     var_dump($received);
+        //     echo '<br>';
+        //     var_dump($receiver->GetID());
+        //     echo '<br>';
+        //     $res = $db_connection->query('UPDATE users SET received_reports = "'.($db_connection->real_escape_string(json_encode($received))).'" WHERE id = '.($receiver->GetID()));
+        //     if (!$res) {
+        //       echo $db_connection->error;
+        //       exit();
+        //     }
+
+        //     $sender = User::FetchBy(['select_list' => 'id, sended_reports', 'is_unique' => true, 'eq_conds' => ['id' => $value->GetAuthorID()]]);
+        //     $sended = $sender->GetSendedReports();
+        //     array_push($sended, $value->GetID());
+        //     var_dump($sended);
+        //     echo '<br>';
+        //     var_dump($sender->GetID());
+        //     echo '<br>';
+        //     $res = $db_connection->query('UPDATE users SET sended_reports = "'.($db_connection->real_escape_string(json_encode($sended))).'" WHERE id = '.($sender->GetID()));
+        //     if (!$res) {
+        //       echo $db_connection->error;
+        //       exit();
+        //     }
+        //   }
+
+        //   foreach ($reps as $key => $value) {
+        //     echo $value->GetID().' ';
+        //   }
+        //   echo '<br>Success<br>';
+        //   $start += $limit;
+
+        //   //break;
+        // }
+      ?>
     </body>
 </html>

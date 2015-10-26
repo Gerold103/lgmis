@@ -9,6 +9,8 @@
 	$title = Language::Word('bookkeeping');
 	$header = $title;
 
+	$head_addition = '<script type="text/javascript" src="'.$link_to_classes.'/report.js"></script>';
+
 	if (isset($_REQUEST['content_type'])) {
 		switch ($_REQUEST['content_type']) {
 			case $content_types_short['reports']: {
@@ -41,14 +43,22 @@
 				$header = $title;
 
 				$reports = array();
-				$my_id = User::GetIDByLogin(GetUserLogin());
-				if ($content_type === 'received_reps') $reports = Report::FetchByRecipientID($my_id);
-				else if ($content_type === 'sended_reps') $reports = Report::FetchByAuthorID($my_id);
-				else $reports = Report::FetchAll();
+				$user = User::FetchBy(['select_list' => 'id, received_reports, sended_reports', 'eq_conds' => ['id' => GetUserID()], 'is_unique' => true]);
+				$size = 0;
+				$received = array();
+				$sended = array();
+				if ($content_type === 'received_reps') {
+					$received = $user->GetReceivedReports();
+					$size = count($received);
+				}
+				else if ($content_type === 'sended_reps') {
+					$sended = $user->GetSendedReports();
+					$size = count($sended);
+				}
+				else {
+					$size = Report::GetCount();
+				}
 
-				if (Error::IsError($reports)) exit();
-
-				$size = count($reports);
 				if ($size) {
 					require($link_to_pagination_init_template);
 
@@ -59,16 +69,33 @@
 					$content .= 	'<thead>';
 					$content .= 		'<tr>';
 					$content .=				'<th class="text-center">'.Language::Word('author').'</th>';
-					$content .=				'<th class="text-center">'.Language::Word('receiver').'</th>';
+					$content .=				'<th class="text-center">'.Language::Word('receivers').'</th>';
 					$content .=				'<th class="text-center" width="30%">'.Language::Word('header').'</th>';
 					$content .=				'<th class="text-center">'.Language::Word('date').'</th>';
 					$content .=				'<th class="text-center">'.Language::Word('actions').'</th>';
 					$content .=			'</tr>';
 					$content .=		'</thead>';
 					$content .=		'<tbody>';
-					for ($i = $from; $i <= $to; ++$i) {
-						$ob = $reports[$i];
-						$content .= ($ob->ToHTMLAutoShortForTable(GetUserPrivileges()));
+					$target = NULL;
+					if ($content_type === 'received_reps') {
+						$target = $received;
+					} else if ($content_type === 'sended_reps') {
+						$target = $sended;
+					}
+					$limit = ($to - $from + 1);
+					if ($content_type != 'all_reps') {
+						$ids = '';
+						for ($i = 0, $cnt = count($target); $i < $cnt; ++$i) {
+							$ids .= '(id = '.$target[$i].')';
+							if ($i < $cnt - 1) $ids .= ' OR';
+						}
+						$reports = Report::FetchBy(['where_addition' => $ids, 'limit' => $limit, 'offset' => $from, 'order_by' => 'id DESC']);
+					} else {
+						$reports = Report::FetchBy(['limit' => $limit, 'offset' => $from, 'order_by' => 'id DESC']);
+					}
+
+					for ($i = 0; $i < $limit; ++$i) {
+						$content .= ($reports[$i]->ToHTMLAutoShortForTable(GetUserPrivileges()));
 					}
 					$content .= 	'</tbody>';
 					$content .= '</table>';

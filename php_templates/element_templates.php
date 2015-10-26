@@ -300,6 +300,19 @@
 		return $res;
 	}
 
+	function PairLabelAndSomething($labes_width, $something_width, $label, $something)
+	{
+		$res = '';
+		$res .= '<div class="row">';
+		$res .=		'<div class="'.ColAllTypes($labes_width).' vcenter" align="right">';
+		$res .= 		'<b>'.$label.'</b>';
+		$res .= 	'</div>';
+		$res .= 	'<div class="'.ColAllTypes($something_width).' vcenter" align="center">'.$something;
+		$res .= 	'</div>';
+		$res .= '</div>';
+		return $res;
+	}
+
 	function PairLabelAndInput($labes_width, $input_width, $label, $input_name, $placeholder = '', $input_value = '')
 	{
 		$res = '';

@@ -66,8 +66,9 @@
 							break;
 						}
 						case Report::$type: {
-							if (!Report::Delete($_POST['id'])) {
-								$content = AlertMessage('alert-danger', Language::Word('error while report deleting'));
+							$tmp = Report::Delete($_POST['id']);
+							if (Error::IsError($tmp)) {
+								$content = AlertMessage('alert-danger', Language::Word('error while report deleting').': '.Error::ToString($tmp));
 							} else {
 								$content = AlertMessage('alert-success', Language::Word('report is deleted'));
 							}
@@ -173,16 +174,19 @@
 							break;
 						}
 						case Report::$type: {
-							$ob = Report::FetchByID($_POST['id']);
-							if (Error::IsError($ob)) break;
-							$ob->FetchFromAssocEditing($_POST);
-							if (Error::IsError($ob->Save())) {
-								$content .= AlertMessage('alert-danger', Language::Word('it was not succeeded to save'));
+							$ob = Report::FetchBy(['eq_conds' => ['id' => $_POST['id']], 'is_unique' => true]);
+							if (Error::IsError($ob)) {
+								$content .= AlertMessage('alert-danger', 'Error while receiving user: '.Error::ToString($ob));
+								break;
+							}
+							$assoc = $_POST;
+							$assoc['recipient_ids'] = urldecode($assoc['recipient_ids']);
+							$ob->FetchFromAssocEditing($assoc);
+							$tmp = $ob->Save();
+							if (Error::IsError($tmp)) {
+								$content .= AlertMessage('alert-danger', Language::Word('it was not succeeded to save').':error: '.Error::ToString($tmp));
 							} else {
 								$content .= AlertMessage('alert-success', Language::Word('changes are saved'));
-								// if ($ob->FetchFileFromAssocEditing($_FILES) < 0) {
-								// 	$content .= AlertMessage('alert-warning', Language::Word('file was not uploaded'));
-								// }
 							}
 							break;
 						}
@@ -294,7 +298,12 @@
 							$assoc = $_POST;
 							$assoc['author_id'] = $_POST['id'];
 							unset($assoc['id']);
+							$assoc['recipient_ids'] = urldecode($assoc['recipient_ids']);
 							$ob = Report::FetchFromAssoc($assoc);
+							if (count($ob->recipient_ids) === 0) {
+								$content = AlertMessage('alert-danger', Language::Word('no recipients specified'));
+								break;
+							}
 							if (Error::IsError($ob)) {
 								$content = AlertMessage('alert-danger', Language::Word('error while report sending'));
 							} else {

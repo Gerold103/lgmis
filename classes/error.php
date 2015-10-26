@@ -1,12 +1,12 @@
 <?php
 	
 	class Error {
-		const no_translation = 0;
-		const db_error = 1;
-		const arg_not_valid = 2;
-		const ambiguously = 3;
-		const not_found = 4;
-		const error = 5;
+		const no_translation = 1;
+		const db_error = 2;
+		const arg_not_valid = 3;
+		const ambiguously = 4;
+		const not_found = 5;
+		const error = 6;
 
 		public static $type = 'error';
 		public $mesg = '';
@@ -15,6 +15,14 @@
 		function Error($mesg = '', $id = self::error) {
 			$this->mesg = $mesg;
 			$this->id = $id;
+		}
+
+		public static function IsType($error, $type) {
+			if (is_a($error, 'Error')) {
+				return ($error->id === $type);
+			} else {
+				return $error === $type;
+			}
 		}
 
 		public static function ToString($err) {

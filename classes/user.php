@@ -13,6 +13,8 @@
 		public  $login           = undef;
 		public  $password		 = undef;
 		private $position        = undef;
+		private $received_reports   = undef;
+		private $sended_reports 	 = undef;
 		private $email           = undef;
 		private $telephone       = undef;
 		private $register_time   = time_undef;
@@ -41,19 +43,23 @@
 		public function GetCount()
 		{
 			global $db_connection;
-			$res = $db_connection->query("SELECT COUNT(*) FROM ".User::$table);
+			$res = $db_connection->query("SELECT COUNT(*) FROM ".self::$table);
 			if ($res) {
 				if ($res->num_rows > 0) {
 					return $res->fetch_row()[0];
 				}
-				User::$last_error = Language::Word('no users');
+				self::$last_error = Language::Word('no users');
 				return 0;
 			}
-			User::$last_error = $db_connection->error;
+			self::$last_error = $db_connection->error;
 			return 0;
 		}
 
 		public function GetPositionNum() { return $this->position; }
+
+		public function GetReceivedReports() { return $this->received_reports; }
+
+		public function GetSendedReports() { return $this->sended_reports; }
 
 		public function GetPosition()
 		{
@@ -83,6 +89,17 @@
 		public function GetTelephone()
 		{
 			return $this->telephone;
+		}
+
+		public function AddReceivedReport()
+		{
+			global $db_connection;
+
+		}
+
+		public function AddSendedReport()
+		{
+
 		}
 		
 		//--------Methods--------
@@ -375,6 +392,22 @@
 			if (ArrayElemIsValidStr($assoc, 'login')) $ob->login = $assoc['login'];
 			if (ArrayElemIsValidStr($assoc, 'password')) $ob->password = $assoc['password'];
 			if (ArrayElemIsValidStr($assoc, 'position')) $ob->position = $assoc['position'];
+			if (isset($assoc['received_reports'])) {
+				if (is_string($assoc['received_reports'])) {
+					if ($assoc['received_reports'] === '') $ob->received_reports = [];
+					else $ob->received_reports = json_decode($assoc['received_reports']);
+				} else {
+					$ob->received_reports = $assoc['received_reports'];
+				}
+			}
+			if (isset($assoc['sended_reports'])) {
+				if (is_string($assoc['sended_reports'])) {
+					if ($assoc['sended_reports'] === '') $ob->sended_reports = [];
+					else $ob->sended_reports = json_decode($assoc['sended_reports']);
+				} else {
+					$ob->sended_reports = $assoc['sended_reports'];
+				}
+			}
 			if (ArrayElemIsValidStr($assoc, 'email')) $ob->email = $assoc['email'];
 			if (ArrayElemIsValidStr($assoc, 'telephone')) $ob->telephone = $assoc['telephone'];
 			try {

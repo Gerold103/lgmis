@@ -436,7 +436,7 @@
 		return -1;
 	}
 
-	$records_on_page = 6;
+	$records_on_page = 2;
 	$page_numbers_on_page = 5;
 	
 	const string_undef = '#Undefined#';
