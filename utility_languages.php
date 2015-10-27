@@ -328,6 +328,12 @@
 						case 'eng': return 'Change receiver';
 					}
 				}
+				case 'change receivers': {
+					switch ($lang) {
+						case 'rus': return 'Изменить получателей';
+						case 'eng': return 'Change receivers';
+					}
+				}
 				case 'changes are saved': {
 					switch ($lang) {
 						case 'rus': return 'Изменения сохранены';
@@ -344,6 +350,12 @@
 					switch ($lang) {
 						case 'rus': return 'Выберите получателя';
 						case 'eng': return 'Choose receiver';
+					}
+				}
+				case 'choose receivers': {
+					switch ($lang) {
+						case 'rus': return 'Выберите получателей';
+						case 'eng': return 'Choose reseivers';
 					}
 				}
 				case 'choose role': {
@@ -410,6 +422,12 @@
 					switch ($lang) {
 						case 'rus': return 'Установленный получатель';
 						case 'eng': return 'Current receiver';
+					}
+				}
+				case 'current receivers': {
+					switch ($lang) {
+						case 'rus': return 'Установленные получатели';
+						case 'eng': return 'Current receivers';
 					}
 				}
 
@@ -947,6 +965,12 @@
 						case 'eng': return "News aren't present so far";
 					}
 				}
+				case 'no recipients specified': {
+					switch ($lang) {
+						case 'rus': return 'Не указаны получатели';
+						case 'eng': return 'No specified recipients';
+					}
+				}
 				case 'no translation': {
 					switch ($lang) {
 						case 'rus': return 'Нет перевода';
@@ -1148,6 +1172,12 @@
 					switch ($lang) {
 						case 'rus': return 'Получатель';
 						case 'eng': return 'Receiver';
+					}
+				}
+				case 'receivers': {
+					switch ($lang) {
+						case 'rus': return 'Получатели';
+						case 'eng': return 'Receivers';
 					}
 				}
 				case 'registration': {

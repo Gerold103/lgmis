@@ -18,6 +18,11 @@ hr {
 }
 
 a img {border:0; outline:0;}
+
+.label-lgmis {
+  background-color: #d1d1d1;
+  color: #747474;
+}
  
 .tooltip-inner {
     white-space:pre-wrap;
