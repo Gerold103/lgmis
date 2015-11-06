@@ -459,7 +459,7 @@
 				$headers = 'From: LGMIS Admin <no-reply@lgmis.cs.msu.ru>'.PHP_EOL.
 					'Reply-To: <no-reply@lgmis.cs.msu.ru>'.PHP_EOL.'X-Mailer: PHP/'.phpversion().'MIME-Version: 1.0'.PHP_EOL.
 					'Content-type: text/html; charset=UTF-8'.PHP_EOL;
-				if (!mail($email, $subject, $message, $headers)) {
+				if (!mail($email, $subject, $message, $headers, '-f no-reply@lgmis.cs.msu.ru')) {
 					echo 'error:'.error_get_last();
 					return false;
 				}
