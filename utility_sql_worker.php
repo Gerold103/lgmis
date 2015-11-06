@@ -134,7 +134,7 @@
 					$content = '';
 					switch ($_POST['type']) {
 						case User::$type: {
-							$user = User::FetchByID($_POST['id']);
+							$user = User::FetchBy(['eq_conds' => ['id' => $_POST['id']], 'is_unique' => true]);
 							if ($user->FetchFromAssocEditing($_POST) < 0) {
 								$content .= AlertMessage('alert-warning', Language::Word('user was not changed'));
 							}

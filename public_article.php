@@ -18,24 +18,10 @@
 			$title = '';
 
 			$header_type = 'h4';
-
-			if ($ob === NULL) {
-				$title = Language::Word('error');
-				$header = $title;
-				$content = Language::Word('internal server error');
-			} else if ($ob === Error::no_translation) {
-				$title = Language::Word('error');
-				$header = Language::Word('sorry');
-				$content = Language::Word('no translation for this article');
-			} else {
-				$title = $ob->name;
-
-				$header = htmlspecialchars($ob->name);
-
-				$content = $ob->ToHTMLUserPublicFull();
-
-				$no_content_center = true;
-			}
+			$title = $ob->GetName();
+			$header = htmlspecialchars($ob->GetName());
+			$content = $ob->ToHTMLUserPublicFull();
+			$no_content_center = true;
 		}
 	}
 

@@ -71,6 +71,7 @@ function loadGlobalResults(local_server) {
 	if (local_server.readyState == 4) {
 		var ulist = elem("glob_search_list");
 		ulist.style.display = 'block';
+		console.log(local_server.responseText);
 		var res = JSON.parse(local_server.responseText);
 		deleteChilds(ulist);
 		if (res.length == 0) {

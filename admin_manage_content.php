@@ -27,12 +27,13 @@
 	if (isset($_GET['content_type'])) {
 		//----A R T I C L E S----
 		if ($_GET['content_type'] == $content_types_short['articles']) {
-			$articles = Article::FetchAll();
-			$size = count($articles);
+			$size = Article::FetchCountOf();
 			if ($user->GetPositionNum() != NotEmployeeNum)
 				$content .= MenuButton(Language::Word('add article'), $link_to_admin_article, 'btn-primary', 'add', 'get');
 			if ($size) {
 				require($link_to_pagination_init_template);
+				$limit = $to - $from + 1;
+				$articles = Article::FetchBy(['limit' => $limit, 'offset' => $from, 'order_by' => 'id DESC']);
 
 				$content .= '<div class="row">';
 				$content .= '<div class="'.ColAllTypes(1).' center-block"></div>';
@@ -47,9 +48,8 @@
 				$content .=			'</tr>';
 				$content .=		'</thead>';
 				$content .=		'<tbody>';
-				for ($i = $from; $i <= $to; ++$i) {
-					$atricle = $articles[$i];
-					$content .= ($atricle->ToHTMLAutoShortForTable(GetUserPrivileges()));
+				for ($i = 0; $i < $limit; ++$i) {
+					$content .= ($articles[$i]->ToHTMLAutoShortForTable(GetUserPrivileges()));
 				}
 				$content .= 	'</tbody>';
 				$content .= '</table>';

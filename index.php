@@ -20,15 +20,16 @@
 	
 	//----A R T I C L E S----
 	if ((!isset($_GET['content_type'])) || ($_GET['content_type'] == $content_types_short['articles'])) {
-		$articles = Article::FetchAll();
-		$size = count($articles);
+		$size = Article::FetchCountOf();
 		if ($size) {
 			$head_addition = MakeScript('window_bottom_callbacks.push(Article.WindowBottomCallback);');
 			$need_pagination = false;
 			require($link_to_pagination_init_template);
+			$limit = $to - $from + 1;
+			$articles = Article::FetchBy(['limit' => $limit, 'offset' => $from, 'order_by' => 'id DESC']);
 
 			$content .= '<div onscroll="scrolled(this);" id="articles_list">';
-			for ($i = $from; $i <= $to; ++$i) {
+			for ($i = 0; $i < $limit; ++$i) {
 				$atricle = $articles[$i];
 				$content .= '<div class="pbl_article">'.($atricle->ToHTMLAutoShortForTable(GetUserPrivileges())).'</div>';
 				if ($i != $to) $content .= '<hr><div style="background-color: #eeeeee;"><br></div><hr>';
@@ -104,6 +105,5 @@
 		require($link_to_pagination_show_template);
 		$content .= $pagination;
 	}
-
 	include($link_to_public_template);
 ?>

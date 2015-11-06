@@ -135,7 +135,7 @@
 			$header = '';
 			$content = '';
 
-			$title = Language::Word('acrticle');
+			$title = Language::Word('article');
 
 			$header = htmlspecialchars($ob->GetName());
 

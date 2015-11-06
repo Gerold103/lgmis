@@ -15,6 +15,9 @@
 
 		public  $language;
 
+		const cachable = false;
+		const translated = true;
+
 		public static $type = 'text_part';
 		public static $table = 'text_parts';
 
@@ -93,7 +96,7 @@
 			$res .= 	'<div class="row">';
 			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
+			$res .= 			SimplePanel(User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'id, name, surname', 'is_unique' => true])->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
@@ -156,7 +159,7 @@
 			global $content_types_full;
 			$res = '<tr>';
 			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
-			$res .= '<td>'.User::FetchByID($this->author_id)->LinkToThis().'</td>';
+			$res .= '<td>'.User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'id, name, surname', 'is_unique' => true])->LinkToThis().'</td>';
 			$res .= '<td>'.date('d : m : Y - H : i', $this->creating_date).'</td>';
 			$res .= '<td>'.htmlspecialchars($content_types_full[$this->role]).'</td>';
 			$res .= '<td>';

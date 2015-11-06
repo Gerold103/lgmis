@@ -9,6 +9,9 @@
 		public 	$recipient_ids = [];
 
 		private $path_to_file = unef;
+		
+		const cachable = false;
+		const translated = false;
 
 		public static $type = 'report';
 		public static $table = 'reports';

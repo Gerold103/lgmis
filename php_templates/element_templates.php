@@ -200,7 +200,7 @@
 		return '<a href="'.$path_to.'">'.Language::Word('on previous admin page').'</a>';
 	}
 
-	function PathToFile($start_path, $file_name, $default_ans = '', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg', 'pdf', 'txt', 'zip', '7z', 'rar'), $lang = 'rus') {
+	function PathToFile($start_path, $file_name, $default_ans = '', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg', 'pdf', 'txt', 'zip', '7z', 'rar'), $lang = '') {
 		if ($lang !== 'rus') $file_name .= '_'.$lang;
 		$res = $start_path.'/'.$file_name.'.';
 		for ($i = 0, $size = count($available); $i < $size; ++$i) {
@@ -211,8 +211,9 @@
 		return $default_ans;
 	}
 
-	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg'), $lang = 'rus')
+	function PathToImage($start_path, $image_name, $default_ans = '#default#', $available = array('bmp', 'gif', 'jpg', 'jpe', 'png', 'jpeg', 'svg'), $lang = '')
 	{
+		if ($lang === '') $lang = GetLanguage();
 		return PathToFile($start_path, $image_name, $default_ans, $available, $lang);
 	}
 

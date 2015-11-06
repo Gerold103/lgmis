@@ -244,6 +244,12 @@
 						case 'eng': return 'Argument not valid';
 					}
 				}
+				case 'article': {
+					switch ($lang) {
+						case 'rus': return 'Новость';
+						case 'eng': return 'Article';
+					}
+				}
 				case 'article adding': {
 					switch ($lang) {
 						case 'rus': return 'Добавление новости';

@@ -15,6 +15,9 @@
 
 		public  $language = undef;
 
+		const cachable = false;
+		const translated = true;
+
 		public static $type = 'user_block';
 		public static $table = 'user_blocks';
 
@@ -152,7 +155,7 @@
 		public function ToHTMLUserPrivateFull()
 		{
 			$res = '';
-			$author_login = User::FetchByID($this->author_id)->login;
+			$author_login = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'login', 'is_unique' => true])->GetLogin();
 			if (GetUserLogin() == $author_login) $res .= '<b>id</b>: '.$this->id.'; ';
 			$res .= '<b>author_id</b>: '.$this->author_id.';<br>';
 			$res .= '<b>name</b>: '.htmlspecialchars($this->name).';<br>';
@@ -168,7 +171,7 @@
 		public function ToHTMLUserPrivateShort()
 		{
 			$res = '';
-			$author_login = User::FetchByID($this->author_id)->login;
+			$author_login = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'login', 'is_unique' => true])->GetLogin();
 			if (GetUserLogin() == $author_login) $res .= '<b>id</b>: '.$this->id.'; ';
 			$res .= '<b>author_id</b>: '.$this->author_id.';<br>';
 			$res .= '<b>name</b>: '.htmlspecialchars($this->name).';<br>';
@@ -183,7 +186,7 @@
 
 		public function ToHTMLUserPrivateShortInTable()
 		{
-			$author_login = User::FetchByID($this->author_id)->login;
+			$author_login = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'login', 'is_unique' => true])->GetLogin();
 			$res = '';
 			$res .= '<div class="row">';
 			$res .= 	'<div class="'.ColAllTypes(1).'"></div>';

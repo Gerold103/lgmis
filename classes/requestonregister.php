@@ -21,6 +21,9 @@
 		public static $table = 'register_requests';
 
 		public static $last_error = '';
+
+		const cachable = false;
+		const translated = false;
 		
 		//--------Methods--------
 
@@ -216,9 +219,9 @@
 			global $db_connection;
 
 
-			$res = User::FetchByLogin($this->login);
-			if ($res !== NULL) {
-				RequestOnRegister::$last_error = Language::Word('user with such login already exists');
+			$res = User::FetchBy(['eq_conds' => ['login' => $this->login], 'select_list' => 'id', 'is_unique' => true]);
+			if (!Error::IsError($res)) {
+				self::$last_error = Language::Word('user with such login already exists');
 				return false;
 			}
 
@@ -236,7 +239,7 @@
 					'".$login_tmp."', '".password_hash($this->password, PASSWORD_DEFAULT)."', CURRENT_TIMESTAMP, '".$email_tmp."', '".$telephone_tmp."',
 					'".$text_tmp."')");
 			if (!$res) {
-				RequestOnRegister::$last_error = $db_connection->error;
+				self::$last_error = $db_connection->error;
 				return false;
 			}
 			return true;
@@ -247,7 +250,7 @@
 		public static function Delete($id)
 		{
 			global $db_connection;
-			if (!$db_connection->query("DELETE FROM `".RequestOnRegister::$table."` WHERE `id` = ".$id)) {
+			if (!$db_connection->query("DELETE FROM `".self::$table."` WHERE `id` = ".$id)) {
 				return 0;
 			} else {
 				return 1;

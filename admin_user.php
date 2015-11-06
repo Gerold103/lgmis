@@ -5,9 +5,9 @@
 	if ((isset($_POST['id'])) && (isset($_GET['id'])) && ($_POST['id'] !== $_GET['id'])) {
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
-		$user = User::FetchByID($_REQUEST['id']);
-		if ($user == NULL) {
-			header('Location: '.$link_to_admin);
+		$user = User::FetchBy(['eq_conds' => ['id' => $_REQUEST['id']], 'is_unique' => true]);
+		if (Error::IsError($user)) {
+			echo Error::ToString($user);
 			exit();
 		}
 		$prev_page = '';
@@ -18,9 +18,9 @@
 			$content = $user->ToHTMLEditing();
 		} else {
 
-			$title = $user->name;
+			$title = $user->GetName();
 
-			$header = htmlspecialchars(Language::Translit($user->name.' '.$user->surname.' '.$user->fathername));
+			$header = htmlspecialchars(Language::Translit($user->GetName().' '.$user->GetSurname().' '.$user->GetFathername()));
 
 			$content = $user->ToHTMLAutoFull(GetUserPrivileges());
 			$no_content_center = true;

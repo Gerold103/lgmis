@@ -14,6 +14,9 @@
 		private $creating_date = time_undef;
 
 		public  $language = undef;
+
+		const cachable = false;
+		const translated = true;
 		
 		public static $type = 'project';
 		public static $table = 'projects';
@@ -103,7 +106,7 @@
 			$res .= 	'<div class="row">';
 			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
+			$res .= 			SimplePanel(User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'id, name, surname', 'is_unique' => true])->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
@@ -154,6 +157,7 @@
 		public function ToHTMLUserPrivateFull()
 		{
 			$res = '';
+			$author = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'id, name, surname, login', 'is_unique' => true]);
 
 			$res .= '<div class="form-horizontal">';
 
@@ -167,7 +171,7 @@
 			$res .= 	'<div class="row">';
 			$res .= 		'<label class="'.ColAllTypes(3).' vcenter control-label">'.Language::Word('author').'</label>';
 			$res .= 		'<div class="'.ColAllTypes(5).' vcenter">';
-			$res .= 			SimplePanel(User::FetchByID($this->author_id)->LinkToThis());
+			$res .= 			SimplePanel($author->LinkToThis());
 			$res .= 		'</div>';
 			$res .= 	'</div>';
 
@@ -190,7 +194,7 @@
 			$res .= 	'</div>';
 
 			$res .= 	'<div class="row">';
-			if ((GetUserLogin() === User::FetchByID($this->author_id)->login) || (GetUserLogin() === 'admin')) {
+			if ((GetUserLogin() === $author->GetLogin()) || (GetUserLogin() === 'admin')) {
 				$res .= 	'<div class="'.ColAllTypes(4).'" align="right">';
 				$res .=			'<div class="margin-sm">'.$this->ToHTMLEdit().'</div>';
 				$res .=		'</div>';
@@ -211,7 +215,7 @@
 		public function ToHTMLUserPrivateShort()
 		{
 			$res = '';
-			$author_login = User::FetchByID($this->author_id)->login;
+			$author_login = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'login', 'is_unique' => true])->GetLogin();
 			if (GetUserLogin() == $author_login) $res .= '<b>id</b>: '.$this->id.'; ';
 			$res .= '<b>direction_id</b>: '.$this->direction_id.'; <b>author_id</b>: '.$this->author_id.';<br>';
 			$res .= '<b>name</b>: '.htmlspecialchars($this->name).';<br>';
@@ -235,7 +239,7 @@
 
 		public function ToHTMLUserPrivateShortInTable()
 		{
-			$author = User::FetchByID($this->author_id);
+			$author = User::FetchBy(['eq_conds' => ['id' => $this->author_id], 'select_list' => 'id, name, surname, login', 'is_unique' => true]);
 			$res = '<tr>';
 			$res .= '<td>'.Direction::FetchByID($this->direction_id)->LinkToThis().'</td>';
 			$res .= '<td>'.htmlspecialchars($this->name).'</td>';
@@ -243,14 +247,14 @@
 			$res .= '<td>'.$author->LinkToThis().'</td>';
 			$res .= '<td>';
 			$res .=		'<div class="row">';
-			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
+			if ((GetUserLogin() === $author->GetLogin()) || (GetUserLogin() === 'admin')) {
 				$res .= 	'<div class="'.ColAllTypes(4).'">';
 			} else {
 				$res .= 	'<div class="'.ColAllTypes(12).'">';
 			}
 			$res .= 			$this->ToHTMLFullVers();
 			$res .=			'</div>';
-			if ((GetUserLogin() === $author->login) || (GetUserLogin() === 'admin')) {
+			if ((GetUserLogin() === $author->GetLogin()) || (GetUserLogin() === 'admin')) {
 				$res .=		'<div class="'.ColAllTypes(4).'">';
 				$res .=			$this->ToHTMLEdit();
 				$res .=		'</div>';
