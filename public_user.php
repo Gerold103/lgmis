@@ -30,7 +30,7 @@
 		$articles = Article::FetchCountOf(['where' => 'author_id = '.$user->GetID()]);
 		$content .= 		'<div class="row" align="center">';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="right"><font color="grey">'.Language::Word('news published').':</font></div>';
-		$content .= 			'<div class="'.ColAllTypes(6).'" align="left">'.count($articles).'</div>';
+		$content .= 			'<div class="'.ColAllTypes(6).'" align="left">'.$articles.'</div>';
 		$content .= 		'</div>';
 		$content .= 		'<hr>';
 		$content .= 		ToPageHeader(Language::PublicMenu('contacts'), 'h4', 'grey');

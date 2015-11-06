@@ -33,6 +33,11 @@
     </head>
 
     <body style="min-width: 850px;">
+<?php if ($need_to_show_timer) { ?>
+    <div style="position: absolute; top: 0; left: 0;" id="script_start_time">
+        <?php echo GetTimerVal(); ?>
+    </div>
+<?php } ?>
         <div id="wrap">
         	<?php
     			//Вывод основной страницы

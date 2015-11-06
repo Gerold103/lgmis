@@ -183,7 +183,7 @@
 
 		public function SetEmail($n) {
 			$this->setted_fields['email'] = 1;
-			$this->email = $email;
+			$this->email = $n;
 		}
 
 		public function SetTelephone($n) {

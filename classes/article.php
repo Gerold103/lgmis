@@ -564,7 +564,8 @@
 			if (!$rc) {
 				return new Error($db_connection->error, Error::db_error);
 			}
-			return $rc->fetch_assoc()['tmp'];
+			$tmp = $rc->fetch_assoc();
+			return $tmp['tmp'];
 		}
 
 		public static function FetchBy($kwargs)

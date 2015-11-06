@@ -105,5 +105,6 @@
 		require($link_to_pagination_show_template);
 		$content .= $pagination;
 	}
+
 	include($link_to_public_template);
 ?>
