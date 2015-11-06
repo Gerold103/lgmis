@@ -47,7 +47,7 @@
                     <form class="navbar-form navbar-left" method="post" action=<?php echo '"'.$link_to_admin_user.'"'; ?> >
                         <input class="btn btn-default" name="full" type="submit" value=<?php echo '"'.Language::Word('my page').'"'; ?> >
                         <input type="hidden" name="type" value=<?php echo '"'.User::$type.'"'; ?> >
-                        <input type="hidden" name="id" value=<?php echo '"'.User::FetchByLogin($_SESSION['user_login'])->id.'"'; ?> >
+                        <input type="hidden" name="id" value=<?php echo '"'.User::FetchBy(['eq_conds' => ['login' => $_SESSION['user_login']], 'select_list' => 'id', 'is_unique' => true])->GetID().'"'; ?> >
                         <input type="hidden" name="prev_page" value=<?php echo '"'.$_SERVER['REQUEST_URI'].'"'; ?> >
                     </form>
                 </li>

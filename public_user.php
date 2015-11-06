@@ -8,27 +8,26 @@
 	if ((isset($_POST['id'])) && (isset($_GET['id'])) && ($_POST['id'] !== $_GET['id'])) {
 		$content = AlertMessage('alert-danger', 'Неоднозначные id');
 	} else {
-		$user = User::FetchByID($_REQUEST['id']);
-
+		$user = User::FetchBy(['eq_conds' => ['id' => $_REQUEST['id']], 'is_unique' => true]);
 		$header = '';
 		$content = '';
 		$footer = '';
 
 		$header_type = 'h3';
 
-		$title = Language::Translit($user->surname.' '.$user->name.' '.$user->fathername);
+		$title = Language::Translit($user->GetSurname().' '.$user->GetName().' '.$user->GetFathername());
 
-		$header = htmlspecialchars(Language::Translit($user->surname.' '.$user->name.' '.$user->fathername));
+		$header = htmlspecialchars(Language::Translit($user->GetSurname().' '.$user->GetName().' '.$user->GetFathername()));
 
 		$content .= '<div class="row" align="center">';
-		$content .= 	'<div class="'.ColAllTypes(4).'"><img src="'.Link::Get($user->path_to_photo).'" class="img-avatar"></div>';
+		$content .= 	'<div class="'.ColAllTypes(4).'"><img src="'.Link::Get($user->GetPathToPhoto()).'" class="img-avatar"></div>';
 		$content .= 	'<div class="'.ColAllTypes(8).'">';
 		$content .= 		'<br><div class="row" align="center">';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="right"><font color="grey">'.Language::Word('position').':</font></div>';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="left">'.$user->GetPosition().'</div>';
 		$content .= 		'</div>';
 
-		$articles = Article::FetchByAuthorID($user->id);
+		$articles = Article::FetchCountOf(['where' => 'author_id = '.$user->GetID()]);
 		$content .= 		'<div class="row" align="center">';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="right"><font color="grey">'.Language::Word('news published').':</font></div>';
 		$content .= 			'<div class="'.ColAllTypes(6).'" align="left">'.count($articles).'</div>';
@@ -43,7 +42,7 @@
 		$content .= '</div>';
 		$content .= '<hr>';
 
-		$blocks = UserBlock::FetchAllByAuthorID($user->id);
+		$blocks = UserBlock::FetchAllByAuthorID($user->GetID());
 		$size = count($blocks);
 		if ($size) {
 			require($link_to_pagination_init_template);

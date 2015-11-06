@@ -7,7 +7,7 @@
 	if (isset($_REQUEST['load_users'])) {
 		if (isset($_REQUEST['prefix'])) {
 			$prefix = $_REQUEST['prefix'];
-			$users = User::FetchByPrefix($prefix, array('select_list' => array('id', 'name', 'surname')));
+			$users = User::FetchLike($prefix, ['select_list' => 'id, name, surname', 'is_assoc' => true]);
 			$content = json_encode($users);
 		}
 	} else if (isset($_REQUEST['search'])) {
@@ -15,7 +15,7 @@
 			case 'global': {
 				$text = $_REQUEST['text'];
 
-				$users = User::FetchByPrefix($text, array('select_list' => array('link_to_full', 'id', 'name', 'surname')));
+				$users = User::FetchLike($text, ['select_list' => 'id, name, surname', 'is_assoc' => true, 'special' => ['link_to_full']]);
 				for ($i = 0; $i < count($users); ++$i) {
 					$users[$i]['name'] = Language::Translit($users[$i]['name']);
 					$users[$i]['surname'] = Language::Translit($users[$i]['surname']);

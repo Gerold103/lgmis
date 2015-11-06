@@ -33,7 +33,7 @@
 		$to = -1;
 
 		require($link_to_pagination_init_template);
-		$users = User::Fetch($from, $count);
+		$users = User::FetchBy(['limit' => $count, 'offset' => $from]);
 
 		for ($i = 0; $i < $count; ++$i) {
 			$content .= $users[$i]->ToHTMLAutoShortForTable(GetUserPrivileges());

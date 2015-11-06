@@ -15,12 +15,12 @@
 		if (isset($_POST['enter'])) {
 			if (isset($_POST['login'])) {
 				if (isset($_POST['password'])) {
-					$user = User::FetchByLogin($_POST['login']);
-					if (!password_verify($_POST['password'], $user->password)) {
+					$user = User::FetchBy(['select_list' => 'login, password', 'eq_conds' => ['login' => $_POST['login']], 'is_unique' => true]);
+					if (!password_verify($_POST['password'], $user->GetPassword())) {
 						echo Language::Word('incorrect password').'<br>'.OnStartAdminPage();
 						exit();
 					}
-					$_SESSION['user_login'] = $user->login;
+					$_SESSION['user_login'] = $user->GetLogin();
 				} else {
 					echo Language::Word('it was not succeeded to be authorized').'<br>'.OnStartAdminPage();
 					exit();

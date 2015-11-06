@@ -6,27 +6,211 @@
 		
 		//--------Attributes--------
 		
-		public  $id              = id_undef;
-		public  $name            = undef;
-		public  $surname         = undef;
-		public  $fathername      = undef;
-		public  $login           = undef;
-		public  $password		 = undef;
-		private $position        = undef;
-		private $received_reports   = undef;
-		private $sended_reports 	 = undef;
-		private $email           = undef;
-		private $telephone       = undef;
-		private $register_time   = time_undef;
-		private $last_visit_time = time_undef;
-		private $birthday        = time_undef;
+		private $id               = id_undef;
+		private $name             = undef;
+		private $surname          = undef;
+		private $fathername       = undef;
+		private $login            = undef;
+		private $password		  = undef;
+		private $position         = undef;
+		private $received_reports = undef;
+		private $sended_reports	  = undef;
+		private $email            = undef;
+		private $telephone        = undef;
+		private $register_time    = time_undef;
+		private $last_visit_time  = time_undef;
+		private $birthday         = time_undef;
 
-		public  $path_to_photo   = undef;
+		private $path_to_photo   = undef;
+
+		const cachable = true;
+		const translated = false;
+
+		private $setted_fields  = [];
 		
 		public static $type = 'user';
 		public static $table = 'users';
 
-		public static $last_error = '';
+		public static function GetAllColumns() { return ['id', 'name', 'surname', 'fathername', 'login', 'password',
+			'position', 'received_reports', 'sended_reports', 'email', 'telephone', 'register_time', 'last_visit_time',
+			'birthday']; }
+
+		public static function CacheKey($id, $kwargs = []) { return self::$type.$id; }
+
+		public static function RemoveFromCacheMeta($kwargs = []) {
+			global $my_cache;
+		}
+
+		public function RemoveFromCache() {
+			if (!isset($this->setted_fields['id'])) return;
+			global $my_cache;
+			$my_cache->add_key(self::CacheKey($this->id), NULL);
+		}
+
+		// private function __update_ob_in_cache($field_name, $ob, $force = false) {
+		// 	if (isset($this->setted_fields[$field_name])) {
+		// 		if ($force) {
+		// 			$ob[$field_name]['value'] = $this->$field_name;
+		// 			$ob[$field_name]['age'] = $this->setted_fields[$field_name];
+		// 			return;
+		// 		}
+		// 		if (!isset($ob[$field_name]) || (isset($ob[$field_name]) &&
+		// 									$ob[$field_name]['age'] < $this->setted_fields[$field_name])) {
+		// 			$ob[$field_name]['value'] = $this->$field_name;
+		// 			$ob[$field_name]['age'] = $this->setted_fields[$field_name];
+		// 		}
+		// 	}
+		// }
+
+		// private function __update_ob_from_cache($field_name, $ob, $force = false) {
+		// 	if (isset($ob[$field_name])) {
+		// 		if ($force) {
+		// 			$this->$field_name = $ob[$field_name]['value'];
+		// 			$this->setted_fields[$field_name] = $ob[$field_name]['age'];
+		// 			return;
+		// 		}
+		// 		if (!isset($this->setted_fields[$field_name]) || (isset($this->setted_fields[$field_name]) &&
+		// 												($this->setted_fields[$field_name] < $ob[$field_name]['age']))) {
+		// 			$this->$field_name = $ob[$field_name]['value'];
+		// 			$this->setted_fields[$field_name] = $ob[$field_name]['age'];
+		// 		}
+		// 	}
+		// }
+
+		// public function UpdateObjectFromCache() {
+		// 	if (!isset($this->setted_fields['id'])) return;
+		// 	global $my_cache;
+		// 	$key = self::CacheKey($this->id);
+		// 	if (!($my_cache->key_exists($key))) {
+		// 		$this->UpdateCacheObject();
+		// 	}
+		// 	$ob = $my_cache->get_val($key);
+
+		// 	$this->__update_ob_from_cache('id', $ob, true);
+		// 	$this->__update_ob_from_cache('name', $ob);
+		// 	$this->__update_ob_from_cache('surname', $ob);
+		// 	$this->__update_ob_from_cache('fathername', $ob);
+		// 	$this->__update_ob_from_cache('login', $ob);
+		// 	$this->__update_ob_from_cache('password', $ob);
+		// 	$this->__update_ob_from_cache('position', $ob);
+		// 	$this->__update_ob_from_cache('received_reports', $ob);
+		// 	$this->__update_ob_from_cache('sended_reports', $ob);
+		// 	$this->__update_ob_from_cache('email', $ob);
+		// 	$this->__update_ob_from_cache('telephone', $ob);
+		// 	$this->__update_ob_from_cache('register_time', $ob, true);
+		// 	$this->__update_ob_from_cache('last_visit_time', $ob);
+		// 	$this->__update_ob_from_cache('birthday', $ob);
+		// 	$this->__update_ob_from_cache('path_to_photo', $ob);
+		// }
+
+		// public function UpdateCacheObject() {
+		// 	global $my_cache;
+
+		// 	if (!isset($this->setted_fields['id'])) return;
+		// 	$key = self::CacheKey($this->id);
+		// 	if ($my_cache->key_exists($key)) {
+		// 		$ob = $my_cache->get_val($key);
+
+		// 		//key = Self<ID><lang>, value = ['name' => ['value'=>val, 'age'=>val], ...]
+		// 		$this->__update_ob_in_cache('id', $ob, true);
+		// 		$this->__update_ob_in_cache('name', $ob);
+		// 		$this->__update_ob_in_cache('surname', $ob);
+		// 		$this->__update_ob_in_cache('fathername', $ob);
+		// 		$this->__update_ob_in_cache('login', $ob);
+		// 		$this->__update_ob_in_cache('password', $ob);
+		// 		$this->__update_ob_in_cache('position', $ob);
+		// 		$this->__update_ob_in_cache('received_reports', $ob);
+		// 		$this->__update_ob_in_cache('sended_reports', $ob);
+		// 		$this->__update_ob_in_cache('email', $ob);
+		// 		$this->__update_ob_in_cache('telephone', $ob);
+		// 		$this->__update_ob_in_cache('register_time', $ob, true);
+		// 		$this->__update_ob_in_cache('last_visit_time', $ob);
+		// 		$this->__update_ob_in_cache('birthday', $ob);
+		// 		$this->__update_ob_in_cache('path_to_photo', $ob);
+		// 	} else {
+		// 		$res = [];
+		// 		foreach ($this->setted_fields as $field => $age) {
+		// 			$res[$field] = ['value' => $this->$field, 'age' => $age];
+		// 		}
+		// 		$my_cache->add_key($key, $res);
+		// 	}
+		// }
+
+		public function SetID($n) {
+			$this->setted_fields['id'] = 1;
+			$this->id = $n;
+		}
+
+		public function SetName($n) {
+			$this->setted_fields['name'] = 1;
+			$this->name = $n;
+		}
+
+		public function SetSurname($n) {
+			$this->setted_fields['surname'] = 1;
+			$this->surname = $n;
+		}
+
+		public function SetFathername($n) {
+			$this->setted_fields['fathername'] = 1;
+			$this->fathername = $n;
+		}
+
+		public function SetLogin($n) {
+			$this->setted_fields['login'] = 1;
+			$this->login = $n;
+		}
+
+		public function SetPassword($n) {
+			$this->setted_fields['password'] = 1;
+			$this->password = $n;
+		}
+
+		public function SetPosition($n) {
+			$this->setted_fields['position'] = 1;
+			$this->position = $n;
+		}
+
+		public function SetReceivedReports($n) {
+			$this->setted_fields['received_reports'] = 1;
+			$this->received_reports = $n;
+		}
+
+		public function SetSendedReports($n) {
+			$this->setted_fields['sended_reports'] = 1;
+			$this->sended_reports = $n;
+		}
+
+		public function SetEmail($n) {
+			$this->setted_fields['email'] = 1;
+			$this->email = $email;
+		}
+
+		public function SetTelephone($n) {
+			$this->setted_fields['telephone'] = 1;
+			$this->telephone = $n;
+		}
+
+		public function SetRegisterTime($n) {
+			$this->setted_fields['register_time'] = 1;
+			$this->register_time = $n;
+		}
+
+		public function SetLastVisitTime($n) {
+			$this->setted_fields['last_visit_time'] = 1;
+			$this->last_visit_time = $n;
+		}
+
+		public function SetBirthday($n) {
+			$this->setted_fields['birthday'] = 1;
+			$this->birthday = $n;
+		}
+
+		public function SetPathToPhoto($n) {
+			$this->setted_fields['path_to_photo'] = 1;
+			$this->path_to_photo = $n;
+		}
+
 
 		public function GetID() { return $this->id; }
 
@@ -48,10 +232,8 @@
 				if ($res->num_rows > 0) {
 					return $res->fetch_row()[0];
 				}
-				self::$last_error = Language::Word('no users');
 				return 0;
 			}
-			self::$last_error = $db_connection->error;
 			return 0;
 		}
 
@@ -67,44 +249,30 @@
 			return Language::Position($this->position);
 		}
 
-		public function GetLastVisitTime()
+		public function GetLastVisitTime() { return date('d : m : Y - H : i', $this->last_visit_time); }
+
+		public function GetRegisterTime() { return date('d : m : Y - H : i', $this->register_time); }
+
+		public function GetBirthday() { return date('d : m : Y', $this->birthday); }
+
+		public function GetEmail() { return $this->email; }
+
+		public function GetTelephone() { return $this->telephone; }
+
+		public static function GetIDByLogin($login)
 		{
-			return date('d : m : Y - H : i', $this->last_visit_time);
+			$user = self::FetchBy(['select_list' => 'id', 'eq_conds' => ['login' => $login], 'is_unique' => true]);
+			if (Error::IsError($user)) {
+				echo Error::ToString($user);
+				return NULL;
+			}
+			return $user->id;
 		}
 
-		public function GetRegisterTime()
-		{
-			return date('d : m : Y - H : i', $this->register_time);
-		}
-
-		public function GetBirthday(){
-			return date('d : m : Y', $this->birthday);
-		}
-
-		public function GetEmail()
-		{
-			return $this->email;
-		}
-
-		public function GetTelephone()
-		{
-			return $this->telephone;
-		}
-
-		public function AddReceivedReport()
-		{
-			global $db_connection;
-
-		}
-
-		public function AddSendedReport()
-		{
-
-		}
+		public function GetPathToPhoto() { return $this->path_to_photo; }
 		
-		//--------Methods--------
+		//---------------- IHTMLAuto implementation ----------------
 		
-		//html code of full representation of object in string
 		public function ToHTMLAutoFull($user_privileges)
 		{
 			switch ($user_privileges) {
@@ -128,8 +296,6 @@
 					return html_undef;
 			}
 		}
-
-		public function ToHTMLAdminFull() { return html_undef; }
 
 		public function ToHTMLPrivateFull()
 		{
@@ -202,27 +368,7 @@
 			return $res;
 		}
 
-		public function ToHTMLUserPublicShortInTable()
-		{
-			global $positions;
-			$res = '';
-			$res .= '<div class="row" style="display: table; width: 100%;" align="center">';
-			$res .= 	'<div class="'.ColAllTypes(4).'" style="float: none; display: table-cell; vertical-align: middle;">';
-			$res .= 		'<img src="'.Link::Get($this->path_to_photo).'" class="img-rounded img-avatar-sm">';
-			$res .= 	'</div>';
-
-			$res .= 	'<div class="'.ColAllTypes(5).'" style="float: none; display: table-cell; vertical-align: middle;">';
-			$res .= 		ToPageHeader(Language::Translit($this->surname.' '.$this->name), 'h4', 'black');
-			$res .= 		'<u>'.Language::Position($this->position).'</u><br>';
-			$res .= 		'<a href="mailto:'.$this->email.'">'.$this->email.'</a><br>';
-			$res .= 	'</div>';
-
-			$res .= 	'<div class="'.ColAllTypes(3).'" style="float: none; display: table-cell; vertical-align: middle;">';
-			$res .= 		$this->ToHTMLFullVers();
-			$res .= 	'</div>';
-			$res .= '</div>';
-			return $res;
-		}
+		public function ToHTMLUserPublicFull() { return html_undef; }
 
 		public function ToHTMLPrivateShortInTable()
 		{
@@ -253,6 +399,351 @@
 			$res .= '</tr>';
 			return $res;
 		}
+
+		public function ToHTMLUserPublicShortInTable()
+		{
+			global $positions;
+			$res = '';
+			$res .= '<div class="row" style="display: table; width: 100%;" align="center">';
+			$res .= 	'<div class="'.ColAllTypes(4).'" style="float: none; display: table-cell; vertical-align: middle;">';
+			$res .= 		'<img src="'.Link::Get($this->path_to_photo).'" class="img-rounded img-avatar-sm">';
+			$res .= 	'</div>';
+
+			$res .= 	'<div class="'.ColAllTypes(5).'" style="float: none; display: table-cell; vertical-align: middle;">';
+			$res .= 		ToPageHeader(Language::Translit($this->surname.' '.$this->name), 'h4', 'black');
+			$res .= 		'<u>'.Language::Position($this->position).'</u><br>';
+			$res .= 		'<a href="mailto:'.$this->email.'">'.$this->email.'</a><br>';
+			$res .= 	'</div>';
+
+			$res .= 	'<div class="'.ColAllTypes(3).'" style="float: none; display: table-cell; vertical-align: middle;">';
+			$res .= 		$this->ToHTMLFullVers();
+			$res .= 	'</div>';
+			$res .= '</div>';
+			return $res;
+		}
+
+		//---------------- IActions implementation ----------------
+
+		public function ToHTMLDel()
+		{
+			global $link_to_utility_interceptor;
+			$args = array(
+				'action_link' => $link_to_utility_interceptor,
+				'action_type' => 'del',
+				'obj_type' => User::$type,
+				'id' => $this->id,
+				'info' => Language::Word('are you sure that you want to delete user').' '.Language::Translit(htmlspecialchars($this->name)).'?',
+			);
+			return ActionButton($args);
+		}
+		
+		public function ToHTMLEdit()
+		{
+			global $link_to_admin_user;
+			$args = array(
+				'action_link' => $link_to_admin_user,
+				'action_type' => 'edit',
+				'obj_type' => User::$type,
+				'id' => $this->id,
+			);
+			return ActionButton($args);
+		}
+
+		public static function ToHTMLFullVersUnsafe($id)
+		{
+			global $link_to_admin_user;
+			global $link_to_public_user;
+			global $link_to_contacts;
+			global $link_to_admin_manage_staff;
+			global $use_mod_rewrite;
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			if (IsSessionPublic()) {
+				$args = array(
+					'action_link' => $link_to_public_user,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'prev_page' => $link_to_contacts,
+					'btn_text' => Language::Word('open profile'),
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_user,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'prev_page' => $link_to_admin_manage_staff,
+					'method' => 'get',
+				);
+			}
+			return ActionButton($args);
+		}
+
+		public function ToHTMLFullVers()
+		{
+			return self::ToHTMLFullVersUnsafe($this->id);
+		}
+
+		//---------------- ILinkable implementation ----------------
+
+		public static function LinkToThisUnsafe($id, $name, $surname, $link_size = 'btn-md', $args2 = array())
+		{
+			global $link_to_admin_user;
+			global $link_to_public_user;
+			global $use_mod_rewrite;
+			$args = array();
+			$mod_rewrite = 0;
+			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
+				$mod_rewrite = 1;
+			}
+			if (IsSessionPublic() === true) {
+				$args = array(
+					'action_link' => $link_to_public_user,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => Language::Translit(($surname).' '.($name)),
+					'lnk_size' => $link_size,
+					'method' => 'get',
+					'mod_rewrite' => $mod_rewrite,
+				);
+			} else {
+				$args = array(
+					'action_link' => $link_to_admin_user,
+					'action_type' => 'full',
+					'obj_type' => self::$type,
+					'id' => $id,
+					'lnk_text' => Language::Translit(($surname).' '.($name)),
+					'lnk_size' => $link_size,
+					'method' => 'get',
+				);
+			}
+			if (isset($args2['style'])) $args['style'] = $args2['style'];
+			return ActionLink($args);
+		}
+
+		public function LinkToThis($link_size = 'btn-md')
+		{
+			return self::LinkToThisUnsafe($this->id, $this->name, $this->surname, $link_size);
+		}
+
+		//---------------- IFetches implementation ----------------
+
+		public function PushToAssoc() {
+			$assoc = [];
+			foreach ($this->setted_fields as $fld => $i) {
+				$assoc[$fld] = $this->$fld;
+			}
+			return $assoc;
+		}
+
+		public static function FetchFromAssoc($assoc)
+		{
+			global $link_to_users_images;
+			$ob = new self();
+			if (ArrayElemIsValidStr($assoc, 'id')) $ob->SetID($assoc['id']);
+			if (ArrayElemIsValidStr($assoc, 'name')) $ob->SetName($assoc['name']);
+			if (ArrayElemIsValidStr($assoc, 'surname')) $ob->SetSurname($assoc['surname']);
+			if (ArrayElemIsValidStr($assoc, 'fathername')) $ob->SetFathername($assoc['fathername']);
+			if (ArrayElemIsValidStr($assoc, 'login')) $ob->SetLogin($assoc['login']);
+			if (ArrayElemIsValidStr($assoc, 'password')) $ob->SetPassword($assoc['password']);
+			if (ArrayElemIsValidStr($assoc, 'position')) $ob->SetPosition($assoc['position']);
+			if (isset($assoc['received_reports'])) {
+				if (is_string($assoc['received_reports'])) {
+					if ($assoc['received_reports'] === '') $ob->received_reports = [];
+					else $ob->SetReceivedReports(json_decode($assoc['received_reports']));
+				} else if ($assoc['received_reports'] != NULL) {
+					$ob->SetReceivedReports($assoc['received_reports']);
+				} else {
+					$ob->received_reports = [];
+				}
+			} else {
+				$ob->received_reports = [];
+			}
+			if (isset($assoc['sended_reports'])) {
+				if (is_string($assoc['sended_reports'])) {
+					if ($assoc['sended_reports'] === '') $ob->sended_reports = [];
+					else $ob->SetSendedReports(json_decode($assoc['sended_reports']));
+				} else if ($assoc['sended_reports'] != NULL) {
+					$ob->SetSendedReports($assoc['sended_reports']);
+				} else {
+					$ob->sended_reports = [];
+				}
+			} else {
+				$ob->sended_reports = [];
+			}
+			if (ArrayElemIsValidStr($assoc, 'email')) $ob->SetEmail($assoc['email']);
+			if (ArrayElemIsValidStr($assoc, 'telephone')) $ob->SetTelephone($assoc['telephone']);
+			try {
+				if (ArrayElemIsValidStr($assoc, 'last_visit_time')) $ob->SetLastVisitTime(strtotime($assoc['last_visit_time']));
+				if (ArrayElemIsValidStr($assoc, 'register_time')) $ob->SetRegisterTime(strtotime($assoc['register_time']));
+				if (ArrayElemIsValidStr($assoc, 'birthday')) $ob->SetBirthday(strtotime($assoc['birthday']));
+			} catch(Exception $e) {
+				$ob->last_visit_time = time_undef;
+				$ob->register_time = time_undef;
+				$ob->birthday = time_undef;
+			}
+			if (ArrayElemIsValidStr($assoc, 'id')) $ob->SetPathToPhoto(PathToImage($link_to_users_images.$ob->id, 'avatar', $link_to_users_images.'common/default_avatar.png'));
+			return $ob;
+		}
+
+		public static function FetchBy($kwargs)
+		{
+			$unique_call = function($kw, $rc) {
+				$res_count = count($rc);
+				if ($res_count > 1) return new Error('', Error::ambiguously);
+				if ($res_count === 0) return new Error('', Error::not_found);
+				return true;
+			};
+
+			$special_call = function($kw, $rc) {
+				extract($kw, EXTR_PREFIX_ALL, 't');
+				$special 		= array();
+				$is_assoc 		= false;
+				$class_parent		= NULL;
+
+				if (isset($t_special))			$special = $t_special;
+				if (isset($t_is_assoc)) 		$is_assoc = $t_is_assoc;
+				if (isset($t_class_parent))		$class_parent = $t_class_parent;
+				$res_count = count($rc);
+
+				for ($i = 0, $count = count($special); $i < $count; ++$i) {
+					switch ($special[$i]) {
+						case 'link_to_full': {
+							if ($is_assoc === false) break;
+							for ($j = 0; $j < $res_count; ++$j) {
+								if (isset($rc[$j]['id']) && isset($rc[$j]['name']) && isset($rc[$j]['surname'])) {
+									$rc[$j]['link_to_full'] = self::LinkToThisUnsafe($rc[$j]['id'], $rc[$j]['name'], $rc[$j]['surname'], 'btn-sm', array('style' => 'color: black;'));
+								}
+							}
+							break;
+						}
+						default: break;
+					}
+				}
+				return $rc;
+			};
+
+			$tmp = $kwargs;
+			$tmp['is_unique_callback'] = $unique_call;
+			$tmp['class_parent'] = new User;
+			$tmp['special_callback'] = $special_call;
+			return FetchBy($tmp);
+		}
+
+		public static function ArrayFromDBResult($result, $is_assoc = false)
+		{
+			$res = array();
+			while ($row = $result->fetch_assoc()) {
+				if ($is_assoc) {
+					array_push($res, $row);
+				}
+				else array_push($res, self::FetchFromAssoc($row));
+			}
+			return $res;
+		}
+
+		public static function FetchLike($prefix, $kwargs = array())
+		{
+			global $db_connection;
+
+			$parts = array_map('trim', preg_split('/\s+/', $prefix));
+			array_filter($parts);
+			$where_clause = '';
+			for ($i = 0, $size = count($parts); $i < $size; ++$i) if ($parts[$i] === '') unset($parts[$i]);
+			$parts = array_values($parts);
+
+			for ($i = 0, $size = count($parts); $i < $size; ++$i) {
+				$where_clause .= ' (LOWER(name) LIKE LOWER("'.$parts[$i].'%")) OR (LOWER(surname) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(name)) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(surname)) LIKE LOWER("'.$parts[$i].'%")) ';
+				if ($i < $size - 1) $where_clause .= 'OR';
+			}
+			$select_list = '*';
+			$kwargs['where_addition'] = $where_clause;
+
+			return self::FetchBy($kwargs);
+		}
+
+		public static function FetchAllEmployes()
+		{
+			global $db_connection;
+			$result = $db_connection->query("SELECT * FROM `".User::$table."` WHERE position<>".NotEmployeeNum." AND position<>0 ORDER BY position DESC, surname, name, fathername");
+			if (!$result) {
+				return NULL;
+			}
+			return User::ArrayFromDBResult($result);
+		}
+
+		public function FetchFromAssocEditing($assoc)
+		{
+			if (ArrayElemIsValidStr($assoc, 'name')) $this->name = $assoc['name'];
+			if (ArrayElemIsValidStr($assoc, 'surname')) $this->surname = $assoc['surname'];
+			if (ArrayElemIsValidStr($assoc, 'fathername')) $this->fathername = $assoc['fathername'];
+			if (ArrayElemIsValidStr($assoc, 'login')) $this->login = $assoc['login'];
+			if (ArrayElemIsValidStr($assoc, 'position')) $this->position = $assoc['position'];
+			if (ArrayElemIsValidStr($assoc, 'email')) $this->email = $assoc['email'];
+			if (ArrayElemIsValidStr($assoc, 'telephone')) $this->telephone = $assoc['telephone'];
+			if (ArrayElemIsValidStr($assoc, 'birth_day') && (ArrayElemIsValidStr($assoc, 'birth_month')) && (ArrayElemIsValidStr($assoc, 'birth_year'))) {
+				$this->birthday = strtotime($assoc['birth_month'].'/'.$assoc['birth_day'].'/'.$assoc['birth_year']);
+			}
+
+			if (ArrayElemIsValidStr($assoc, 'password_old')) {
+				if (!password_verify($assoc['password_old'], $this->password)) {
+					return -1;
+				}
+				if ((!ArrayElemIsValidStr($assoc, 'password_new1'))
+					|| (!ArrayElemIsValidStr($assoc, 'password_new2')) ||
+					($assoc['password_new1'] != $assoc['password_new2'])) {
+					return -1;
+				}
+				$this->password = password_hash($assoc['password_new1'], PASSWORD_DEFAULT);
+			}
+		}
+
+		public function FetchPhotoFromAssocEditing($assoc)
+		{
+			if (isset($assoc['img']['name']) && (is_uploaded_file($assoc['img']['tmp_name']))) {
+				global $link_to_users_images;
+				$img_name = 'avatar';
+				$sepext = explode('.', strtolower($assoc['img']['name']));
+			    $type = end($sepext);
+			    $img_name .= '.'.$type;
+			    $upload_path = $link_to_users_images.$this->id.'/'.$img_name;
+			    if (!delete_image($link_to_users_images.$this->id.'/avatar')) {
+			    	return -1;
+			    } else if (!move_uploaded_file($assoc['img']['tmp_name'], $upload_path)) {
+			    	return -1;
+			    } else {
+			    	return 1;
+			    }
+			}
+			return 0;
+		}
+
+		public static function InsertToDB($request)
+		{
+			global $db_connection;
+			global $link_to_users_images;
+			$name = $db_connection->real_escape_string($request->name);
+			$surname = $db_connection->real_escape_string($request->surname);
+			$fathername = $db_connection->real_escape_string($request->fathername);
+			$login = $db_connection->real_escape_string($request->login);
+			$email = $db_connection->real_escape_string($request->email);
+			$telephone = $db_connection->real_escape_string($request->telephone);
+			$res = $db_connection->query("INSERT INTO `".User::$table."` (`id`, `name`, `surname`, `fathername`, `login`, `password`, `position`, `email`, `telephone`, `register_time`, `last_visit_time`) VALUES ('0', '".$name."', '".$surname."', '".$fathername."', '".$login."', '".$request->password."', ".NewEmployeeNum.", '".$email."', '".$telephone."', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
+			@mkdir($link_to_users_images.($db_connection->insert_id));
+			@mkdir($link_to_users_images.($db_connection->insert_id).'/blocks');
+			if (!$res) {
+				return false;
+			}
+			$request->id = $db_connection->insert_id;
+			return true;
+		}
+
 
 		public function ToHTMLEditing()
 		{
@@ -314,415 +805,6 @@
 			return $res;
 		}
 		
-		public function ToHTMLUserPublicFull() { return html_undef; }
-		
-		public function ToHTMLDel()
-		{
-			global $link_to_utility_interceptor;
-			$args = array(
-				'action_link' => $link_to_utility_interceptor,
-				'action_type' => 'del',
-				'obj_type' => User::$type,
-				'id' => $this->id,
-				'info' => Language::Word('are you sure that you want to delete user').' '.Language::Translit(htmlspecialchars($this->name)).'?',
-			);
-			return ActionButton($args);
-		}
-		
-		public function ToHTMLEdit()
-		{
-			global $link_to_admin_user;
-			$args = array(
-				'action_link' => $link_to_admin_user,
-				'action_type' => 'edit',
-				'obj_type' => User::$type,
-				'id' => $this->id,
-			);
-			return ActionButton($args);
-		}
-
-		public static function ToHTMLFullVersUnsafe($id)
-		{
-			global $link_to_admin_user;
-			global $link_to_public_user;
-			global $link_to_contacts;
-			global $link_to_admin_manage_staff;
-			global $use_mod_rewrite;
-			$mod_rewrite = 0;
-			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
-				$mod_rewrite = 1;
-			}
-			if (IsSessionPublic()) {
-				$args = array(
-					'action_link' => $link_to_public_user,
-					'action_type' => 'full',
-					'obj_type' => User::$type,
-					'id' => $id,
-					'prev_page' => $link_to_contacts,
-					'btn_text' => Language::Word('open profile'),
-					'method' => 'get',
-					'mod_rewrite' => $mod_rewrite,
-				);
-			} else {
-				$args = array(
-					'action_link' => $link_to_admin_user,
-					'action_type' => 'full',
-					'obj_type' => User::$type,
-					'id' => $id,
-					'prev_page' => $link_to_admin_manage_staff,
-					'method' => 'get',
-				);
-			}
-			return ActionButton($args);
-		}
-
-		public function ToHTMLFullVers()
-		{
-			return User::ToHTMLFullVersUnsafe($this->id);
-		}
-
-		public static function FetchFromAssoc($assoc)
-		{
-			global $link_to_users_images;
-			$ob = new self();
-			if (ArrayElemIsValidStr($assoc, 'id')) $ob->id = $assoc['id'];
-			if (ArrayElemIsValidStr($assoc, 'name')) $ob->name = $assoc['name'];
-			if (ArrayElemIsValidStr($assoc, 'surname')) $ob->surname = $assoc['surname'];
-			if (ArrayElemIsValidStr($assoc, 'fathername')) $ob->fathername = $assoc['fathername'];
-			if (ArrayElemIsValidStr($assoc, 'login')) $ob->login = $assoc['login'];
-			if (ArrayElemIsValidStr($assoc, 'password')) $ob->password = $assoc['password'];
-			if (ArrayElemIsValidStr($assoc, 'position')) $ob->position = $assoc['position'];
-			if (isset($assoc['received_reports'])) {
-				if (is_string($assoc['received_reports'])) {
-					if ($assoc['received_reports'] === '') $ob->received_reports = [];
-					else $ob->received_reports = json_decode($assoc['received_reports']);
-				} else if ($assoc['received_reports'] != NULL) {
-					$ob->received_reports = $assoc['received_reports'];
-				} else {
-					$ob->received_reports = [];
-				}
-			} else {
-				$ob->received_reports = [];
-			}
-			if (isset($assoc['sended_reports'])) {
-				if (is_string($assoc['sended_reports'])) {
-					if ($assoc['sended_reports'] === '') $ob->sended_reports = [];
-					else $ob->sended_reports = json_decode($assoc['sended_reports']);
-				} else if ($assoc['sended_reports'] != NULL) {
-					$ob->sended_reports = $assoc['sended_reports'];
-				} else {
-					$ob->sended_reports = [];
-				}
-			} else {
-				$ob->sended_reports = [];
-			}
-			if (ArrayElemIsValidStr($assoc, 'email')) $ob->email = $assoc['email'];
-			if (ArrayElemIsValidStr($assoc, 'telephone')) $ob->telephone = $assoc['telephone'];
-			try {
-				if (ArrayElemIsValidStr($assoc, 'last_visit_time')) $ob->last_visit_time = strtotime($assoc['last_visit_time']);
-				if (ArrayElemIsValidStr($assoc, 'register_time')) $ob->register_time = strtotime($assoc['register_time']);
-				if (ArrayElemIsValidStr($assoc, 'birthday')) $ob->birthday = strtotime($assoc['birthday']);
-			} catch(Exception $e) {
-				$ob->last_visit_time = time_undef;
-				$ob->register_time = time_undef;
-				$ob->birthday = time_undef;
-			}
-			if (ArrayElemIsValidStr($assoc, 'id')) $ob->path_to_photo = PathToImage($link_to_users_images.$ob->id, 'avatar', $link_to_users_images.'common/default_avatar.png');
-			return $ob;
-		}
-
-		public static function FetchBy($kwargs)
-		{
-			extract($kwargs, EXTR_PREFIX_ALL, 't');
-
-			$select_list 	= '*';
-			$eq_conds 		= array();
-			$order_by 		= '';
-			$limit 			= '';
-			$offset 		= '';
-			$where_addition = '';
-			$is_assoc 		= false;
-			$is_unique		= false;
-			$special 		= array();
-
-			if (isset($t_select_list)) 		$select_list = $t_select_list;
-			if (isset($t_eq_conds)) 		$eq_conds = $t_eq_conds;
-			if (isset($t_order_by)) 		$order_by = $t_order_by;
-			if (isset($t_limit)) 			$limit = $t_limit;
-			if (isset($t_offset)) 			$offset = $t_offset;
-			if (isset($t_where_addition)) 	$where_addition = $t_where_addition;
-			if (isset($t_is_assoc)) 		$is_assoc = $t_is_assoc;
-			if (isset($t_is_unique))		$is_unique = $t_is_unique;
-			if (isset($t_special))			$special = $t_special;
-
-			global $db_connection;
-
-			$where_clause = '';
-			$i = 0;
-			$size = count($eq_conds);
-			$need_where_word = ($size !== 0) || StringNotEmpty($where_addition);
-			foreach ($eq_conds as $key => $value) {
-				$value_tmp = $db_connection->real_escape_string($value);
-				if (is_string($value_tmp)) $value_tmp = '"'.$value_tmp.'"';
-				$where_clause .= ' ('.$key.' = '.$value_tmp.') ';
-				if ($i < $size - 1) $where_clause .= 'OR';
-				++$i;
-			}
-			if ($need_where_word) {
-				if (StringNotEmpty($where_clause) && StringNotEmpty($where_addition)) {
-					$where_clause = '('.$where_clause.') AND ';
-					$where_addition = '('.$where_addition.')';
-				}
-				$where_clause = "WHERE ".$where_clause.' '.$where_addition;
-			}
-
-			if (StringNotEmpty($order_by)) {
-				$where_clause .= ' ORDER BY '.$order_by;
-			}
-
-			if (StringNotEmpty($limit))
-				$where_clause .= ' LIMIT '.$limit;
-			if (StringNotEmpty($offset)) {
-				$where_clause .= ' OFFSET '.$offset;
-			}
-
-			if (!StringNotEmpty($lang)) $lang = GetLanguage();
-
-			$from_table = self::$table;
-			$res = $db_connection->query("SELECT ".$select_list." FROM ".$from_table." ".$where_clause);
-			if (!$res) {
-				return new Error($db_connection->error, Error::db_error);
-			}
-			$res = self::ArrayFromDBResult($res, $is_assoc);
-			$res_count = count($res);
-
-			if ($is_unique) {
-				if ($res_count > 1) return Error::ambiguously;
-				if ($res_count === 0) return Error::not_found;
-			}
-
-			for ($i = 0, $count = count($special); $i < $count; ++$i) {
-				switch ($special[$i]) {
-					default: break;
-				}
-			}
-
-			if (!$is_unique) return $res;
-			else return $res[0];
-		}
-
-		public static function FetchFromPost()
-		{
-			return User::FetchFromAssoc($_POST);
-		}
-
-		public static function ArrayFromDBResult($result, $is_assoc = false)
-		{
-			$res = array();
-			while ($row = $result->fetch_assoc()) {
-				if ($is_assoc) {
-					array_push($res, $row);
-				}
-				else array_push($res, self::FetchFromAssoc($row));
-			}
-			return $res;
-		}
-
-		public static function FetchAllByPosition($pos)
-		{
-			global $db_connection;
-			$pos_tmp = $db_connection->real_escape_string($pos);
-
-			$result = $db_connection->query("SELECT * FROM ".User::$table." WHERE position='".$pos_tmp."'");
-			if ($result->num_rows < 1) {
-				return NULL;
-			}
-			return User::ArrayFromDBResult($result);
-		}
-
-		public static function FetchByPrefix($prefix, $args = array())
-		{
-			global $db_connection;
-
-			$parts = array_map('trim', preg_split('/\s+/', $prefix));
-			array_filter($parts);
-			$where_clause = '';
-			for ($i = 0, $size = count($parts); $i < $size; ++$i) if ($parts[$i] === '') unset($parts[$i]);
-
-			for ($i = 0, $size = count($parts); $i < $size; ++$i) {
-				$where_clause .= ' (LOWER(name) LIKE LOWER("'.$parts[$i].'%")) OR (LOWER(surname) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(name)) LIKE LOWER("'.$parts[$i].'%")) OR (translit(LOWER(surname)) LIKE LOWER("'.$parts[$i].'%")) ';
-				if ($i < $size - 1) $where_clause .= 'OR';
-			}
-			$select_list = '*';
-			$complex_attrs = array();
-			if (isset($args['select_list'])) {
-				for ($i = count($args['select_list']) - 1; $i >= 0; --$i) {
-					if ($args['select_list'][$i] == 'link_to_full') {
-						array_push($complex_attrs, 'link_to_full');
-						unset($args['select_list'][$i]);
-					}
-				}
-				$args['select_list'] = array_values($args['select_list']);
-				$select_list = '';
-				for ($i = 0, $count = count($args['select_list']); $i < $count; ++$i) {
-					$select_list .= $args['select_list'][$i];
-					if ($i < $count - 1) $select_list .= ', ';
-				}
-			}
-			$result = $db_connection->query("SELECT ".$select_list." FROM ".self::$table." WHERE ".$where_clause);
-			if (!$result) {
-				echo $db_connection->error;
-				return Error::db_error;
-			}
-			$res = array();
-			while ($row = $result->fetch_assoc()) {
-				$user = $row;
-				for ($i = 0; $i < count($complex_attrs); ++$i) {
-					if ($complex_attrs[$i] == 'link_to_full') {
-						$user['link_to_full'] = self::LinkToThisUnsafe($user['id'], $user['name'], $user['surname'], 'btn-sm', array('style' => 'color: black;'));
-					}
-				}
-				array_push($res, $user);
-			}
-			return $res;
-		}
-		
-		public static function FetchByLogin($login)
-		{
-			global $db_connection;
-			$login_tmp = $db_connection->real_escape_string($login);
-
-			$result = $db_connection->query("SELECT * FROM users WHERE login='".$login_tmp."'");
-			if ((!$result) || ($result->num_rows < 1)) {
-				return NULL;
-			}
-			$row = $result->fetch_assoc();
-			$user = User::FetchFromAssoc($row);
-
-			if (!$db_connection->query("UPDATE ".User::$table." SET `last_visit_time` = NOW() WHERE `id` = ".$user->id.";")) {
-				return AlertMessage('alert-danger', 'Ошибка при обновлении времени последнего визита пользователя');
-			}
-			return $user;
-		}
-		
-		public static function FetchByID($id)
-		{
-			global $db_connection;
-			$res = NULL;
-			$result = $db_connection->query("SELECT * FROM `".User::$table."` WHERE `id`=".$id);
-			if ((!$result) || ($result->num_rows != 1)) {
-				return NULL;
-			}
-			return User::FetchFromAssoc($result->fetch_assoc());
-		}
-
-		public static function Fetch($from, $count)
-		{
-			global $db_connection;
-			$res = array();
-			$result = $db_connection->query("SELECT * FROM ".User::$table." ORDER BY position DESC, surname, name, fathername LIMIT ".$from.", ".$count);
-			if (!$result) {
-				return NULL;
-			}
-			while ($row = $result->fetch_assoc()) {
-				array_push($res, User::FetchFromAssoc($row));
-			}
-			return $res;
-		}
-
-		public static function FetchAll()
-		{
-			global $db_connection;
-			$result = $db_connection->query("SELECT * FROM `".User::$table."` ORDER BY position DESC, surname, name, fathername");
-			if (!$result) {
-				return NULL;
-			}
-			return User::ArrayFromDBResult($result);
-		}
-
-		public static function FetchAllEmployes()
-		{
-			global $db_connection;
-			$result = $db_connection->query("SELECT * FROM `".User::$table."` WHERE position<>".NotEmployeeNum." AND position<>0 ORDER BY position DESC, surname, name, fathername");
-			if (!$result) {
-				return NULL;
-			}
-			return User::ArrayFromDBResult($result);
-		}
-
-		public static function GetIDByLogin($login)
-		{
-			$user = User::FetchByLogin($login);
-			if ($user == NULL) return NULL;
-			return $user->id;
-		}
-
-		public static function InsertToDB($request)
-		{
-			global $db_connection;
-			global $link_to_users_images;
-			$name = $db_connection->real_escape_string($request->name);
-			$surname = $db_connection->real_escape_string($request->surname);
-			$fathername = $db_connection->real_escape_string($request->fathername);
-			$login = $db_connection->real_escape_string($request->login);
-			$email = $db_connection->real_escape_string($request->email);
-			$telephone = $db_connection->real_escape_string($request->telephone);
-			$res = $db_connection->query("INSERT INTO `".User::$table."` (`id`, `name`, `surname`, `fathername`, `login`, `password`, `position`, `email`, `telephone`, `register_time`, `last_visit_time`) VALUES ('0', '".$name."', '".$surname."', '".$fathername."', '".$login."', '".$request->password."', ".NewEmployeeNum.", '".$email."', '".$telephone."', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
-			@mkdir($link_to_users_images.($db_connection->insert_id));
-			@mkdir($link_to_users_images.($db_connection->insert_id).'/blocks');
-			if (!$res) {
-				return false;
-			}
-			$request->id = $db_connection->insert_id;
-			return true;
-		}
-
-		public function FetchFromAssocEditing($assoc)
-		{
-			if (ArrayElemIsValidStr($assoc, 'name')) $this->name = $assoc['name'];
-			if (ArrayElemIsValidStr($assoc, 'surname')) $this->surname = $assoc['surname'];
-			if (ArrayElemIsValidStr($assoc, 'fathername')) $this->fathername = $assoc['fathername'];
-			if (ArrayElemIsValidStr($assoc, 'login')) $this->login = $assoc['login'];
-			if (ArrayElemIsValidStr($assoc, 'position')) $this->position = $assoc['position'];
-			if (ArrayElemIsValidStr($assoc, 'email')) $this->email = $assoc['email'];
-			if (ArrayElemIsValidStr($assoc, 'telephone')) $this->telephone = $assoc['telephone'];
-			if (ArrayElemIsValidStr($assoc, 'birth_day') && (ArrayElemIsValidStr($assoc, 'birth_month')) && (ArrayElemIsValidStr($assoc, 'birth_year'))) {
-				$this->birthday = strtotime($assoc['birth_month'].'/'.$assoc['birth_day'].'/'.$assoc['birth_year']);
-			}
-
-			if (ArrayElemIsValidStr($assoc, 'password_old')) {
-				if (!password_verify($assoc['password_old'], $this->password)) {
-					return -1;
-				}
-				if ((!ArrayElemIsValidStr($assoc, 'password_new1'))
-					|| (!ArrayElemIsValidStr($assoc, 'password_new2')) ||
-					($assoc['password_new1'] != $assoc['password_new2'])) {
-					return -1;
-				}
-				$this->password = password_hash($assoc['password_new1'], PASSWORD_DEFAULT);
-			}
-		}
-
-		public function FetchPhotoFromAssocEditing($assoc)
-		{
-			if (isset($assoc['img']['name']) && (is_uploaded_file($assoc['img']['tmp_name']))) {
-				global $link_to_users_images;
-				$img_name = 'avatar';
-				$sepext = explode('.', strtolower($assoc['img']['name']));
-			    $type = end($sepext);
-			    $img_name .= '.'.$type;
-			    $upload_path = $link_to_users_images.$this->id.'/'.$img_name;
-			    if (!delete_image($link_to_users_images.$this->id.'/avatar')) {
-			    	return -1;
-			    } else if (!move_uploaded_file($assoc['img']['tmp_name'], $upload_path)) {
-			    	return -1;
-			    } else {
-			    	return 1;
-			    }
-			}
-			return 0;
-		}
-		
 		public function Save()
 		{
 			global $db_connection;
@@ -775,45 +857,5 @@
 			}
 		}
 
-		public static function LinkToThisUnsafe($id, $name, $surname, $link_size = 'btn-md', $args2 = array())
-		{
-			global $link_to_admin_user;
-			global $link_to_public_user;
-			global $use_mod_rewrite;
-			$args = array();
-			$mod_rewrite = 0;
-			if (isset($use_mod_rewrite) && ($use_mod_rewrite === true)) {
-				$mod_rewrite = 1;
-			}
-			if (IsSessionPublic() === true) {
-				$args = array(
-					'action_link' => $link_to_public_user,
-					'action_type' => 'full',
-					'obj_type' => self::$type,
-					'id' => $id,
-					'lnk_text' => Language::Translit(($surname).' '.($name)),
-					'lnk_size' => $link_size,
-					'method' => 'get',
-					'mod_rewrite' => $mod_rewrite,
-				);
-			} else {
-				$args = array(
-					'action_link' => $link_to_admin_user,
-					'action_type' => 'full',
-					'obj_type' => self::$type,
-					'id' => $id,
-					'lnk_text' => Language::Translit(($surname).' '.($name)),
-					'lnk_size' => $link_size,
-					'method' => 'get',
-				);
-			}
-			if (isset($args2['style'])) $args['style'] = $args2['style'];
-			return ActionLink($args);
-		}
-
-		public function LinkToThis($link_size = 'btn-md')
-		{
-			return self::LinkToThisUnsafe($this->id, $this->name, $this->surname, $link_size);
-		}
 	}
 ?>

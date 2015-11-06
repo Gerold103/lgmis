@@ -27,6 +27,7 @@ Article.WindowBottomCallback = function() {
 Article.AppendToBottom = function(local_server) {
 	if (local_server.readyState == 4) {
 		$('#loadingMain').remove();
+		console.log(local_server.responseText);
 		var objs = JSON.parse(local_server.responseText);
 		var objs_list = elem("articles_list");
 		if (objs.length < records_on_page) Article.all_loaded = true;

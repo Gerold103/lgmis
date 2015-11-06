@@ -4,6 +4,8 @@
 	class MyFile {
 		const perm_to_all_registered = 0;
 		const perm_to_only_empls = 15;
+		const cachable = false;
+		const translated = false;
 
 		//--------Attributes--------
 

@@ -27,7 +27,7 @@
 
 		public static function ToString($err) {
 			if (is_a($err, 'Error')) {
-				return $err->mesg;
+				return Error::ToString($err->id).': '.$err->mesg;
 			}
 			switch ($err) {
 				case self::no_translation: return Language::Word('no translation');

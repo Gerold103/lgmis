@@ -35,4 +35,7 @@
 		$content .= MenuButton(Language::Word('bookkeeping'), $link_to_admin_bookkeeping, 'btn-default', '', 'get');
 
 	include($link_to_admin_template);
+
+	if ($need_to_show_timer)
+		echo 'secs: '.(microtime(true) - $start_timer__);
 ?>
