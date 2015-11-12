@@ -86,6 +86,25 @@
 	$content .=				'</div>';
 	$content .= 		'</div>';
 
+	$content .= 		'<div class="modal fade" id="edit_file" tabindex="-1" role="dialog">';
+	$content .= 			'<div class="modal-dialog" role="document">';
+	$content .= 				'<div class="modal-content">';
+	$content .=						'<div class="modal-header">';
+	$content .= 						'<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+	$content .= 						'<h4 class="modal-title" id="myModalLabel">'.Language::ActionTypeToText('edit').'</h4>';
+	$content .= 					'</div>';
+	$content .=						'<div class="modal-body">';
+	$content .= 						PairLabelAndInput(5, 7, Language::Word('name'), 'file_name');
+	$content .= 						PairLabelAndRadio(3, 9, Language::Word('permissions'), 'file_permissions', [['name' => 'for_employees', 'val' => Language::Word('for employees')], ['name' => 'for_registered', 'val' => Language::Word('for registered')]], -1);
+	$content .= 					'</div>';
+	$content .= 					'<div class="modal-footer">';
+	$content .= 						'<button type="button" class="btn btn-default" data-dismiss="modal">'.Language::Word('cancel').'</button>';
+	$content .= 						'<button name="save" type="button" class="btn btn-primary">'.Language::Word('save').'</button>';
+	$content .= 					'</div>';
+	$content .= 				'</div>';
+	$content .= 			'</div>';
+	$content .= 		'</div>';
+
 	$content .= 		'<div class="modal fade" id="myModal" tabindex="-1" role="dialog">';
 	$content .= 			'<div class="modal-dialog" role="document">';
 	$content .= 				'<div class="modal-content">';

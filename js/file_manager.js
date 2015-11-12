@@ -5,6 +5,9 @@ var files_per_row = 4;
 var cols_per_col = 3;
 var cur_files = [];
 
+var file_permissions = {0: 'for_registered', 15: 'for_employees'};
+var file_permissions_reverse = {'for_registered': 0, 'for_employees': 15};
+
 function turnOffLoader() {
 	var loader = elem("file_backdrop_area");
 	loader.className = "";
@@ -119,6 +122,92 @@ function saveFiles() {
     local_server.send(fd);
 }
 
+function editFile(file_id) {
+	var file = null;
+	var i = 0;
+	for (i = 0; i < cur_files.length; ++i) {
+		if (cur_files[i].id == file_id) {
+			file = cur_files[i];
+			break;
+		}
+	}
+	if (file == null) {
+		alert('No file with id = ' + file_id);
+		return;
+	}
+	$('#file_actions').modal('hide');
+	var edit_modal = elem('edit_file');
+	var name = findChildWithName(edit_modal, 'file_name');
+	if (name == null) {
+		alert('No field with name "file_name"');
+		return;
+	}
+	name.value = customDecodeURIComponent(file.name);
+	var tmp = findChildWithName(edit_modal, 'file_permissions');
+	if (tmp == null) {
+		alert('Not found element file_permissions');
+		return;
+	}
+	for (var j = 0; j < tmp.childNodes.length; ++j) {
+		tmp.childNodes[j].className = 'btn btn-primary';
+	}
+
+	var active_perm = findChildWithName(edit_modal, file_permissions[file.permissions]);
+	if (active_perm == null) {
+		alert('No field with permissions: ' + file.permissions);
+		return;
+	}
+	active_perm = active_perm.parentNode;
+	active_perm.className += ' active';
+
+	var save = findChildWithName(edit_modal, 'save');
+	if (save == null) {
+		alert('Not found save');
+		return;
+	}
+	save.setAttribute('onclick', 'editSave(' + i + ');');
+	$('#edit_file').modal('show');
+}
+
+function editSave(file_no) {
+	console.log(file_no);
+	var file = cur_files[file_no];
+
+	var edit_modal = elem('edit_file');
+	var name = findChildWithName(edit_modal, 'file_name');
+	if (name == null) {
+		alert("Not found file_name input");
+		return;
+	}
+	var perms = findChildWithName(edit_modal, 'file_permissions');
+	if (perms == null) {
+		alert("Not found file_permissions");
+		return;
+	}
+	var txt_perms = null;
+	for (var i = 0; i < perms.childNodes.length; ++i) {
+		if (perms.childNodes[i].className.indexOf('active') != -1) {
+			txt_perms = perms.childNodes[i].childNodes[0].getAttribute('name');
+			break;
+		}
+	}
+	if (txt_perms == null) {
+		alert("No active perms");
+		return;
+	}
+
+	var local_server = getXmlHttp();
+	var fd = new FormData();
+	fd.append("type", files_type);
+	fd.append("edit", file.id);
+	fd.append("name", name.value);
+	fd.append("permissions", file_permissions_reverse[txt_perms]);
+	local_server.onreadystatechange = function() { if (local_server.readyState == 4) { console.log(local_server.responseText); refresh_manager(null); } };
+	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
+	local_server.send(fd);
+	$('#edit_file').modal('hide');
+}
+
 function deleteFile(file_id) {
 	$("#file_actions").modal('hide');
 	console.log(file_id);
@@ -189,13 +278,17 @@ function show_actions_for(id) {
 			var actions = document.createElement('div');
 			actions.className = "row";
 			var col1 = document.createElement('div');
-			col1.className = ColAllTypes(6);
+			col1.className = ColAllTypes(4);
 			col1.innerHTML = file.link_to_download;
 			var col2 = document.createElement('div');
-			col2.className = ColAllTypes(6);
-			col2.innerHTML = file.link_to_delete;
+			col2.className = ColAllTypes(4);
+			col2.innerHTML = file.link_to_edit;
+			var col3 = document.createElement('div');
+			col3.className = ColAllTypes(4);
+			col3.innerHTML = file.link_to_delete;
 			actions.appendChild(col1);
 			actions.appendChild(col2);
+			actions.appendChild(col3);
 			body.appendChild(actions);
 			$('#file_actions').modal('show');
 		}

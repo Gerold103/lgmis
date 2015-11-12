@@ -76,7 +76,7 @@
 							break;
 						}
 						if ($iam->GetPositionNum() != NotEmployeeNum) $my_rights = MyFile::perm_to_only_empls;
-						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file, owner_id', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download', 'link_to_delete'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
+						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file, owner_id, permissions', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download', 'link_to_delete', 'link_to_edit'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
 						if (Error::IsError($obs)) {
 							$content = json_encode(["error" => Error::ToString($obs)]);
 							break;
@@ -168,6 +168,42 @@
 				default: break;
 			}
 			delete_file($dir);
+		}
+	} else if (isset($_REQUEST['edit'])) {
+		global $link_prefix;
+		$author_id = GetUserID();
+		switch ($_REQUEST['type']) {
+			case MyFile::$type: {
+				global $link_to_files_manager_dir;
+				$ob_id = $_REQUEST['edit'];
+				$file = MyFile::FetchBy(['eq_conds' => ['id' => $ob_id], 'is_unique' => true]);
+				if (Error::IsError($file)) {
+					$content = json_encode(['error' => Error::ToString($file)]);
+					break;
+				}
+				$old_name = $file->GetName();
+				if (ArrayElemIsValidStr($_REQUEST, 'name')) $file->SetName(urlencode($_REQUEST['name']));
+				if (ArrayElemIsValidStr($_REQUEST, 'permissions')) $file->SetPermissions($_REQUEST['permissions']);
+				if ($old_name != $file->GetName()) {
+					$path = $file->GetPathToFileStr();
+					if (file_exists($path.$file->GetName())) {
+						$content = json_encode(['error' => 'File '.$file->GetName().' already exists']);
+						break;
+					}
+					if (!rename($path.$old_name, $path.$file->GetName())) {
+						$content = json_encode(['error' => 'Error while renaming file']);
+						break;
+					}
+				}
+				$rc = $file->Save();
+				if (Error::IsError($rc)) {
+					$content = json_encode(['error' => Error::ToString($rc)]);
+					break;
+				}
+				$content = json_encode(['ok' => true]);
+				break;
+			}
+			default: break;
 		}
 	} else if (isset($_REQUEST['save'])) {
 		global $link_prefix;

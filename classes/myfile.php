@@ -20,6 +20,14 @@
 		public static $type = 'myfile';
 		public static $table = 'myfiles';
 
+		public function SetID($n) 			{ $this->id = $n; }
+		public function SetOwnerID($n) 		{ $this->owner_id = $n; }
+		public function SetName($n) 		{ $this->name = $n; }
+		public function SetPathToFile($n) 	{ $this->path_to_file = $n; }
+		public function SetCreatingDate($n) { $this->creating_date = $n; }
+		public function SetPermissions($n) 	{ $this->permissions = $n; }
+		public function SetIsDirectory($n) 	{ $this->is_directory = $n; }
+
 		public function GetID() 			{ return $this->id; }
 		public function GetOwnerID() 		{ return $this->owner_id; }
 		public function GetName() 			{ return $this->name; }
@@ -27,6 +35,15 @@
 		public function GetCreatingDate() 	{ return $this->creating_date; }
 		public function GetPermissions() 	{ return $this->permissions; }
 		public function IsDir()				{ return $this->is_directory; }
+
+		public function GetPathToFileStr()	{
+			global $link_prefix;
+			$res = $_SERVER['DOCUMENT_ROOT'].$link_prefix;
+			foreach ($this->path_to_file as $i => $path) {
+				$res .= $path.'/';
+			}
+			return $res;
+		}
 
 		public function GetLinkToDelete()	{
 			$user_id = GetUserID();
@@ -49,6 +66,7 @@
 				$path .= urlencode($this->path_to_file[$i]).urlencode('/');
 			}
 			$name = urlencode($this->name);
+			$res = '';
 			if (!$this->is_directory) {
 				$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.$path.$name.'">'.Language::Word('download file').'</a>';
 				return $res;
@@ -56,6 +74,17 @@
 				//$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($path).'">'.Language::
 				return $res;
 			}
+		}
+
+		public function GetLinkToEdit() {
+			$click = 'editFile('.$this->id.');';
+			$class = 'btn btn-default';
+			$user_id = GetUserID();
+			if (($user_id != $this->owner_id) && (GetUserPrivileges() != admin_user_id)) {
+				$class .= ' disabled';
+				$click = '';
+			}
+			return '<a href="#" class="'.$class.'" onclick="'.$click.'">'.Language::ActionTypeToText('edit').'</a>';
 		}
 
 		public static function PermissionsFromString($str) {
@@ -260,6 +289,16 @@
 						}
 						break;
 					}
+					case 'link_to_edit': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['id']) && isset($res[$j]['owner_id'])) {
+								$tmp = self::FetchFromAssoc(['id' => $res[$j]['id'], 'owner_id' => $res[$j]['owner_id']]);
+								$res[$j]['link_to_edit'] = $tmp->GetLinkToEdit();
+							}
+						}
+						break;
+					}
 					default: break;
 				}
 			}
@@ -299,6 +338,31 @@
 				}
 			}
 			if (!$res) return new Error($db_connection->error, Error::db_error);
+			return true;
+		}
+
+		//Methods for pushing
+		public function Save()
+		{
+			global $db_connection;
+			$res = $db_connection->query("SELECT `id` FROM `".self::$table."` WHERE (`id`=".$this->id.")");
+			if (!$res) {
+				echo $db_connection->error;
+				return new Error($db_connection->error, Error::db_error);
+			} else {
+				if ($res->num_rows == 0) {
+					echo 'there are no article with id = '.$this->id;
+					return new Error('', Error::not_found);
+				}
+			}
+			$name_tmp 		= $db_connection->real_escape_string($this->name);
+			$path_to_file_tmp = $db_connection->real_escape_string(json_encode($this->path_to_file));
+			$permissions_tmp = $db_connection->real_escape_string($this->permissions);
+			$res = $db_connection->query("UPDATE `".self::$table."` SET `name`=\"".$name_tmp."\", `path_to_file`=\"".$path_to_file_tmp."\", `permissions`=".$permissions_tmp." WHERE `id`=".$this->id);
+			if (!$res) {
+				echo $db_connection->error;
+				return new Error($db_connection->error, Error::db_error);
+			}
 			return true;
 		}
 
