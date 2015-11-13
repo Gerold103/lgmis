@@ -66,14 +66,12 @@
 				$path .= urlencode($this->path_to_file[$i]).urlencode('/');
 			}
 			$name = urlencode($this->name);
-			$res = '';
-			if (!$this->is_directory) {
-				$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.$path.$name.'">'.Language::Word('download file').'</a>';
-				return $res;
-			} else {
-				//$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.urlencode($path).'">'.Language::
-				return $res;
+			$text = Language::Word('download file');
+			if ($this->is_directory) {
+				$text = Language::Word('download zip');
 			}
+			$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.$path.$name.'">'.$text.'</a>';
+			return $res;
 		}
 
 		public function GetLinkToEdit() {

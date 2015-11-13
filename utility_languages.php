@@ -506,6 +506,12 @@
 						case 'eng': return 'Download file';
 					}
 				}
+				case 'download zip': {
+					switch ($lang) {
+						case 'rus': return 'Скачать zip-архивом';
+						case 'eng': return 'Download as Zip';
+					}
+				}
 				case 'drag file': {
 					switch ($lang) {
 						case 'rus': return 'Перетащите файл';

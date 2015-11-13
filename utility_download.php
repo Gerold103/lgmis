@@ -13,15 +13,27 @@
 	}
 
 	if (file_exists($file_path)) {
-	    header('Content-Description: File Transfer');
-	    header('Content-Type: application/octet-stream');
-	    header('Content-Disposition: attachment; filename="'.urldecode(basename($file_path)).'"');
-	    header('Expires: 0');
-	    header('Cache-Control: must-revalidate');
-	    header('Pragma: public');
-	    header('Content-Length: ' . filesize($file_path));
-	    readfile($file_path);
-	    exit;
+		if (!is_dir($file_path)) {
+		    header('Content-Description: File Transfer');
+		    header('Content-Type: application/octet-stream');
+		    header('Content-Disposition: attachment; filename="'.urldecode(basename($file_path)).'"');
+		    header('Expires: 0');
+		    header('Cache-Control: must-revalidate');
+		    header('Pragma: public');
+		    header('Content-Length: ' . filesize($file_path));
+		    readfile($file_path);
+		    exit;
+		} else {
+			$tmp_zip = tempnam('/tmp', hash('crc32', $file_path)).'.zip';
+			HZip::zipDir($file_path, $tmp_zip);
+			header('Content-Description: File Transfer');
+		    header('Content-Type: application/octet-stream');
+		    header('Content-Disposition: attachment; filename="'.urldecode(basename($file_path)).'.zip"');
+		    header("Content-Transfer-Encoding: binary");
+		    header('Content-Length: '.filesize($tmp_zip));
+		    readfile($tmp_zip);
+		    exit;
+		}
 	} else {
 		echo $file_path;
 		echo 'not exist';
