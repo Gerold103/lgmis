@@ -41,6 +41,24 @@
 		}
 	} else if (isset($_REQUEST['download'])) {
 		switch ($_REQUEST['download']) {
+			case 'link': {
+				switch ($_REQUEST['type']) {
+					case 'file': {
+						$file = MyFile::FetchBy(['select_list' => 'name, path_to_file', 'eq_conds' => ['id' => $_REQUEST['id']], 'is_unique' => true]);
+						$url = $file->GetURLToFile();
+						$link = SecretLink::CreateForActualLink($url);
+						if (Error::IsError($link)) {
+							$content = json_encode(['error' => Error::ToString($link)]);
+							break;
+						}
+						global $link_prefix;
+						$content = json_encode(['link' => 'http://'.$_SERVER["HTTP_HOST"].$link_prefix.'download/'.$link->GetPublicLink()]);
+						break;
+					}
+					default: break;
+				}
+				break;
+			}
 			case 'more': {
 				switch ($_REQUEST['type']) {
 					case Article::$type: {
@@ -76,7 +94,7 @@
 							break;
 						}
 						if ($iam->GetPositionNum() != NotEmployeeNum) $my_rights = MyFile::perm_to_only_empls;
-						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file, owner_id, permissions', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download', 'link_to_delete', 'link_to_edit'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
+						$obs = MyFile::FetchBy(['select_list' => 'id, name, is_directory, path_to_file, owner_id, permissions', 'order_by' => 'is_directory DESC, name', 'special' => ['file_type', 'link_to_download', 'link_to_delete', 'link_to_edit', 'link_to_link_to_download'], 'eq_conds' => ['path_to_file' => json_encode($dir)], 'is_assoc' => true, 'where_addition' => 'permissions <= '.$my_rights]);
 						if (Error::IsError($obs)) {
 							$content = json_encode(["error" => Error::ToString($obs)]);
 							break;

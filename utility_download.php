@@ -2,6 +2,18 @@
 	require_once('utility_lgmis_lib.php');
 	include_once($link_to_utility_authorization);
 
+	if (isset($_GET['public_link'])) {
+		SecretLink::ClearOldLinks();
+		$link = SecretLink::FetchBy(['select_list' => 'actual_link', 'eq_conds' => ['public_link' => $_GET['public_link']], 'is_unique' => true]);
+		if (Error::IsError($link)) {
+			echo 'Ссылка не найдена';
+			exit();
+		}
+		global $link_prefix;
+		header('Location: '.$link_prefix.$link->GetActualLink());
+		exit();
+	}
+
 	$file_path = $_SERVER['DOCUMENT_ROOT'].$link_prefix;
 	if (isset($_GET['file_path'])) {
 		$file_path .= $_GET['file_path'];

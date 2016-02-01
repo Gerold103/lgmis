@@ -36,11 +36,9 @@ function refresh_manager(local_server) {
 		getListOfFiles();
 	} else {
 		if (local_server.readyState == 4) {
-			console.log(local_server.responseText);
 			var answer;
 			try {
 				answer = JSON.parse(local_server.responseText);
-				console.log(answer);
 			} catch(err) {
 				alert("Error while parsnig answer from server");
 				turnOffLoader();
@@ -170,7 +168,6 @@ function editFile(file_id) {
 }
 
 function editSave(file_no) {
-	console.log(file_no);
 	var file = cur_files[file_no];
 
 	var edit_modal = elem('edit_file');
@@ -202,7 +199,7 @@ function editSave(file_no) {
 	fd.append("edit", file.id);
 	fd.append("name", name.value);
 	fd.append("permissions", file_permissions_reverse[txt_perms]);
-	local_server.onreadystatechange = function() { if (local_server.readyState == 4) { console.log(local_server.responseText); refresh_manager(null); } };
+	local_server.onreadystatechange = function() { if (local_server.readyState == 4) { refresh_manager(null); } };
 	local_server.open("POST", link_prefix + link_to_admin_ajax_interceptor);
 	local_server.send(fd);
 	$('#edit_file').modal('hide');
@@ -210,7 +207,6 @@ function editSave(file_no) {
 
 function deleteFile(file_id) {
 	$("#file_actions").modal('hide');
-	console.log(file_id);
 	var local_server = getXmlHttp();
 	var fd = new FormData();
 	fd.append("type", files_type);
@@ -229,7 +225,6 @@ function goDownDir(name) {
 	clearTimeout(click_timer);
 	click_status = 0;
 	cur_directory.push(name);
-	console.log(cur_directory);
 	refresh_manager(null);
 }
 
@@ -237,8 +232,27 @@ function goUpDir(num) {
 	clearTimeout(click_timer);
 	click_status = 0;
 	cur_directory = cur_directory.slice(0, num + 1);
-	console.log(cur_directory);
 	refresh_manager(null);
+}
+
+function copy_to_clipboard(link) {
+	link = customDecodeURIComponent(link);
+	window.prompt("Copy to clipboard: Ctrl+C, Enter", link);
+}
+
+function show_new_link(local_server) {
+	if (local_server.readyState == 4) {
+		var link = JSON.parse(local_server.responseText);
+		copy_to_clipboard(link.link);
+	}
+}
+
+function get_temporary_link(link) {
+	link = customDecodeURIComponent(link);
+	var local_server = getXmlHttp();
+	local_server.onreadystatechange = function() { show_new_link(local_server); };
+	local_server.open("POST", link);
+	local_server.send();
 }
 
 function show_actions_for(id) {
@@ -278,17 +292,21 @@ function show_actions_for(id) {
 			var actions = document.createElement('div');
 			actions.className = "row";
 			var col1 = document.createElement('div');
-			col1.className = ColAllTypes(4);
+			col1.className = ColAllTypes(3);
 			col1.innerHTML = file.link_to_download;
 			var col2 = document.createElement('div');
-			col2.className = ColAllTypes(4);
+			col2.className = ColAllTypes(3);
 			col2.innerHTML = file.link_to_edit;
 			var col3 = document.createElement('div');
-			col3.className = ColAllTypes(4);
+			col3.className = ColAllTypes(3);
 			col3.innerHTML = file.link_to_delete;
+			var col4 = document.createElement('div');
+			col4.className = ColAllTypes(3);
+			col4.innerHTML = file.link_to_link_to_download;
 			actions.appendChild(col1);
 			actions.appendChild(col2);
 			actions.appendChild(col3);
+			actions.appendChild(col4);
 			body.appendChild(actions);
 			$('#file_actions').modal('show');
 		}
@@ -334,11 +352,9 @@ function createFileElement(id) {
 function showListOfFiles(local_server) {
 	if (local_server.readyState == 4) {
 		turnOffLoader();
-		console.log(local_server.responseText);
 		var files = JSON.parse(local_server.responseText);
 		cur_files = files;
 		var rows_cnt = Math.ceil(files.length / files_per_row);
-		console.log(rows_cnt);
 		var files_place = elem("files_place");
 		deleteChilds(files_place);
 		for (var i = 0; i < rows_cnt; ++i) {

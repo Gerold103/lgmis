@@ -13,6 +13,10 @@ a {
     text-decoration: none !important;
 }
 
+button, .btn, .btn-default {
+	white-space: pre-wrap;
+}
+
 hr {
 	margin: 1px !important;
 }

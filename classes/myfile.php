@@ -20,6 +20,16 @@
 		public static $type = 'myfile';
 		public static $table = 'myfiles';
 
+		public function CreateDownloadLink() {
+			global $link_prefix;
+
+			$link = new SecretLink();
+			$link->SetPublicLink($link_prefix.'create_link/file/'.$this->GetID());
+			$link->SetAuthorID(GetUserID());
+			$link->SetActualLink($this->GetURLToFile());
+			return $link;
+		}
+
 		public function SetID($n) 			{ $this->id = $n; }
 		public function SetOwnerID($n) 		{ $this->owner_id = $n; }
 		public function SetName($n) 		{ $this->name = $n; }
@@ -57,20 +67,26 @@
 			return $res;
 		}
 
-		public function GetLinkToFile()		{
+		public function GetURLToFile() {
 			global $link_to_utility_download;
-			global $link_to_logo;
-
 			$path = '';
 			for ($i = 0, $size = count($this->path_to_file); $i < $size; ++$i) {
 				$path .= urlencode($this->path_to_file[$i]).urlencode('/');
 			}
 			$name = urlencode($this->name);
+
+			return $link_to_utility_download.'?file_path='.$path.$name;
+		}
+
+		public function GetLinkToFile()		{
+			global $link_to_utility_download;
+			global $link_to_logo;
+
 			$text = Language::Word('download file');
 			if ($this->is_directory) {
 				$text = Language::Word('download zip');
 			}
-			$res = '<a class="btn btn-warning" href="'.$link_to_utility_download.'?file_path='.$path.$name.'">'.$text.'</a>';
+			$res = '<a class="btn btn-warning" href="'.$this->GetURLToFile().'">'.$text.'</a>';
 			return $res;
 		}
 
@@ -293,6 +309,17 @@
 							if (isset($res[$j]['id']) && isset($res[$j]['owner_id'])) {
 								$tmp = self::FetchFromAssoc(['id' => $res[$j]['id'], 'owner_id' => $res[$j]['owner_id']]);
 								$res[$j]['link_to_edit'] = $tmp->GetLinkToEdit();
+							}
+						}
+						break;
+					}
+					case 'link_to_link_to_download': {
+						if ($is_assoc === false) break;
+						for ($j = 0; $j < $res_count; ++$j) {
+							if (isset($res[$j]['id']) && isset($res[$j]['owner_id'])) {
+								$tmp = self::FetchFromAssoc(['path_to_file' => $res[$j]['path_to_file'], 'name' => $res[$j]['name'], 'id' => $res[$j]['id']]);
+								$link = $tmp->CreateDownloadLink();
+								$res[$j]['link_to_link_to_download'] = SecretLink::WrapLinkToButton($link->GetPublicLink());
 							}
 						}
 						break;
