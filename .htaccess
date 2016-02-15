@@ -32,3 +32,5 @@ RewriteRule ^lang/([a-z]+)/?$ utility_language_change.php?lang=$1 [L]
 RewriteRule ^create_link/file/([0-9]+)/?$ admin_ajax_interceptor.php?download=link&type=file&id=$1 [L]
 
 RewriteRule ^download/([a-zA-Z\d]+)/?$ utility_download.php?public_link=$1 [L]
+
+RewriteRule ^pupils/([a-z\d]+)/([a-z\d]+)/?$ pupils/$1/$2.html [L]
